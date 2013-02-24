@@ -28,4 +28,11 @@ namespace bunsan{namespace curl
         if (ret)
             BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_perform"));
     }
+
+    void easy::pause(const int bitmask)
+    {
+        const CURLcode ret = ::curl_easy_pause(m_curl, bitmask);
+        if (ret)
+            BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_pause"));
+    }
 }}

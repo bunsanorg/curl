@@ -21,6 +21,7 @@ namespace bunsan{namespace curl
         std::string unescape(const std::string &url);
 
         void perform();
+        void pause(const int bitmask);
 
     private:
         CURL *const m_curl;
