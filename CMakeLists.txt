@@ -11,6 +11,7 @@ bunsan_use_boost(system filesystem serialization unit_test_framework thread)
 bunsan_use_curl()
 
 bunsan_add_shared_library(${PROJECT_NAME}
+    src/error_category.cpp
 )
 
 bunsan_install_headers()
