@@ -4,6 +4,8 @@
 
 #include <boost/noncopyable.hpp>
 
+#include <string>
+
 namespace bunsan{namespace curl
 {
     class easy: private boost::noncopyable // TODO really?
@@ -14,6 +16,9 @@ namespace bunsan{namespace curl
 
         easy();
         ~easy();
+
+        std::string escape(const std::string &url);
+        std::string unescape(const std::string &url);
 
         void perform();
 
