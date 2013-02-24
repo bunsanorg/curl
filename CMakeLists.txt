@@ -12,6 +12,7 @@ bunsan_use_curl()
 
 bunsan_add_shared_library(${PROJECT_NAME}
     src/error_category.cpp
+    src/error.cpp
 )
 
 bunsan_install_headers()
