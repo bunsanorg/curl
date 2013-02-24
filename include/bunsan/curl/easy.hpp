@@ -15,6 +15,8 @@ namespace bunsan{namespace curl
         easy();
         ~easy();
 
+        void perform();
+
     private:
         CURL *const m_curl;
     };

@@ -21,4 +21,11 @@ namespace bunsan{namespace curl
     {
         ::curl_easy_cleanup(m_curl);
     }
+
+    void easy::perform()
+    {
+        const CURLcode ret = ::curl_easy_perform(m_curl);
+        if (ret)
+            BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_perform"));
+    }
 }}
