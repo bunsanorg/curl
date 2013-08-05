@@ -1,6 +1,7 @@
 #include <bunsan/curl/easy.hpp>
-#include <bunsan/curl/error.hpp>
+
 #include <bunsan/curl/detail/curl_delete.hpp>
+#include <bunsan/curl/error.hpp>
 
 #include <memory>
 

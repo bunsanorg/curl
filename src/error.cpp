@@ -1,4 +1,5 @@
 #include <bunsan/curl/error.hpp>
+
 #include <bunsan/curl/error_category.hpp>
 
 namespace bunsan{namespace curl
