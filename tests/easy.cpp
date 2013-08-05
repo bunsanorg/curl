@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE easy
 #include <boost/test/unit_test.hpp>
 
-#include "bunsan/curl/easy.hpp"
+#include <bunsan/curl/easy.hpp>
 
 BOOST_AUTO_TEST_SUITE(easy)
 
