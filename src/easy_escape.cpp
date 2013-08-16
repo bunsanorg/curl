@@ -1,6 +1,6 @@
 #include <bunsan/curl/easy.hpp>
 
-#include <bunsan/curl/detail/curl_delete.hpp>
+#include <bunsan/curl/detail/unique_ptr.hpp>
 #include <bunsan/curl/error.hpp>
 
 #include <memory>
@@ -15,7 +15,7 @@ namespace bunsan{namespace curl
         }
         else
         {
-            const std::unique_ptr<char, detail::curl_delete> ptr(::curl_easy_escape(m_curl, url.data(), url.size()));
+            const detail::unique_ptr<char> ptr(::curl_easy_escape(m_curl, url.data(), url.size()));
             if (!ptr)
                 BOOST_THROW_EXCEPTION(easy_error() <<
                                       easy_error::what_message("curl_easy_escape"));
@@ -32,7 +32,7 @@ namespace bunsan{namespace curl
         else
         {
             int size;
-            const std::unique_ptr<char, detail::curl_delete> ptr(::curl_easy_unescape(m_curl, url.data(), url.size(), &size));
+            const detail::unique_ptr<char> ptr(::curl_easy_unescape(m_curl, url.data(), url.size(), &size));
             if (!ptr)
                 BOOST_THROW_EXCEPTION(easy_error() <<
                                       easy_error::what_message("curl_easy_unescape"));
