@@ -37,4 +37,9 @@ namespace bunsan{namespace curl
     {
         using basic_error::basic_error;
     };
+
+    struct share_error: basic_error<CURLSHcode, &share_category>
+    {
+        using basic_error::basic_error;
+    };
 }}
