@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bunsan/curl/error_category.hpp>
+
 #include <bunsan/categorized_error.hpp>
 
 #include <curl/curl.h>
@@ -8,25 +10,31 @@ namespace bunsan{namespace curl
 {
     struct error: virtual bunsan::error {};
 
-    struct easy_error: virtual error, virtual categorized_error
+    template <typename Code, const std::error_category &(*GetCategory)()>
+    struct basic_error: virtual error, virtual categorized_error
     {
-        easy_error()=default;
-        explicit easy_error(const CURLcode code);
-        easy_error(const CURLcode code, const std::string &what);
+        basic_error()=default;
 
-        // inherited
-        explicit easy_error(const std::error_code &ec);
-        easy_error(const std::error_code &ec, const std::string &what);
+        explicit basic_error(const Code code):
+            basic_error(std::error_code(code, GetCategory())) {}
+
+        basic_error(const Code code, const std::string &what):
+            basic_error(std::error_code(code, GetCategory()), what) {}
+
+        basic_error(const std::error_code &ec):
+            categorized_error(ec) {}
+
+        basic_error(const std::error_code &ec, const std::string &what):
+            categorized_error(ec, what) {}
     };
 
-    struct multi_error: virtual error, virtual categorized_error
+    struct easy_error: basic_error<CURLcode, &easy_category>
     {
-        multi_error()=default;
-        explicit multi_error(const CURLcode code);
-        multi_error(const CURLcode code, const std::string &what);
+        using basic_error::basic_error;
+    };
 
-        // inherited
-        explicit multi_error(const std::error_code &ec);
-        multi_error(const std::error_code &ec, const std::string &what);
+    struct multi_error: basic_error<CURLcode, &multi_category>
+    {
+        using basic_error::basic_error;
     };
 }}

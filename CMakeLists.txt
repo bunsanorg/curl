@@ -12,7 +12,6 @@ bunsan_use_curl()
 
 bunsan_add_shared_library(${PROJECT_NAME}
     src/error_category.cpp
-    src/error.cpp
     src/global.cpp
     src/easy.cpp
     src/easy_escape.cpp
