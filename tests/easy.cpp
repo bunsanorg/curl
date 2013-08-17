@@ -24,6 +24,15 @@ BOOST_AUTO_TEST_CASE(ctor)
     BOOST_CHECK(!e2);
 }
 
+BOOST_AUTO_TEST_CASE(easy_get)
+{
+    CURL *curl;
+    bunsan::curl::easy e(curl = ::curl_easy_init());
+    BOOST_REQUIRE(curl);
+    BOOST_REQUIRE(e);
+    BOOST_CHECK_EQUAL(&bunsan::curl::easy::get(curl), &e);
+}
+
 BOOST_AUTO_TEST_CASE(escaping)
 {
     static const std::vector<std::pair<std::string, std::string>> tests = {

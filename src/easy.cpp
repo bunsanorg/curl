@@ -20,6 +20,7 @@ namespace bunsan{namespace curl
 
     easy::easy(CURL *const curl) noexcept: m_curl(curl)
     {
+        BOOST_ASSERT_MSG(!get_(curl), "CURL is already captured.");
         init();
     }
 
@@ -87,7 +88,25 @@ namespace bunsan{namespace curl
         if (*this)
         {
             const CURLcode ret = ::curl_easy_setopt(m_curl, CURLOPT_PRIVATE, this);
-            BOOST_ASSERT(ret == CURLE_OK);
+            BOOST_ASSERT_MSG(ret == CURLE_OK, easy_category().message(ret).c_str());
         }
+    }
+
+    easy &easy::get(CURL *const curl) noexcept
+    {
+        easy *const obj = get_(curl);
+        BOOST_ASSERT_MSG(obj, "CURL was not captured.");
+        BOOST_ASSERT(obj->m_curl == curl);
+        return *obj;
+    }
+
+    easy *easy::get_(CURL *const curl) noexcept
+    {
+        BOOST_ASSERT(curl);
+
+        char *obj;
+        const CURLcode ret = ::curl_easy_getinfo(curl, CURLINFO_PRIVATE, &obj);
+        BOOST_ASSERT_MSG(ret == CURLE_OK, easy_category().message(ret).c_str());
+        return reinterpret_cast<easy *>(obj);
     }
 }}

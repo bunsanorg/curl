@@ -37,8 +37,18 @@ namespace bunsan{namespace curl
         void perform();
         void pause(const int bitmask);
 
+        /*!
+         * Get easy object from captured CURL pointer.
+         *
+         * \warning If CURL pointer is not captured
+         * by easy object behavior is undefined.
+         */
+        static easy &get(CURL *const curl) noexcept;
+
     private:
         void init() noexcept;
+
+        static easy *get_(CURL *const curl) noexcept;
 
     private:
         /// \note implementation can use m_curl == nullptr internally
