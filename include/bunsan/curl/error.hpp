@@ -33,7 +33,7 @@ namespace bunsan{namespace curl
         using basic_error::basic_error;
     };
 
-    struct multi_error: basic_error<CURLcode, &multi_category>
+    struct multi_error: basic_error<CURLMcode, &multi_category>
     {
         using basic_error::basic_error;
     };
