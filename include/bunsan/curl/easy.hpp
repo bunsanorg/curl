@@ -2,17 +2,31 @@
 
 #include <curl/curl.h>
 
-#include <boost/noncopyable.hpp>
-
 #include <string>
 
 namespace bunsan{namespace curl
 {
-    class easy: private boost::noncopyable // TODO really?
+    class easy
     {
     public:
+        /// Create invalid object.
+        easy(std::nullptr_t) noexcept;
+
+        /// Destroy current object making it invalid.
+        easy &operator=(std::nullptr_t) noexcept;
+
         /// \note Takes ownership.
         explicit easy(CURL *const curl) noexcept;
+
+        easy(const easy &)=delete;
+        easy &operator=(const easy &)=delete;
+
+        easy(easy &&) noexcept;
+        easy &operator=(easy &&) noexcept;
+
+        void swap(easy &) noexcept;
+
+        explicit operator bool() const noexcept;
 
         easy();
         ~easy();
@@ -24,6 +38,15 @@ namespace bunsan{namespace curl
         void pause(const int bitmask);
 
     private:
-        CURL *const m_curl;
+        void init() noexcept;
+
+    private:
+        /// \note implementation can use m_curl == nullptr internally
+        CURL *m_curl;
     };
+
+    inline void swap(easy &a, easy &b) noexcept
+    {
+        a.swap(b);
+    }
 }}
