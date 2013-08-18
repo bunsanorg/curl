@@ -64,6 +64,11 @@ namespace bunsan{namespace curl
         template <typename Option>
         void set_(const Option &opt, options::copy_policy::by_curl)
         {
+            // FIXME workaround for curl_easy_duphandle()
+            // cURL sometimes doesn't copy options
+            // so we will copy them ourselves
+            m_option_set.add(opt);
+
             opt.init(m_curl);
         }
 
