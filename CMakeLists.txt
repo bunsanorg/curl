@@ -16,6 +16,8 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/easy.cpp
     src/easy_escape.cpp
 
+    src/options/option_set.cpp
+
     src/detail/curl_delete.cpp
 )
 
