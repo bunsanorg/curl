@@ -15,6 +15,7 @@ namespace bunsan{namespace curl
         if (m_curl)
             ::curl_easy_cleanup(m_curl);
         m_curl = nullptr;
+        m_option_set.clear();
         return *this;
     }
 
@@ -25,7 +26,8 @@ namespace bunsan{namespace curl
     }
 
     easy::easy(easy &&curl) noexcept:
-        m_curl(curl.m_curl)
+        m_curl(curl.m_curl),
+        m_option_set(std::move(curl.m_option_set))
     {
         curl.m_curl = nullptr;
         init();
@@ -35,6 +37,7 @@ namespace bunsan{namespace curl
     {
         m_curl = curl.m_curl;
         curl.m_curl = nullptr;
+        m_option_set = std::move(curl.m_option_set);
         init();
         return *this;
     }
@@ -56,6 +59,7 @@ namespace bunsan{namespace curl
         using std::swap;
 
         swap(m_curl, curl.m_curl);
+        swap(m_option_set, curl.m_option_set);
         init();
         curl.init();
     }
@@ -81,6 +85,12 @@ namespace bunsan{namespace curl
         const CURLcode ret = ::curl_easy_pause(m_curl, bitmask);
         if (ret)
             BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_pause"));
+    }
+
+    void easy::reset()
+    {
+        ::curl_easy_reset(m_curl);
+        m_option_set.clear();
     }
 
     void easy::init() noexcept

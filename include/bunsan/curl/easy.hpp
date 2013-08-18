@@ -1,8 +1,12 @@
 #pragma once
 
+#include <bunsan/curl/options/option_set.hpp>
+#include <bunsan/curl/options/traits.hpp>
+
 #include <curl/curl.h>
 
 #include <string>
+#include <type_traits>
 
 namespace bunsan{namespace curl
 {
@@ -37,6 +41,15 @@ namespace bunsan{namespace curl
         void perform();
         void pause(const int bitmask);
 
+        template <typename Option>
+        void set(const Option &opt)
+        {
+            set_(opt, typename options::option_traits<Option>::copy_policy());
+        }
+
+        /// Set all options to default values.
+        void reset();
+
         /*!
          * Get easy object from captured CURL pointer.
          *
@@ -48,11 +61,25 @@ namespace bunsan{namespace curl
     private:
         void init() noexcept;
 
+        template <typename Option>
+        void set_(const Option &opt, options::copy_policy::by_curl)
+        {
+            opt.init(m_curl);
+        }
+
+        template <typename Option>
+        void set_(const Option &opt, options::copy_policy::by_wrapper)
+        {
+            m_option_set.add(opt);
+            opt.init(m_curl);
+        }
+
         static easy *get_(CURL *const curl) noexcept;
 
     private:
         /// \note implementation can use m_curl == nullptr internally
         CURL *m_curl;
+        options::option_set m_option_set;
     };
 
     inline void swap(easy &a, easy &b) noexcept
