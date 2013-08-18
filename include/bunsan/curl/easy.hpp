@@ -22,8 +22,8 @@ namespace bunsan{namespace curl
         /// \note Takes ownership.
         explicit easy(CURL *const curl) noexcept;
 
-        easy(const easy &)=delete;
-        easy &operator=(const easy &)=delete;
+        easy(const easy &);
+        easy &operator=(const easy &);
 
         easy(easy &&) noexcept;
         easy &operator=(easy &&) noexcept;

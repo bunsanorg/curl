@@ -25,6 +25,26 @@ namespace bunsan{namespace curl
         init();
     }
 
+    easy::easy(const easy &curl):
+        m_curl(curl.m_curl ? ::curl_easy_duphandle(curl.m_curl) : nullptr),
+        m_option_set(curl.m_option_set)
+    {
+        if (curl.m_curl)
+        {
+            if (!m_curl)
+                BOOST_THROW_EXCEPTION(easy_error() <<
+                                      easy_error::what_message("curl_easy_duphandle"));
+            init();
+            m_option_set.init(m_curl);
+        }
+    }
+
+    easy &easy::operator=(const easy &curl)
+    {
+        easy(curl).swap(*this);
+        return *this;
+    }
+
     easy::easy(easy &&curl) noexcept:
         m_curl(curl.m_curl),
         m_option_set(std::move(curl.m_option_set))
