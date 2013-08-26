@@ -11,7 +11,7 @@ namespace bunsan{namespace curl
     struct error: virtual bunsan::error {};
 
     template <typename Code, const std::error_category &(*GetCategory)()>
-    struct basic_error: virtual error, virtual categorized_error
+    struct basic_error: categorized_error, virtual error
     {
         basic_error()=default;
 
@@ -21,11 +21,7 @@ namespace bunsan{namespace curl
         basic_error(const Code code, const std::string &what):
             basic_error(std::error_code(code, GetCategory()), what) {}
 
-        basic_error(const std::error_code &ec):
-            categorized_error(ec) {}
-
-        basic_error(const std::error_code &ec, const std::string &what):
-            categorized_error(ec, what) {}
+        using categorized_error::categorized_error;
     };
 
     struct easy_error: basic_error<CURLcode, &easy_category>
