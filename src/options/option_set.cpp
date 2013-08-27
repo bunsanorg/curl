@@ -2,6 +2,8 @@
 
 #include <boost/assert.hpp>
 
+#include <set>
+
 namespace bunsan{namespace curl{namespace options
 {
     namespace detail
@@ -67,9 +69,15 @@ namespace bunsan{namespace curl{namespace options
 
     void option_set::setopt(CURL *const curl) const
     {
+        std::set<shared_option_ptr> set;
         for (const shared_option_ptr &opt: m_options)
-            if (opt)
+        {
+            if (opt && set.find(opt) == set.end())
+            {
                 opt->setopt(curl);
+                set.insert(opt);
+            }
+        }
     }
 
     void option_set::clear()
