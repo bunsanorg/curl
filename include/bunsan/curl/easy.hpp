@@ -70,8 +70,7 @@ namespace bunsan{namespace curl
         template <typename Option>
         void set_(const Option &opt, options::copy_policy::by_wrapper)
         {
-            m_option_set.add(opt);
-            opt.setopt(m_curl);
+            m_option_set.add_and_setopt(opt, m_curl);
         }
 
         static easy *get_(CURL *const curl) noexcept;

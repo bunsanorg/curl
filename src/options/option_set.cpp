@@ -54,6 +54,17 @@ namespace bunsan{namespace curl{namespace options
             m_options[curl_opt_id(id)] = opt_;
     }
 
+    void option_set::add_and_setopt(option_ptr &&opt, CURL *const curl)
+    {
+        const detail::option_base::const_id_range range = opt->ids();
+        BOOST_ASSERT(!range.empty());
+        const CURLoption id = *range.begin();
+        const CURLoption id_ = curl_opt_id(id);
+        add(std::move(opt));
+        BOOST_ASSERT(m_options[id_]);
+        m_options[id_]->setopt(curl);
+    }
+
     void option_set::setopt(CURL *const curl) const
     {
         for (const shared_option_ptr &opt: m_options)

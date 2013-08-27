@@ -85,7 +85,15 @@ namespace bunsan{namespace curl{namespace options
             add(newopt(opt));
         };
 
+        template <typename Option>
+        void add_and_setopt(const Option &opt, CURL *const curl)
+        {
+            add_and_setopt(newopt(opt), curl);
+        }
+
         void add(option_ptr &&opt);
+
+        void add_and_setopt(option_ptr &&opt, CURL *const curl);
 
         void setopt(CURL *const curl) const;
 
