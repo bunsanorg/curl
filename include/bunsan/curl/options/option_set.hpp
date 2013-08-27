@@ -82,8 +82,7 @@ namespace bunsan{namespace curl{namespace options
         template <typename Option>
         void add(const Option &opt)
         {
-            option_ptr tmp(new option<Option>(opt));
-            add(std::move(tmp));
+            add(newopt(opt));
         };
 
         void add(option_ptr &&opt);
@@ -93,6 +92,13 @@ namespace bunsan{namespace curl{namespace options
         void clear();
 
     private:
+        template <typename Option>
+        option_ptr newopt(const Option &opt)
+        {
+            option_ptr tmp(new option<Option>(opt));
+            return tmp;
+        }
+
         void reset(const CURLoption id);
 
     private:
