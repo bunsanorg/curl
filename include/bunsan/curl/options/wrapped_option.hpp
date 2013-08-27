@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bunsan/curl/detail/easy.hpp>
 #include <bunsan/curl/error.hpp>
 
 #include <curl/curl.h>
@@ -18,9 +19,7 @@ namespace bunsan{namespace curl{namespace options
 
         void init(CURL *const curl) const
         {
-            const CURLcode ret = ::curl_easy_setopt(curl, id(), Wrapper::data());
-            if (ret)
-                BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_setopt"));
+            detail::easy::setopt(curl, id(), Wrapper::data());
         }
     };
 }}}
