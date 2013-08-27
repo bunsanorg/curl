@@ -26,7 +26,7 @@ namespace bunsan{namespace curl{namespace options
             return detail::make_one_step_range<const CURLoption>(id());
         }
 
-        void init(CURL *const curl) const
+        void setopt(CURL *const curl) const
         {
             detail::easy::setopt(curl, id(), Wrapper::data());
         }

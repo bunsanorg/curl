@@ -54,11 +54,11 @@ namespace bunsan{namespace curl{namespace options
             m_options[curl_opt_id(id)] = opt_;
     }
 
-    void option_set::init(CURL *const curl) const
+    void option_set::setopt(CURL *const curl) const
     {
         for (const shared_option_ptr &opt: m_options)
             if (opt)
-                opt->init(curl);
+                opt->setopt(curl);
     }
 
     void option_set::clear()

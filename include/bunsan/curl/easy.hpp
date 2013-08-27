@@ -64,14 +64,14 @@ namespace bunsan{namespace curl
         template <typename Option>
         void set_(const Option &opt, options::copy_policy::by_curl)
         {
-            opt.init(m_curl);
+            opt.setopt(m_curl);
         }
 
         template <typename Option>
         void set_(const Option &opt, options::copy_policy::by_wrapper)
         {
             m_option_set.add(opt);
-            opt.init(m_curl);
+            opt.setopt(m_curl);
         }
 
         static easy *get_(CURL *const curl) noexcept;

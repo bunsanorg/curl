@@ -25,7 +25,7 @@ namespace bunsan{namespace curl{namespace options
                 std::ptrdiff_t> const_id_range;
 
         public:
-            virtual void init(CURL *curl) const=0;
+            virtual void setopt(CURL *curl) const=0;
 
             virtual const_id_range ids() const=0;
 
@@ -47,9 +47,9 @@ namespace bunsan{namespace curl{namespace options
     public:
         explicit option(const T &impl): m_impl(impl) {}
 
-        void init(CURL *curl) const override
+        void setopt(CURL *curl) const override
         {
-            m_impl.init(curl);
+            m_impl.setopt(curl);
         }
 
         const_id_range ids() const override
@@ -88,7 +88,7 @@ namespace bunsan{namespace curl{namespace options
 
         void add(option_ptr &&opt);
 
-        void init(CURL *const curl) const;
+        void setopt(CURL *const curl) const;
 
         void clear();
 
