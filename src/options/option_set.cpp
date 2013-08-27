@@ -36,29 +36,51 @@ namespace bunsan{namespace curl{namespace options
             constexpr CURLoption type = static_cast<CURLoption>(10000);
             while (id >= type)
                 id = static_cast<CURLoption>(id - type);
+            BOOST_ASSERT(0 <= id);
+            BOOST_ASSERT(id < CURLOPT_LASTENTRY);
             return id;
         }
     }
 
-    void option_set::add(detail::option_ptr &&opt)
+    void option_set::add(option_ptr &&opt)
     {
         BOOST_ASSERT(opt);
-        const CURLoption id = curl_opt_id(opt->id());
-        BOOST_ASSERT(0 <= id);
-        BOOST_ASSERT(id < CURLOPT_LASTENTRY);
-        m_options[id] = std::move(opt);
+        shared_option_ptr opt_(opt.release());
+        const detail::option_base::const_id_range range = opt_->ids();
+        BOOST_ASSERT(!range.empty());
+        for (const CURLoption &id: range)
+            reset(id);
+        for (const CURLoption &id: range)
+            m_options[curl_opt_id(id)] = opt_;
     }
 
     void option_set::init(CURL *const curl) const
     {
-        for (const option_ptr &opt: m_options)
+        for (const shared_option_ptr &opt: m_options)
             if (opt)
                 opt->init(curl);
     }
 
     void option_set::clear()
     {
-        for (option_ptr &opt: m_options)
+        for (shared_option_ptr &opt: m_options)
             opt.reset();
+    }
+
+    void option_set::reset(const CURLoption id)
+    {
+        const CURLoption id_ = curl_opt_id(id);
+        const shared_option_ptr opt = m_options[id_];
+        if (opt)
+        {
+            for (const CURLoption &other_id: opt->ids())
+            {
+                const CURLoption other_id_ = curl_opt_id(other_id);
+                BOOST_ASSERT(m_options[other_id_]);
+                BOOST_ASSERT(m_options[other_id_] == opt);
+                m_options[other_id_].reset();
+            }
+        }
+        BOOST_ASSERT(!m_options[id_]);
     }
 }}}

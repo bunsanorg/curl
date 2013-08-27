@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 
 #include <boost/noncopyable.hpp>
+#include <boost/range/any_range.hpp>
 
 #include <array>
 #include <memory>
@@ -15,11 +16,18 @@ namespace bunsan{namespace curl{namespace options
         {
         public:
             typedef std::unique_ptr<option_base> option_ptr;
+            typedef std::shared_ptr<option_base> shared_option_ptr;
+
+            typedef boost::any_range<
+                const CURLoption,
+                boost::forward_traversal_tag,
+                const CURLoption &,
+                std::ptrdiff_t> const_id_range;
 
         public:
             virtual void init(CURL *curl) const=0;
 
-            virtual CURLoption id() const=0;
+            virtual const_id_range ids() const=0;
 
             virtual option_ptr clone() const=0;
 
@@ -27,10 +35,11 @@ namespace bunsan{namespace curl{namespace options
         };
 
         typedef option_base::option_ptr option_ptr;
-
+        typedef option_base::shared_option_ptr shared_option_ptr;
     }
 
     using detail::option_ptr;
+    using detail::shared_option_ptr;
 
     template <typename T>
     class option: public detail::option_base
@@ -43,9 +52,9 @@ namespace bunsan{namespace curl{namespace options
             m_impl.init(curl);
         }
 
-        CURLoption id() const override
+        const_id_range ids() const override
         {
-            return m_impl.id();
+            return m_impl.ids();
         }
 
         option_ptr clone() const override
@@ -77,14 +86,17 @@ namespace bunsan{namespace curl{namespace options
             add(std::move(tmp));
         };
 
-        void add(detail::option_ptr &&opt);
+        void add(option_ptr &&opt);
 
         void init(CURL *const curl) const;
 
         void clear();
 
     private:
-        std::array<option_ptr, CURLOPT_LASTENTRY> m_options;
+        void reset(const CURLoption id);
+
+    private:
+        std::array<shared_option_ptr, CURLOPT_LASTENTRY> m_options;
     };
 
     inline void swap(option_set &a, option_set &b) noexcept
