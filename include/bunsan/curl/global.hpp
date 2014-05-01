@@ -25,7 +25,8 @@ namespace bunsan{namespace curl
         /*!
          * Library should be initialized by this object.
          *
-         * \warning Currently there is no way to initialize library with non-default constructor.
+         * \warning Currently there is no way to initialize library
+         * with non-default constructor.
          *
          * \todo Non-default library initialization.
          */

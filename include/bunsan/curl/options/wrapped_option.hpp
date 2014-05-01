@@ -21,7 +21,8 @@ namespace bunsan{namespace curl{namespace options
 
         constexpr CURLoption id() const { return Id; }
 
-        auto ids() const -> decltype(detail::make_one_step_range<const CURLoption>(this->id()))
+        auto ids() const ->
+            decltype(detail::make_one_step_range<const CURLoption>(this->id()))
         {
             return detail::make_one_step_range<const CURLoption>(id());
         }
