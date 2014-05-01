@@ -22,7 +22,8 @@ namespace bunsan{namespace curl{namespace options
                 const CURLoption,
                 boost::forward_traversal_tag,
                 const CURLoption &,
-                std::ptrdiff_t> const_id_range;
+                std::ptrdiff_t
+            > const_id_range;
 
         public:
             virtual void setopt(CURL *curl) const=0;
