@@ -5,6 +5,7 @@
 #include <bunsan/curl/options/wrapper/bool.hpp>
 #include <bunsan/curl/options/wrapper/c_function.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
+#include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
@@ -68,6 +69,12 @@ BOOST_AUTO_TEST_CASE(csv_list_)
     BOOST_CHECK_EQUAL(csv_list<>({"hello", "world"}).data(), "hello,world");
     BOOST_CHECK_EQUAL(csv_list<>({"1", "2", "3"}).data(), "1,2,3");
     BOOST_CHECK_EQUAL(csv_list<':'>({"1", "2", "3"}).data(), "1:2:3");
+}
+
+BOOST_AUTO_TEST_CASE(duration_)
+{
+    BOOST_CHECK_EQUAL(seconds(std::chrono::minutes(1)).data(), 60);
+    BOOST_CHECK_EQUAL(milliseconds(std::chrono::seconds(1)).data(), 1000);
 }
 
 BOOST_AUTO_TEST_CASE(string_)
