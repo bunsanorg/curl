@@ -1,8 +1,7 @@
 #pragma once
 
-#include <bunsan/curl/options/wrapper/wrapped_option_helper.hpp>
-
 #include <bunsan/curl/options/wrapper/bool.hpp>
+#include <bunsan/curl/options/wrapper/wrapped_option.hpp>
 
 namespace bunsan{namespace curl{namespace options
 {
