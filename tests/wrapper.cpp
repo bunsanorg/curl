@@ -4,6 +4,7 @@
 #include <bunsan/curl/options/wrapper/bitmask.hpp>
 #include <bunsan/curl/options/wrapper/bool.hpp>
 #include <bunsan/curl/options/wrapper/c_function.hpp>
+#include <bunsan/curl/options/wrapper/string.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
 
@@ -53,6 +54,14 @@ BOOST_AUTO_TEST_CASE(c_function_)
 
     BOOST_CHECK_EQUAL(function(&ns::x).data(), &ns::x);
     BOOST_CHECK_EQUAL(function(&ns::x).data()(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(string_)
+{
+    BOOST_CHECK(string(boost::none).data() == nullptr);
+    BOOST_CHECK_EQUAL(string("hello").data(), std::string("hello"));
+    BOOST_CHECK_EQUAL(string("1 2 3").data(), std::string("1 2 3"));
+    BOOST_CHECK_EQUAL(string("12345", 4).data(), std::string("1234"));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // wrapper
