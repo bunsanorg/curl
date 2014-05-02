@@ -8,6 +8,7 @@
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
+#include <bunsan/curl/options/wrapper/writefunction.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
 
@@ -99,6 +100,23 @@ BOOST_AUTO_TEST_CASE(string_)
     BOOST_CHECK_EQUAL(string("hello").data(), std::string("hello"));
     BOOST_CHECK_EQUAL(string("1 2 3").data(), std::string("1 2 3"));
     BOOST_CHECK_EQUAL(string("12345", 4).data(), std::string("1234"));
+}
+
+BOOST_AUTO_TEST_CASE(writefunction_)
+{
+    bool w1_ = false;
+    writefunction w1(
+        [&](char *ptr, size_t size, size_t nmemb)
+        {
+            BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
+            BOOST_CHECK_EQUAL(size, 1);
+            BOOST_CHECK_EQUAL(nmemb, 2);
+            w1_ = true;
+            return 10;
+        });
+    char ptr[] = "ptr";
+    BOOST_CHECK_EQUAL(w1.callback()(ptr, 1, 2, w1.data()), 10);
+    BOOST_CHECK(w1_);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // wrapper
