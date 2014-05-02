@@ -4,6 +4,7 @@
 #include <bunsan/curl/options/wrapper/bitmask.hpp>
 #include <bunsan/curl/options/wrapper/bool.hpp>
 #include <bunsan/curl/options/wrapper/c_function.hpp>
+#include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
@@ -54,6 +55,13 @@ BOOST_AUTO_TEST_CASE(c_function_)
 
     BOOST_CHECK_EQUAL(function(&ns::x).data(), &ns::x);
     BOOST_CHECK_EQUAL(function(&ns::x).data()(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(csv_list_)
+{
+    BOOST_CHECK_EQUAL(csv_list<>({"hello", "world"}).data(), "hello,world");
+    BOOST_CHECK_EQUAL(csv_list<>({"1", "2", "3"}).data(), "1,2,3");
+    BOOST_CHECK_EQUAL(csv_list<':'>({"1", "2", "3"}).data(), "1:2:3");
 }
 
 BOOST_AUTO_TEST_CASE(string_)
