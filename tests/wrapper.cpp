@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(string_)
 BOOST_AUTO_TEST_CASE(writefunction_)
 {
     bool w1_ = false;
-    writefunction w1(
+    const writefunction w1(
         [&](char *ptr, size_t size, size_t nmemb)
         {
             BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
