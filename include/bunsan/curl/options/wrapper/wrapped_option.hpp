@@ -21,15 +21,14 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         constexpr CURLoption id() const { return Id; }
 
-        auto ids() const ->
-            decltype(detail::make_one_step_range<const CURLoption>(this->id()))
+        curl::detail::one_step_range<const CURLoption> ids()
         {
-            return detail::make_one_step_range<const CURLoption>(id());
+            return curl::detail::make_one_step_range<const CURLoption>(id());
         }
 
         void setopt(CURL *const curl) const
         {
-            detail::easy::setopt(curl, id(), Wrapper::data());
+            curl::detail::easy::setopt(curl, id(), Wrapper::data());
         }
     };
 }}}}
