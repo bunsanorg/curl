@@ -9,7 +9,7 @@
 
 #include <boost/range/iterator_range.hpp>
 
-namespace bunsan{namespace curl{namespace options
+namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     template <CURLoption Id, typename Wrapper>
     class wrapped_option: private Wrapper
@@ -32,4 +32,4 @@ namespace bunsan{namespace curl{namespace options
             detail::easy::setopt(curl, id(), Wrapper::data());
         }
     };
-}}}
+}}}}
