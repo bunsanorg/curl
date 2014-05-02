@@ -42,6 +42,12 @@ BOOST_AUTO_TEST_CASE(bitmask_)
         bm(type::first, type::third).data(),
         static_cast<long>(type::first) | static_cast<long>(type::third)
     );
+
+    typedef bitmask<long long, 0> llbm;
+
+    BOOST_CHECK_EQUAL(llbm().data(), 0);
+    BOOST_CHECK_EQUAL(llbm(1).data(), 1);
+    BOOST_CHECK_EQUAL(llbm(1, 2, 4).data(), 1 | 2 | 4);
 }
 
 BOOST_AUTO_TEST_CASE(c_function_)

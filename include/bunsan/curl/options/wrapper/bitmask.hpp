@@ -13,14 +13,14 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     namespace detail
     {
         template <typename T>
-        typename std::enable_if<!std::is_enum<T>::value, long>::
+        inline typename std::enable_if<!std::is_enum<T>::value, long>::
         type bitmask_cast(const T data)
         {
             return boost::numeric_cast<long>(data);
         }
 
         template <typename T>
-        typename std::enable_if<std::is_enum<T>::value, long>::
+        inline typename std::enable_if<std::is_enum<T>::value, long>::
         type bitmask_cast(const T data)
         {
             return bitmask_cast(
@@ -28,6 +28,15 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
                     typename std::underlying_type<T>::type
                 >(data)
             );
+        }
+
+        inline long bitmask_merge() { return 0; }
+
+        template <typename Arg, typename ... Args>
+        inline long bitmask_merge(const Arg arg, Args &&...args)
+        {
+            return bitmask_cast(arg) |
+                   bitmask_merge(std::forward<Args>(args)...);
         }
     }
 
@@ -41,26 +50,15 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         bitmask()=default;
 
         template <typename ... Args>
-        bitmask(const T arg, Args &&...args):
-            bitmask(
-                detail::bitmask_cast(arg),
+        bitmask(Args &&...args):
+            m_data(detail::bitmask_merge(
                 std::forward<Args>(args)...
-            ) {}
+            )) {}
 
         inline long data() const
         {
             return m_data;
         }
-
-    private:
-        bitmask(const long data): m_data(data) {}
-
-        template <typename ... Args>
-        bitmask(const long arg1, const T arg2, Args &&...args):
-            bitmask(
-                arg1 | detail::bitmask_cast(arg2),
-                std::forward<Args>(args)...
-            ) {}
 
     private:
         long m_data = detail::bitmask_cast(Default);
