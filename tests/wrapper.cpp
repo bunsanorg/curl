@@ -6,6 +6,7 @@
 #include <bunsan/curl/options/wrapper/c_function.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
+#include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
@@ -75,6 +76,21 @@ BOOST_AUTO_TEST_CASE(duration_)
 {
     BOOST_CHECK_EQUAL(seconds(std::chrono::minutes(1)).data(), 60);
     BOOST_CHECK_EQUAL(milliseconds(std::chrono::seconds(1)).data(), 1000);
+}
+
+BOOST_AUTO_TEST_CASE(path_)
+{
+    typedef boost::filesystem::path fpath;
+
+    BOOST_CHECK(path(boost::none).data() == nullptr);
+    BOOST_CHECK_EQUAL(
+        fpath(path(fpath("hello") / "world").data()),
+        fpath("hello/world")
+    );
+    BOOST_CHECK_EQUAL(
+        fpath(path("hello").data()),
+        fpath("hello")
+    );
 }
 
 BOOST_AUTO_TEST_CASE(string_)
