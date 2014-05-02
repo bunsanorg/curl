@@ -7,6 +7,7 @@
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
+#include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
 
@@ -92,6 +93,26 @@ BOOST_AUTO_TEST_CASE(path_)
         fpath(path("hello").data()),
         fpath("hello")
     );
+}
+
+BOOST_AUTO_TEST_CASE(readfunction_)
+{
+    bool r1_ = false;
+    const readfunction r1(
+        [&](void *ptr, size_t size, size_t nmemb)
+        {
+            BOOST_CHECK_EQUAL(
+                std::string(static_cast<char *>(ptr)),
+                "ptr"
+            );
+            BOOST_CHECK_EQUAL(size, 1);
+            BOOST_CHECK_EQUAL(nmemb, 2);
+            r1_ = true;
+            return 10;
+        });
+    char ptr[] = "ptr";
+    BOOST_CHECK_EQUAL(r1.callback()(ptr, 1, 2, r1.data()), 10);
+    BOOST_CHECK(r1_);
 }
 
 BOOST_AUTO_TEST_CASE(string_)
