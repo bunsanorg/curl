@@ -7,6 +7,7 @@
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
+#include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
@@ -95,6 +96,11 @@ BOOST_AUTO_TEST_CASE(enum__)
     BOOST_CHECK_EQUAL(enum_type(type::second).data(), 1);
     BOOST_CHECK_EQUAL(enum_type(type::third).data(), 2);
     BOOST_CHECK_EQUAL(enum_type().data(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(long__)
+{
+    BOOST_CHECK_EQUAL(long_(10).data(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(path_)
