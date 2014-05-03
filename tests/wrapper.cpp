@@ -123,19 +123,18 @@ BOOST_AUTO_TEST_CASE(readfunction_)
 {
     bool r1_ = false;
     const readfunction r1(
-        [&](void *ptr, size_t size, size_t nmemb)
+        [&](void *ptr, size_t size)
         {
             BOOST_CHECK_EQUAL(
                 std::string(static_cast<char *>(ptr)),
                 "ptr"
             );
-            BOOST_CHECK_EQUAL(size, 1);
-            BOOST_CHECK_EQUAL(nmemb, 2);
+            BOOST_CHECK_EQUAL(size, 12);
             r1_ = true;
             return 10;
         });
     char ptr[] = "ptr";
-    BOOST_CHECK_EQUAL(r1.callback()(ptr, 1, 2, r1.data()), 10);
+    BOOST_CHECK_EQUAL(r1.callback()(ptr, 3, 4, r1.data()), 10);
     BOOST_CHECK(r1_);
 }
 
@@ -159,16 +158,15 @@ BOOST_AUTO_TEST_CASE(writefunction_)
 {
     bool w1_ = false;
     const writefunction w1(
-        [&](char *ptr, size_t size, size_t nmemb)
+        [&](char *ptr, size_t size)
         {
             BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
-            BOOST_CHECK_EQUAL(size, 1);
-            BOOST_CHECK_EQUAL(nmemb, 2);
+            BOOST_CHECK_EQUAL(size, 6);
             w1_ = true;
             return 10;
         });
     char ptr[] = "ptr";
-    BOOST_CHECK_EQUAL(w1.callback()(ptr, 1, 2, w1.data()), 10);
+    BOOST_CHECK_EQUAL(w1.callback()(ptr, 2, 3, w1.data()), 10);
     BOOST_CHECK(w1_);
 }
 

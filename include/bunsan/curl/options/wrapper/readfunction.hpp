@@ -15,14 +15,14 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         typedef basic_function<readfunction_traits> wrapper;
 
         typedef std::function<
-            std::size_t (void *ptr, size_t size, size_t nmemb)
+            std::size_t (void *ptr, size_t size)
         > function_type;
 
         static inline std::size_t static_call(
             void *ptr, size_t size, size_t nmemb, void *userdata)
         {
             const auto this_ = static_cast<const wrapper *>(userdata);
-            return this_->call(ptr, size, nmemb);
+            return this_->call(ptr, size * nmemb);
         }
     };
 
