@@ -11,6 +11,7 @@
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
+#include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
@@ -144,6 +145,14 @@ BOOST_AUTO_TEST_CASE(string_)
     BOOST_CHECK_EQUAL(string("hello").data(), std::string("hello"));
     BOOST_CHECK_EQUAL(string("1 2 3").data(), std::string("1 2 3"));
     BOOST_CHECK_EQUAL(string("12345", 4).data(), std::string("1234"));
+}
+
+BOOST_AUTO_TEST_CASE(wrapped_option_default_)
+{
+    typedef wrapped_option_default<seconds, 15> def;
+    BOOST_CHECK_EQUAL(def(std::chrono::seconds(10)).data(), 10);
+    BOOST_CHECK_EQUAL(def(std::chrono::minutes(1)).data(), 60);
+    BOOST_CHECK_EQUAL(def().data(), 15);
 }
 
 BOOST_AUTO_TEST_CASE(writefunction_)
