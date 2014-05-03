@@ -33,6 +33,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     };
 }}}}
 
-#define BUNSAN_CURL_OPTION_WRAPPED(NAME, CODE, WRAPPER) \
+#define BUNSAN_CURL_OPTION_WRAPPED(NAME, CODE, ...) \
     typedef ::bunsan::curl::options::wrapper::wrapped_option< \
-        CODE, ::bunsan::curl::options::wrapper::WRAPPER> NAME;
+        CODE, ::bunsan::curl::options::wrapper::__VA_ARGS__> NAME;
