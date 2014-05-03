@@ -6,6 +6,7 @@
 #include <bunsan/curl/options/wrapper/c_function.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
+#include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
@@ -78,6 +79,22 @@ BOOST_AUTO_TEST_CASE(duration_)
 {
     BOOST_CHECK_EQUAL(seconds(std::chrono::minutes(1)).data(), 60);
     BOOST_CHECK_EQUAL(milliseconds(std::chrono::seconds(1)).data(), 1000);
+}
+
+BOOST_AUTO_TEST_CASE(enum__)
+{
+    enum class type
+    {
+        first,
+        second,
+        third,
+        def
+    };
+    typedef enum_<type, type::def> enum_type;
+    BOOST_CHECK_EQUAL(enum_type(type::first).data(), 0);
+    BOOST_CHECK_EQUAL(enum_type(type::second).data(), 1);
+    BOOST_CHECK_EQUAL(enum_type(type::third).data(), 2);
+    BOOST_CHECK_EQUAL(enum_type().data(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(path_)
