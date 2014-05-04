@@ -15,6 +15,7 @@
 #include <bunsan/curl/options/wrapper/progressfunction.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/seekfunction.hpp>
+#include <bunsan/curl/options/wrapper/sockoptfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
@@ -239,6 +240,21 @@ BOOST_AUTO_TEST_CASE(seekfunction_)
         });
     BOOST_CHECK_EQUAL(s1.callback()(s1.data(), 25, SEEK_SET), CURL_SEEKFUNC_CANTSEEK);
     BOOST_CHECK(s1_);
+}
+
+BOOST_AUTO_TEST_CASE(sockoptfunction_)
+{
+    bool so1_ = false;
+    const sockoptfunction so1(
+        [&](curl_socket_t curlfd, bunsan::curl::socktype purpose)
+        {
+            BOOST_CHECK_EQUAL(curlfd, 12);
+            BOOST_CHECK_EQUAL(purpose, bunsan::curl::socktype::accept);
+            so1_ = true;
+            return 10;
+        });
+    BOOST_CHECK_EQUAL(so1.callback()(so1.data(), curl_socket_t(12), CURLSOCKTYPE_ACCEPT), 10);
+    BOOST_CHECK(so1_);
 }
 
 BOOST_AUTO_TEST_CASE(string_)
