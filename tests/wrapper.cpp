@@ -7,6 +7,7 @@
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
+#include <bunsan/curl/options/wrapper/interleavefunction.hpp>
 #include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
@@ -97,6 +98,25 @@ BOOST_AUTO_TEST_CASE(enum__)
     BOOST_CHECK_EQUAL(enum_type(type::second).data(), 1);
     BOOST_CHECK_EQUAL(enum_type(type::third).data(), 2);
     BOOST_CHECK_EQUAL(enum_type().data(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(interleavefunction_)
+{
+    bool il1_ = false;
+    const interleavefunction il1(
+        [&](void *ptr, size_t size)
+        {
+            BOOST_CHECK_EQUAL(
+                std::string(static_cast<char *>(ptr)),
+                "ptr"
+            );
+            BOOST_CHECK_EQUAL(size, 15);
+            il1_ = true;
+            return 10;
+        });
+    char ptr[] = "ptr";
+    BOOST_CHECK_EQUAL(il1.callback()(ptr, 3, 5, il1.data()), 10);
+    BOOST_CHECK(il1_);
 }
 
 BOOST_AUTO_TEST_CASE(long__)
