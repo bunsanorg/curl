@@ -8,6 +8,7 @@
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
+#include <bunsan/curl/options/wrapper/ioctlfunction.hpp>
 #include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
@@ -117,6 +118,25 @@ BOOST_AUTO_TEST_CASE(interleavefunction_)
     char ptr[] = "ptr";
     BOOST_CHECK_EQUAL(il1.callback()(ptr, 3, 5, il1.data()), 10);
     BOOST_CHECK(il1_);
+}
+
+BOOST_AUTO_TEST_CASE(ioctlfunction_)
+{
+    bunsan::curl::easy easy;
+    bool io1_ = false;
+    const ioctlfunction io1(
+        [&](bunsan::curl::easy &handle, int cmd)
+        {
+            BOOST_CHECK_EQUAL(&handle, &easy);
+            BOOST_CHECK_EQUAL(cmd, 15);
+            io1_ = true;
+            return bunsan::curl::ioerr::unknowncmd;
+        });
+    BOOST_CHECK_EQUAL(
+        io1.callback()(easy.handle(), 15, io1.data()),
+        CURLIOE_UNKNOWNCMD
+    );
+    BOOST_CHECK(io1_);
 }
 
 BOOST_AUTO_TEST_CASE(long__)
