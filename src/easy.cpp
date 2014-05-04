@@ -67,6 +67,7 @@ namespace bunsan{namespace curl
         if (!m_curl)
             BOOST_THROW_EXCEPTION(easy_error() <<
                                   easy_error::what_message("curl_easy_init"));
+        init();
     }
 
     easy::~easy()

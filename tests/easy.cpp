@@ -27,6 +27,13 @@ BOOST_AUTO_TEST_CASE(ctor)
     BOOST_CHECK(!e2);
 }
 
+BOOST_AUTO_TEST_CASE(default_ctor)
+{
+    bunsan::curl::easy e;
+    BOOST_REQUIRE(e);
+    BOOST_CHECK_EQUAL(&bunsan::curl::easy::get(e.handle()), &e);
+}
+
 BOOST_AUTO_TEST_CASE(easy_get)
 {
     CURL *curl;
