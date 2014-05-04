@@ -16,6 +16,7 @@
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/seekfunction.hpp>
 #include <bunsan/curl/options/wrapper/sockoptfunction.hpp>
+#include <bunsan/curl/options/wrapper/ssl_ctx_function.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
@@ -255,6 +256,26 @@ BOOST_AUTO_TEST_CASE(sockoptfunction_)
         });
     BOOST_CHECK_EQUAL(so1.callback()(so1.data(), curl_socket_t(12), CURLSOCKTYPE_ACCEPT), 10);
     BOOST_CHECK(so1_);
+}
+
+BOOST_AUTO_TEST_CASE(ssl_ctx_function_)
+{
+    bunsan::curl::easy easy;
+    bool sc1_ = false;
+    const ssl_ctx_function sc1(
+        [&](bunsan::curl::easy &handle, void *sslctx)
+        {
+            BOOST_CHECK_EQUAL(&handle, &easy);
+            BOOST_CHECK_EQUAL(
+                std::string(static_cast<char *>(sslctx)),
+                "ptr"
+            );
+            sc1_ = true;
+            return CURLE_AGAIN;
+        });
+    char ptr[] = "ptr";
+    BOOST_CHECK_EQUAL(sc1.callback()(easy.handle(), ptr, sc1.data()), CURLE_AGAIN);
+    BOOST_CHECK(sc1_);
 }
 
 BOOST_AUTO_TEST_CASE(string_)
