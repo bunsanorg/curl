@@ -12,10 +12,13 @@
 #include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/opensocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
+#include <bunsan/curl/options/wrapper/progressfunction.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
+
+#include <boost/mpl/list.hpp>
 
 BOOST_AUTO_TEST_SUITE(wrapper)
 
@@ -174,6 +177,33 @@ BOOST_AUTO_TEST_CASE(path_)
         fpath(path("hello").data()),
         fpath("hello")
     );
+}
+
+typedef boost::mpl::list<
+    double,
+    curl_off_t
+> progressfunction_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(progressfunction_, T, progressfunction_types)
+{
+    typedef basic_progressfunction<T> test_progressfunction;
+    bool pr1_ = false;
+    T dltotal_ = 100;
+    T dlnow_ = 50;
+    T ultotal_ = 1000;
+    T ulnow_ = 200;
+    const test_progressfunction pr1(
+        [&](T dltotal, T dlnow, T ultotal, T ulnow)
+        {
+            BOOST_CHECK_EQUAL(dltotal, dltotal_);
+            BOOST_CHECK_EQUAL(dlnow, dlnow_);
+            BOOST_CHECK_EQUAL(ultotal, ultotal_);
+            BOOST_CHECK_EQUAL(ulnow, ulnow_);
+            pr1_ = true;
+            return 10;
+        });
+    BOOST_CHECK_EQUAL(pr1.callback()(pr1.data(), dltotal_, dlnow_, ultotal_, ulnow_), 10);
+    BOOST_CHECK(pr1_);
 }
 
 BOOST_AUTO_TEST_CASE(readfunction_)
