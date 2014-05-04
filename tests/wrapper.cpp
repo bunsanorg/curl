@@ -10,6 +10,7 @@
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
 #include <bunsan/curl/options/wrapper/ioctlfunction.hpp>
 #include <bunsan/curl/options/wrapper/long_.hpp>
+#include <bunsan/curl/options/wrapper/opensocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/readfunction.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
@@ -142,6 +143,22 @@ BOOST_AUTO_TEST_CASE(ioctlfunction_)
 BOOST_AUTO_TEST_CASE(long__)
 {
     BOOST_CHECK_EQUAL(long_(10).data(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(opensocketfunction_)
+{
+    bool os1_ = false;
+    struct curl_sockaddr addr;
+    const opensocketfunction os1(
+        [&](bunsan::curl::socktype purpose, struct curl_sockaddr *address)
+        {
+            BOOST_CHECK_EQUAL(purpose, bunsan::curl::socktype::accept);
+            BOOST_CHECK_EQUAL(address, &addr);
+            os1_ = true;
+            return curl_socket_t(10);
+        });
+    BOOST_CHECK_EQUAL(os1.callback()(os1.data(), CURLSOCKTYPE_ACCEPT, &addr), 10);
+    BOOST_CHECK(os1_);
 }
 
 BOOST_AUTO_TEST_CASE(path_)
