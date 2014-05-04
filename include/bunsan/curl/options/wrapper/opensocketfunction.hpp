@@ -1,8 +1,8 @@
 #pragma once
 
-#include <bunsan/curl/socktype.hpp>
 #include <bunsan/curl/options/traits.hpp>
 #include <bunsan/curl/options/wrapper/basic_function.hpp>
+#include <bunsan/curl/socktype.hpp>
 
 #include <curl/curl.h>
 

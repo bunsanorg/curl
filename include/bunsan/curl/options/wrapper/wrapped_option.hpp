@@ -1,8 +1,7 @@
 #pragma once
 
-#include <bunsan/curl/detail/one_step_iterator.hpp>
-
 #include <bunsan/curl/detail/easy.hpp>
+#include <bunsan/curl/detail/one_step_iterator.hpp>
 #include <bunsan/curl/error.hpp>
 
 #include <curl/curl.h>
