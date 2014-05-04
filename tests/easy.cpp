@@ -8,6 +8,7 @@ BOOST_AUTO_TEST_SUITE(easy)
 BOOST_AUTO_TEST_CASE(ctor)
 {
     bunsan::curl::easy e1;
+    CURL *handle = e1.handle();
     BOOST_CHECK(e1);
     bunsan::curl::easy e2 = nullptr;
     BOOST_CHECK(!e2);
@@ -17,9 +18,11 @@ BOOST_AUTO_TEST_CASE(ctor)
     e3 = std::move(e1);
     BOOST_CHECK(!e1);
     BOOST_CHECK(e3);
+    BOOST_CHECK_EQUAL(e3.handle(), handle);
     swap(e2, e3);
     BOOST_CHECK(e2);
     BOOST_CHECK(!e3);
+    BOOST_CHECK_EQUAL(e2.handle(), handle);
     e2 = nullptr;
     BOOST_CHECK(!e2);
 }
@@ -31,6 +34,7 @@ BOOST_AUTO_TEST_CASE(easy_get)
     BOOST_REQUIRE(curl);
     BOOST_REQUIRE(e);
     BOOST_CHECK_EQUAL(&bunsan::curl::easy::get(curl), &e);
+    BOOST_CHECK_EQUAL(e.handle(), curl);
 }
 
 BOOST_AUTO_TEST_CASE(escaping)

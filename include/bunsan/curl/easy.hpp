@@ -32,6 +32,15 @@ namespace bunsan{namespace curl
 
         explicit operator bool() const noexcept;
 
+        /*!
+         * \return raw handle
+         *
+         * \note Ownership remains.
+         *
+         * \warning If object is not valid behavior is undefined.
+         */
+        CURL *handle();
+
         easy();
         ~easy();
 

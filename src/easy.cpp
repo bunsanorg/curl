@@ -89,6 +89,13 @@ namespace bunsan{namespace curl
         return m_curl;
     }
 
+    CURL *easy::handle()
+    {
+        BOOST_ASSERT(*this);
+
+        return m_curl;
+    }
+
     void easy::perform()
     {
         BOOST_ASSERT(*this);
