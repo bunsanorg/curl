@@ -10,6 +10,7 @@
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/fnmatch_function.hpp>
+#include <bunsan/curl/options/wrapper/headerfunction.hpp>
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
 #include <bunsan/curl/options/wrapper/ioctlfunction.hpp>
 #include <bunsan/curl/options/wrapper/long_.hpp>
@@ -162,6 +163,25 @@ BOOST_AUTO_TEST_CASE(fnmatch_function_)
         CURL_FNMATCHFUNC_NOMATCH
     );
     BOOST_CHECK(fm1_);
+}
+
+BOOST_AUTO_TEST_CASE(headerfunction_)
+{
+    bool h1_ = false;
+    const headerfunction h1(
+        [&](void *ptr, size_t size)
+        {
+            BOOST_CHECK_EQUAL(
+                std::string(static_cast<char *>(ptr)),
+                "ptr"
+            );
+            BOOST_CHECK_EQUAL(size, 15);
+            h1_ = true;
+            return 10;
+        });
+    char ptr[] = "ptr";
+    BOOST_CHECK_EQUAL(h1.callback()(ptr, 3, 5, h1.data()), 10);
+    BOOST_CHECK(h1_);
 }
 
 BOOST_AUTO_TEST_CASE(interleavefunction_)
