@@ -13,6 +13,7 @@
 #include <bunsan/curl/options/wrapper/headerfunction.hpp>
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
 #include <bunsan/curl/options/wrapper/ioctlfunction.hpp>
+#include <bunsan/curl/options/wrapper/literal.hpp>
 #include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/opensocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
@@ -234,6 +235,32 @@ BOOST_AUTO_TEST_CASE(ioctlfunction_)
         CURLIOE_UNKNOWNCMD
     );
     BOOST_CHECK(io1_);
+}
+
+BOOST_AUTO_TEST_CASE(literal_)
+{
+    {
+        enum class type
+        {
+            first = 0,
+            second = 1,
+            third = 2
+        };
+        typedef enum_literal<type, type::third> lit;
+        BOOST_CHECK_EQUAL(lit().data(), 2);
+    }
+    {
+        typedef long_literal<10> lit;
+        BOOST_CHECK_EQUAL(lit().data(), 10);
+    }
+    {
+        typedef string_literal<> lit;
+        BOOST_CHECK_EQUAL(std::string(lit().data()), "");
+    }
+    {
+        typedef string_literal<'h', 'e', 'l', 'l', 'o'> lit;
+        BOOST_CHECK_EQUAL(std::string(lit().data()), "hello");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(long__)
