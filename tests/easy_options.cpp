@@ -9,41 +9,20 @@
 #include </usr/include/boost/algorithm/string/predicate.hpp>
 #include </usr/include/boost/algorithm/string/trim.hpp>
 
+#include <cstring>
+
 struct easy_fixture
 {
-    easy_fixture()
-    {
-        easy.set(bunsan::curl::options::verbose(true));
-    }
-
     bunsan::curl::easy easy;
-};
-
-struct url_fixture: easy_fixture
-{
-    url_fixture()
-    {
-        easy.set(bunsan::curl::options::url("http://google.com"));
-    }
-
-    void verify_data()
-    {
-        BOOST_CHECK(boost::algorithm::starts_with(data, "<HTML><HEAD>"));
-        BOOST_CHECK(boost::algorithm::ends_with(data, "</BODY></HTML>"));
-    }
-
+    const std::string url_root = "http://localhost:8090";
     std::string data;
 };
 
-BOOST_FIXTURE_TEST_SUITE(easy_options, url_fixture)
-
-BOOST_AUTO_TEST_CASE(call)
-{
-    easy.perform();
-}
+BOOST_FIXTURE_TEST_SUITE(easy_options, easy_fixture)
 
 BOOST_AUTO_TEST_CASE(write)
 {
+    easy.set(bunsan::curl::options::url(url_root + "/hello"));
     easy.set(bunsan::curl::options::writefunction(
         [&](char *const ptr, const std::size_t size)
         {
@@ -52,10 +31,7 @@ BOOST_AUTO_TEST_CASE(write)
         }
     ));
     easy.perform();
-    BOOST_CHECK(!data.empty());
-    boost::algorithm::trim(data);
-    verify_data();
-    BOOST_TEST_MESSAGE("HTTP Response:\n" << data);
+    BOOST_CHECK_EQUAL(data, "Hello, world!");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // easy_options
