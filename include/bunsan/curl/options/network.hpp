@@ -16,8 +16,8 @@
 namespace bunsan{namespace curl{namespace options
 {
     BUNSAN_CURL_OPTION_WRAPPED(url, CURLOPT_URL, string)
-    BUNSAN_CURL_OPTION_WRAPPED(protocols, CURLOPT_PROTOCOLS, bitmask<proto, proto::all>)
-    BUNSAN_CURL_OPTION_WRAPPED(redir_protocols, CURLOPT_REDIR_PROTOCOLS, bitmask<proto, proto::all>)
+    BUNSAN_CURL_OPTION_WRAPPED(protocols, CURLOPT_PROTOCOLS, bitmask<proto>)
+    BUNSAN_CURL_OPTION_WRAPPED(redir_protocols, CURLOPT_REDIR_PROTOCOLS, bitmask<proto>)
     BUNSAN_CURL_OPTION_WRAPPED(proxy, CURLOPT_PROXY, string)
     BUNSAN_CURL_OPTION_WRAPPED(proxyport, CURLOPT_PROXYPORT, long_)
     BUNSAN_CURL_OPTION_WRAPPED(proxytype, CURLOPT_PROXYTYPE, enum_<curl::proxy, curl::proxy::http>)

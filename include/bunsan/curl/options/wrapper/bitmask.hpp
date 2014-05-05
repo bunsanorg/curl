@@ -40,15 +40,13 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     }
 
-    template <typename T, T Default>
+    template <typename T>
     class bitmask
     {
     public:
         typedef copy_policy::by_curl copy_policy;
 
     public:
-        bitmask()=default;
-
         template <typename ... Args>
         bitmask(Args &&...args):
             m_data(detail::bitmask_merge(
@@ -61,6 +59,15 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
 
     private:
-        long m_data = detail::bitmask_cast(Default);
+        long m_data;
+    };
+
+    template <typename T, T Default>
+    class bitmask_optional: public bitmask<T>
+    {
+    public:
+        using bitmask<T>::bitmask;
+
+        bitmask_optional(): bitmask<T>(Default) {}
     };
 }}}}

@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(bool_)
     BOOST_CHECK_EQUAL(bool_02(true).data(), 2);
 }
 
-BOOST_AUTO_TEST_CASE(bitmask_)
+BOOST_AUTO_TEST_CASE(bitmask_optional_)
 {
     enum class type
     {
@@ -48,10 +48,11 @@ BOOST_AUTO_TEST_CASE(bitmask_)
         third = 1 << 2,
         def = 1 << 10
     };
-    typedef bitmask<type, type::def> bm;
+    typedef bitmask<type> bm;
+    typedef bitmask_optional<type, type::def> bmo;
 
     BOOST_CHECK_EQUAL(
-        bm().data(),
+        bmo().data(),
         static_cast<long>(type::def)
     );
     BOOST_CHECK_EQUAL(
@@ -59,15 +60,26 @@ BOOST_AUTO_TEST_CASE(bitmask_)
         static_cast<long>(type::first)
     );
     BOOST_CHECK_EQUAL(
+        bmo(type::first).data(),
+        static_cast<long>(type::first)
+    );
+    BOOST_CHECK_EQUAL(
         bm(type::first, type::third).data(),
         static_cast<long>(type::first) | static_cast<long>(type::third)
     );
+    BOOST_CHECK_EQUAL(
+        bmo(type::first, type::third).data(),
+        static_cast<long>(type::first) | static_cast<long>(type::third)
+    );
 
-    typedef bitmask<long long, 0> llbm;
+    typedef bitmask<long long> llbm;
+    typedef bitmask_optional<long long, 0> llbmo;
 
-    BOOST_CHECK_EQUAL(llbm().data(), 0);
+    BOOST_CHECK_EQUAL(llbmo().data(), 0);
     BOOST_CHECK_EQUAL(llbm(1).data(), 1);
+    BOOST_CHECK_EQUAL(llbmo(1).data(), 1);
     BOOST_CHECK_EQUAL(llbm(1, 2, 4).data(), 1 | 2 | 4);
+    BOOST_CHECK_EQUAL(llbmo(1, 2, 4).data(), 1 | 2 | 4);
 }
 
 BOOST_AUTO_TEST_CASE(c_function_)
