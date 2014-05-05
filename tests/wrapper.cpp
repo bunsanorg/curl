@@ -169,12 +169,9 @@ BOOST_AUTO_TEST_CASE(headerfunction_)
 {
     bool h1_ = false;
     const headerfunction h1(
-        [&](void *ptr, size_t size)
+        [&](char *ptr, size_t size)
         {
-            BOOST_CHECK_EQUAL(
-                std::string(static_cast<char *>(ptr)),
-                "ptr"
-            );
+            BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
             BOOST_CHECK_EQUAL(size, 15);
             h1_ = true;
             return 10;
@@ -188,12 +185,9 @@ BOOST_AUTO_TEST_CASE(interleavefunction_)
 {
     bool il1_ = false;
     const interleavefunction il1(
-        [&](void *ptr, size_t size)
+        [&](char *ptr, size_t size)
         {
-            BOOST_CHECK_EQUAL(
-                std::string(static_cast<char *>(ptr)),
-                "ptr"
-            );
+            BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
             BOOST_CHECK_EQUAL(size, 15);
             il1_ = true;
             return 10;
@@ -289,12 +283,9 @@ BOOST_AUTO_TEST_CASE(readfunction_)
 {
     bool r1_ = false;
     const readfunction r1(
-        [&](void *ptr, size_t size)
+        [&](char *ptr, size_t size)
         {
-            BOOST_CHECK_EQUAL(
-                std::string(static_cast<char *>(ptr)),
-                "ptr"
-            );
+            BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
             BOOST_CHECK_EQUAL(size, 12);
             r1_ = true;
             return 10;
