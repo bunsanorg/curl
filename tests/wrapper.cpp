@@ -4,6 +4,7 @@
 #include <bunsan/curl/options/wrapper/bitmask.hpp>
 #include <bunsan/curl/options/wrapper/bool.hpp>
 #include <bunsan/curl/options/wrapper/c_function.hpp>
+#include <bunsan/curl/options/wrapper/closesocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
@@ -77,6 +78,20 @@ BOOST_AUTO_TEST_CASE(c_function_)
 
     BOOST_CHECK_EQUAL(function(&ns::x).data(), &ns::x);
     BOOST_CHECK_EQUAL(function(&ns::x).data()(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(closesocketfunction_)
+{
+    bool cs1_ = false;
+    const closesocketfunction cs1(
+        [&](curl_socket_t item)
+        {
+            BOOST_CHECK_EQUAL(item, 15);
+            cs1_ = true;
+            return 10;
+        });
+    BOOST_CHECK_EQUAL(cs1.callback()(cs1.data(), curl_socket_t(15)), 10);
+    BOOST_CHECK(cs1_);
 }
 
 BOOST_AUTO_TEST_CASE(csv_list_)
