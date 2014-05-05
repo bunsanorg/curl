@@ -6,6 +6,7 @@
 #include <bunsan/curl/options/wrapper/c_function.hpp>
 #include <bunsan/curl/options/wrapper/closesocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
+#include <bunsan/curl/options/wrapper/debugfunction.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
@@ -99,6 +100,27 @@ BOOST_AUTO_TEST_CASE(csv_list_)
     BOOST_CHECK_EQUAL(csv_list<>({"hello", "world"}).data(), "hello,world");
     BOOST_CHECK_EQUAL(csv_list<>({"1", "2", "3"}).data(), "1,2,3");
     BOOST_CHECK_EQUAL(csv_list<':'>({"1", "2", "3"}).data(), "1:2:3");
+}
+
+BOOST_AUTO_TEST_CASE(debugfunction_)
+{
+    bunsan::curl::easy easy;
+    bool d1_ = false;
+    const debugfunction d1(
+        [&](bunsan::curl::easy &handle,
+            bunsan::curl::info info_type,
+            char *ptr,
+            size_t size)
+        {
+            BOOST_CHECK_EQUAL(&handle, &easy);
+            BOOST_CHECK_EQUAL(info_type, bunsan::curl::info::data_out);
+            BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
+            BOOST_CHECK_EQUAL(size, 15);
+            d1_ = true;
+        });
+    char ptr[] = "ptr";
+    d1.callback()(easy.handle(), CURLINFO_DATA_OUT, ptr, 15, d1.data());
+    BOOST_CHECK(d1_);
 }
 
 BOOST_AUTO_TEST_CASE(duration_)
