@@ -11,9 +11,44 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     namespace detail
     {
+        template <char Separator, char ... Separators>
+        struct csv_list_separators
+        {
+            static inline void call(std::ostream &out)
+            {
+                csv_list_separators<Separator>::call(out);
+                csv_list_separators<Separators...>::call(out);
+            }
+        };
+
+        template <char Separator>
+        struct csv_list_separators<Separator>
+        {
+            static inline void call(std::ostream &out)
+            {
+                out << Separator;
+            }
+        };
+    }
+
+    template <char Separator=',', char ... Separators>
+    class csv_list: public string
+    {
+    public:
+        csv_list()=default;
+
+        template <typename Container>
+        explicit csv_list(const Container &container):
+            string(to_string(container)) {}
+
+        template <typename T>
+        explicit csv_list(const std::initializer_list<T> &container):
+            string(to_string(container)) {}
+
+    private:
         /// \todo verify container items
-        template <char Separator, typename Container>
-        std::string csv_list_string(const Container &container)
+        template <typename Container>
+        static std::string to_string(const Container &container)
         {
             std::ostringstream sout;
 
@@ -24,27 +59,15 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
                 if (first)
                     first = false;
                 else
-                    sout << Separator;
+                    detail::csv_list_separators<
+                        Separator,
+                        Separators...
+                    >::call(sout);
 
                 sout << obj;
             }
 
             return sout.str();
         }
-    }
-
-    template <char Separator=','>
-    class csv_list: public string
-    {
-    public:
-        csv_list()=default;
-
-        template <typename Container>
-        explicit csv_list(const Container &container):
-            string(detail::csv_list_string<Separator>(container)) {}
-
-        template <typename T>
-        explicit csv_list(const std::initializer_list<T> &container):
-            string(detail::csv_list_string<Separator>(container)) {}
     };
 }}}}

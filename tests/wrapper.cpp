@@ -102,6 +102,14 @@ BOOST_AUTO_TEST_CASE(csv_list_)
     BOOST_CHECK_EQUAL(csv_list<>({"hello", "world"}).data(), "hello,world");
     BOOST_CHECK_EQUAL(csv_list<>({"1", "2", "3"}).data(), "1,2,3");
     BOOST_CHECK_EQUAL(csv_list<':'>({"1", "2", "3"}).data(), "1:2:3");
+    {
+        typedef csv_list<';', ' '> csv_list_;
+        BOOST_CHECK_EQUAL(csv_list_({"1", "2", "3"}).data(), "1; 2; 3");
+    }
+    {
+        typedef csv_list<' ', '=', ' '> csv_list_;
+        BOOST_CHECK_EQUAL(csv_list_({"1", "2", "3"}).data(), "1 = 2 = 3");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(debugfunction_)
