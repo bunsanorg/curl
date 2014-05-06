@@ -4,6 +4,7 @@ from http.server import *
 import subprocess
 import sys
 import threading
+import time
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -21,6 +22,10 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/hello":
             self.wfile.write(b"Hello, world!")
+        elif self.path == "/sleep":
+            time.sleep(1)
+            self._ok_headers()
+            self.wfile.write(b'DONE')
         else:
             self._404()
 
