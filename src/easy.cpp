@@ -101,18 +101,34 @@ namespace bunsan{namespace curl
     {
         BOOST_ASSERT(*this);
 
-        const CURLcode ret = ::curl_easy_perform(m_curl);
-        if (ret)
-            BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_perform"));
+        std::error_code ec;
+        perform(ec);
+        if (ec)
+            BOOST_THROW_EXCEPTION(easy_error(ec, "curl_easy_perform"));
+    }
+
+    void easy::perform(std::error_code &ec)
+    {
+        BOOST_ASSERT(*this);
+
+        ec.assign(::curl_easy_perform(m_curl), easy_category());
     }
 
     void easy::pause(const int bitmask)
     {
         BOOST_ASSERT(*this);
 
-        const CURLcode ret = ::curl_easy_pause(m_curl, bitmask);
-        if (ret)
-            BOOST_THROW_EXCEPTION(easy_error(ret, "curl_easy_pause"));
+        std::error_code ec;
+        pause(bitmask, ec);
+        if (ec)
+            BOOST_THROW_EXCEPTION(easy_error(ec, "curl_easy_pause"));
+    }
+
+    void easy::pause(const int bitmask, std::error_code &ec)
+    {
+        BOOST_ASSERT(*this);
+
+        ec.assign(::curl_easy_pause(m_curl, bitmask), easy_category());
     }
 
     void easy::reset()

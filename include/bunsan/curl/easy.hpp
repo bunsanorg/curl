@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 
 #include <string>
+#include <system_error>
 #include <type_traits>
 
 namespace bunsan{namespace curl
@@ -48,7 +49,10 @@ namespace bunsan{namespace curl
         std::string unescape(const std::string &url);
 
         void perform();
+        void perform(std::error_code &ec);
+
         void pause(const int bitmask);
+        void pause(const int bitmask, std::error_code &ec);
 
         template <typename Option>
         void set(const Option &opt)

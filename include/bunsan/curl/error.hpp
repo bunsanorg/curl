@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bunsan/curl/error_category.hpp>
+#include <bunsan/curl/error_code.hpp>
 
 #include <bunsan/categorized_error.hpp>
 
@@ -39,3 +40,18 @@ namespace bunsan{namespace curl
         using basic_error::basic_error;
     };
 }}
+
+inline std::error_code make_error_code(const CURLcode e)
+{
+    return std::error_code(e, bunsan::curl::easy_category());
+}
+
+inline std::error_code make_error_code(const CURLMcode e)
+{
+    return std::error_code(e, bunsan::curl::multi_category());
+}
+
+inline std::error_code make_error_code(const CURLSHcode e)
+{
+    return std::error_code(e, bunsan::curl::share_category());
+}
