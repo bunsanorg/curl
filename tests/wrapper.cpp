@@ -23,6 +23,7 @@
 #include <bunsan/curl/options/wrapper/sockoptfunction.hpp>
 #include <bunsan/curl/options/wrapper/ssl_ctx_function.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
+#include <bunsan/curl/options/wrapper/string_list.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
 
@@ -403,6 +404,22 @@ BOOST_AUTO_TEST_CASE(string_)
     BOOST_CHECK_EQUAL(string("hello").data(), std::string("hello"));
     BOOST_CHECK_EQUAL(string("1 2 3").data(), std::string("1 2 3"));
     BOOST_CHECK_EQUAL(string("12345", 4).data(), std::string("1234"));
+}
+
+BOOST_AUTO_TEST_CASE(string_list_)
+{
+    const string_list list({"hello", "world"});
+
+    auto iter = list.data();
+    BOOST_REQUIRE(iter);
+    BOOST_CHECK_EQUAL(std::string(iter->data), "hello");
+
+    iter = iter->next;
+    BOOST_REQUIRE(iter);
+    BOOST_CHECK_EQUAL(std::string(iter->data), "world");
+
+    iter = iter->next;
+    BOOST_REQUIRE(!iter);
 }
 
 BOOST_AUTO_TEST_CASE(wrapped_option_default_)
