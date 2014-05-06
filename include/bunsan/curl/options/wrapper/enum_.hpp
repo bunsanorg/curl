@@ -10,13 +10,11 @@
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
-    template <typename Enum, Enum Default>
+    template <typename Enum>
     class enum_
     {
     public:
         typedef copy_policy::by_curl copy_policy;
-
-        enum_()=default;
 
         explicit enum_(const Enum data): m_data(data) {}
 
@@ -28,6 +26,15 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
 
     private:
-        Enum m_data = Default;
+        Enum m_data;
+    };
+
+    template <typename Enum, Enum Default>
+    class enum_optional: public enum_<Enum>
+    {
+    public:
+        using enum_<Enum>::enum_;
+
+        enum_optional(): enum_<Enum>(Default) {}
     };
 }}}}

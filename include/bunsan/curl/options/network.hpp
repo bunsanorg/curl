@@ -23,7 +23,7 @@ namespace bunsan{namespace curl{namespace options
     BUNSAN_CURL_OPTION_WRAPPED(redir_protocols_all, CURLOPT_REDIR_PROTOCOLS, enum_literal<proto, proto::all>)
     BUNSAN_CURL_OPTION_WRAPPED(proxy, CURLOPT_PROXY, string)
     BUNSAN_CURL_OPTION_WRAPPED(proxyport, CURLOPT_PROXYPORT, long_)
-    BUNSAN_CURL_OPTION_WRAPPED(proxytype, CURLOPT_PROXYTYPE, enum_<curl::proxy, curl::proxy::http>)
+    BUNSAN_CURL_OPTION_WRAPPED(proxytype, CURLOPT_PROXYTYPE, enum_<curl::proxy>)
     BUNSAN_CURL_OPTION_WRAPPED(noproxy, CURLOPT_NOPROXY, csv_list<>)
     BUNSAN_CURL_OPTION_WRAPPED(httpproxytunnel, CURLOPT_HTTPPROXYTUNNEL, bool_01)
     BUNSAN_CURL_OPTION_WRAPPED(socks5_gssapi_service, CURLOPT_SOCKS5_GSSAPI_SERVICE, string)

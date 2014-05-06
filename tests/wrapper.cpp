@@ -161,11 +161,15 @@ BOOST_AUTO_TEST_CASE(enum__)
         third,
         def
     };
-    typedef enum_<type, type::def> enum_type;
+    typedef enum_<type> enum_type;
+    typedef enum_optional<type, type::def> enum_optional_type;
     BOOST_CHECK_EQUAL(enum_type(type::first).data(), 0);
+    BOOST_CHECK_EQUAL(enum_optional_type(type::first).data(), 0);
     BOOST_CHECK_EQUAL(enum_type(type::second).data(), 1);
+    BOOST_CHECK_EQUAL(enum_optional_type(type::second).data(), 1);
     BOOST_CHECK_EQUAL(enum_type(type::third).data(), 2);
-    BOOST_CHECK_EQUAL(enum_type().data(), 3);
+    BOOST_CHECK_EQUAL(enum_optional_type(type::third).data(), 2);
+    BOOST_CHECK_EQUAL(enum_optional_type().data(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(fnmatch_function_)
