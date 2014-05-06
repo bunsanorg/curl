@@ -4,25 +4,27 @@
 
 #include <curl/curl.h>
 
-#include <boost/cast.hpp>
-
 #include <type_traits>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
-    class long_
+    template <typename T>
+    class integer
     {
     public:
         typedef copy_policy::by_curl copy_policy;
 
-        explicit long_(const long data): m_data(data) {}
+        explicit integer(const T data): m_data(data) {}
 
-        inline long data() const
+        inline T data() const
         {
             return m_data;
         }
 
     private:
-        long m_data;
+        T m_data;
     };
+
+    typedef integer<long> long_;
+    typedef integer<::curl_off_t> curl_off_t_;
 }}}}

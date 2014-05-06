@@ -11,10 +11,10 @@
 #include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/fnmatch_function.hpp>
 #include <bunsan/curl/options/wrapper/headerfunction.hpp>
+#include <bunsan/curl/options/wrapper/integer.hpp>
 #include <bunsan/curl/options/wrapper/interleavefunction.hpp>
 #include <bunsan/curl/options/wrapper/ioctlfunction.hpp>
 #include <bunsan/curl/options/wrapper/literal.hpp>
-#include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/opensocketfunction.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/progressfunction.hpp>
@@ -202,6 +202,12 @@ BOOST_AUTO_TEST_CASE(headerfunction_)
     BOOST_CHECK(h1_);
 }
 
+BOOST_AUTO_TEST_CASE(integer_)
+{
+    BOOST_CHECK_EQUAL(long_(10).data(), 10);
+    BOOST_CHECK_EQUAL(curl_off_t_(15).data(), 15);
+}
+
 BOOST_AUTO_TEST_CASE(interleavefunction_)
 {
     bool il1_ = false;
@@ -261,11 +267,6 @@ BOOST_AUTO_TEST_CASE(literal_)
         typedef string_literal<'h', 'e', 'l', 'l', 'o'> lit;
         BOOST_CHECK_EQUAL(std::string(lit().data()), "hello");
     }
-}
-
-BOOST_AUTO_TEST_CASE(long__)
-{
-    BOOST_CHECK_EQUAL(long_(10).data(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(opensocketfunction_)

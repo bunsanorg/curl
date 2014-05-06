@@ -5,8 +5,8 @@
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
 #include <bunsan/curl/options/wrapper/duration.hpp>
 #include <bunsan/curl/options/wrapper/enum_.hpp>
+#include <bunsan/curl/options/wrapper/integer.hpp>
 #include <bunsan/curl/options/wrapper/literal.hpp>
-#include <bunsan/curl/options/wrapper/long_.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
