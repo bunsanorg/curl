@@ -1,6 +1,7 @@
 bunsan_tests_project_header()
 
 bunsan_tests_project_add_test(easy easy.cpp)
+bunsan_tests_project_add_test(slist slist.cpp)
 bunsan_tests_project_add_test(wrapper wrapper.cpp)
 
 bunsan_find_python3()
