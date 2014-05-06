@@ -4,6 +4,7 @@
 
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <algorithm>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace detail
@@ -57,6 +58,27 @@ namespace bunsan{namespace curl{namespace detail
         string_list(const string_list &);
         string_list &operator=(const string_list &);
 
+        template <typename Iterator>
+        explicit string_list(Iterator begin, const Iterator end)
+        {
+            for (; begin != end; ++begin)
+                append(*begin);
+        }
+
+        template <typename Arg, typename ... Args>
+        void assign(Arg &&arg, Args &&...args)
+        {
+            string_list(
+                std::forward<Arg>(arg),
+                std::forward<Args>(args)...
+            ).swap(*this);
+        }
+
+        void clear()
+        {
+            m_data.reset();
+        }
+
         inline void swap(string_list &list) noexcept
         {
             m_data.swap(list.m_data);
@@ -73,6 +95,19 @@ namespace bunsan{namespace curl{namespace detail
         inline const_iterator cbegin() const { return begin(); }
         inline const_iterator cend() const { return end(); }
 
+        inline bool empty() const { return !m_data; }
+        inline std::size_t size() const { return std::distance(begin(), end()); }
+
+        inline ::curl_slist *slist()
+        {
+            return m_data.get();
+        }
+
+        inline const ::curl_slist *slist() const
+        {
+            return m_data.get();
+        }
+
     private:
         slist_ptr m_data;
     };
@@ -81,6 +116,8 @@ namespace bunsan{namespace curl{namespace detail
     {
         a.swap(b);
     }
+
+    bool operator==(const string_list &a, const string_list &b);
 
     inline string_list::const_iterator begin(const string_list &list)
     {

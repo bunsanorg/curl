@@ -34,6 +34,32 @@ BOOST_AUTO_TEST_CASE(string_list)
         "of",
         "strings"
     };
+    constexpr std::size_t objs_size = sizeof(objs) / sizeof(objs[0]);
+    const auto check =
+        [&](const bunsan::curl::detail::string_list &list)
+        {
+            BOOST_CHECK_EQUAL(list.size(), 4);
+
+            auto iter = list.begin();
+            BOOST_REQUIRE(iter != list.end());
+            BOOST_CHECK_EQUAL(std::string(*iter), "hello");
+
+            ++iter;
+            BOOST_REQUIRE(iter != list.end());
+            BOOST_CHECK_EQUAL(std::string(*iter), "world");
+
+            ++iter;
+            BOOST_REQUIRE(iter != list.end());
+            BOOST_CHECK_EQUAL(std::string(*iter), "of");
+
+            ++iter;
+            BOOST_REQUIRE(iter != list.end());
+            BOOST_CHECK_EQUAL(std::string(*iter), "strings");
+
+            ++iter;
+            BOOST_REQUIRE(iter == list.end());
+        };
+
     bunsan::curl::detail::string_list list;
     for (const char *const obj: objs)
         list.append(obj);
@@ -47,48 +73,30 @@ BOOST_AUTO_TEST_CASE(string_list)
         }
     }
 
-    {
-        auto iter = list.begin();
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "hello");
-
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "world");
-
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "of");
-
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "strings");
-
-        ++iter;
-        BOOST_REQUIRE(iter == list.end());
-    }
+    check(list);
 
     bunsan::curl::detail::string_list list2 = list;
-    {
-        auto iter = list2.begin();
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "hello");
+    check(list2);
 
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "world");
+    BOOST_CHECK_NE(list.slist(), list2.slist());
 
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "of");
+    const auto ptr = list.slist();
+    bunsan::curl::detail::string_list list3 = std::move(list);
+    check(list3);
+    BOOST_CHECK_EQUAL(list3.slist(), ptr);
+    BOOST_CHECK(list.empty());
 
-        ++iter;
-        BOOST_REQUIRE(iter != list.end());
-        BOOST_CHECK_EQUAL(std::string(*iter), "strings");
+    list.assign(objs, objs + objs_size);
+    check(list);
 
-        ++iter;
-        BOOST_REQUIRE(iter == list.end());
-    }
+    BOOST_CHECK(list == list3);
+    BOOST_CHECK(list == list2);
+
+    list.clear();
+    BOOST_CHECK(list.empty());
+    list2.clear();
+    BOOST_CHECK(list2.empty());
+    BOOST_CHECK(list == list2);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // slist
