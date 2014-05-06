@@ -20,6 +20,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/detail/curl_delete.cpp
     src/detail/slist.cpp
+    src/detail/string_list.cpp
 )
 
 bunsan_install_headers()
