@@ -27,9 +27,16 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/hello":
             self.wfile.write(b"Hello, world!")
         elif self.path == "/sleep":
-            time.sleep(1)
-            self._ok_headers()
-            self.wfile.write(b'DONE')
+            try:
+                time.sleep(1)
+                self._ok_headers()
+                self.wfile.write(b'DONE')
+            except BrokenPipeError:
+                self.log_message('"{} {} {}" broken pipe'.format(
+                    self.command,
+                    self.path,
+                    self.request_version
+                ))
         elif self.path == "/big":
             self._ok_headers(
                 ('Content-Length', str(len(self.big)))
