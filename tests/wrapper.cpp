@@ -23,10 +23,13 @@
 #include <bunsan/curl/options/wrapper/seekfunction.hpp>
 #include <bunsan/curl/options/wrapper/sockoptfunction.hpp>
 #include <bunsan/curl/options/wrapper/ssl_ctx_function.hpp>
+#include <bunsan/curl/options/wrapper/stream_enum.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/string_list.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
+
+#include <bunsan/stream_enum.hpp>
 
 #include <boost/mpl/list.hpp>
 
@@ -412,6 +415,27 @@ BOOST_AUTO_TEST_CASE(ssl_ctx_function_)
     char ptr[] = "ptr";
     BOOST_CHECK_EQUAL(sc1.callback()(easy.handle(), ptr, sc1.data()), CURLE_AGAIN);
     BOOST_CHECK(sc1_);
+}
+
+BUNSAN_STREAM_ENUM_CLASS(my_stream_enum,
+(
+    first,
+    second,
+    third
+))
+
+BOOST_AUTO_TEST_CASE(stream_enum_)
+{
+    typedef stream_enum<my_stream_enum> se;
+    typedef stream_enum_optional<my_stream_enum, my_stream_enum::second> seo;
+
+    BOOST_CHECK_EQUAL(se(my_stream_enum::first).data(), "first");
+    BOOST_CHECK_EQUAL(seo(my_stream_enum::first).data(), "first");
+    BOOST_CHECK_EQUAL(se(my_stream_enum::second).data(), "second");
+    BOOST_CHECK_EQUAL(seo(my_stream_enum::second).data(), "second");
+    BOOST_CHECK_EQUAL(se(my_stream_enum::third).data(), "third");
+    BOOST_CHECK_EQUAL(seo(my_stream_enum::third).data(), "third");
+    BOOST_CHECK_EQUAL(seo().data(), "second");
 }
 
 BOOST_AUTO_TEST_CASE(string_)
