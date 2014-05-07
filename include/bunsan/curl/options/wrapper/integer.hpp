@@ -27,4 +27,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
     typedef integer<long> long_;
     typedef integer<::curl_off_t> curl_off_t_;
+    typedef integer<time_t> time_t_;
 }}}}

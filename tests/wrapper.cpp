@@ -211,6 +211,7 @@ BOOST_AUTO_TEST_CASE(integer_)
 {
     BOOST_CHECK_EQUAL(long_(10).data(), 10);
     BOOST_CHECK_EQUAL(curl_off_t_(15).data(), 15);
+    BOOST_CHECK_EQUAL(time_t_(20).data(), 20);
 }
 
 BOOST_AUTO_TEST_CASE(interleavefunction_)

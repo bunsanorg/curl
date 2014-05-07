@@ -9,8 +9,10 @@ import time
 
 class Handler(BaseHTTPRequestHandler):
 
-    def _ok_headers(self):
+    def _ok_headers(self, *headers):
         self.send_response(200)
+        for header in headers:
+            self.send_header(*header)
         self.end_headers()
 
     def _error(self, *args, **kwargs):
@@ -19,6 +21,8 @@ class Handler(BaseHTTPRequestHandler):
     def _404(self):
         self._error(404)
 
+    big = b'big data stub\n' * 10**6
+
     def do_GET(self):
         if self.path == "/hello":
             self.wfile.write(b"Hello, world!")
@@ -26,6 +30,11 @@ class Handler(BaseHTTPRequestHandler):
             time.sleep(1)
             self._ok_headers()
             self.wfile.write(b'DONE')
+        elif self.path == "/big":
+            self._ok_headers(
+                ('Content-Length', str(len(self.big)))
+            )
+            self.wfile.write(self.big)
         else:
             self._404()
 

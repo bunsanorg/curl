@@ -6,6 +6,7 @@
 #include <bunsan/curl/options/callback.hpp>
 #include <bunsan/curl/options/connection.hpp>
 #include <bunsan/curl/options/network.hpp>
+#include <bunsan/curl/options/protocol.hpp>
 
 #include </usr/include/boost/algorithm/string/predicate.hpp>
 #include </usr/include/boost/algorithm/string/trim.hpp>
@@ -43,6 +44,16 @@ BOOST_AUTO_TEST_CASE(timeout)
     std::error_code ec;
     easy.perform(ec);
     BOOST_CHECK_EQUAL(ec, CURLE_OPERATION_TIMEDOUT);
+}
+
+BOOST_AUTO_TEST_CASE(maxfilesize)
+{
+    easy.set(bunsan::curl::options::url(url_root + "/big"));
+    easy.set(bunsan::curl::options::maxfilesize(1024 * 1024));
+
+    std::error_code ec;
+    easy.perform(ec);
+    BOOST_CHECK_EQUAL(ec, CURLE_FILESIZE_EXCEEDED);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // easy_options
