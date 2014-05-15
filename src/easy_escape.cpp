@@ -15,7 +15,9 @@ namespace bunsan{namespace curl
         }
         else
         {
-            const detail::unique_ptr<char> ptr(::curl_easy_escape(m_curl, url.data(), url.size()));
+            const detail::unique_ptr<char> ptr(
+                ::curl_easy_escape(m_curl, url.data(), url.size())
+            );
             if (!ptr)
                 BOOST_THROW_EXCEPTION(easy_error() <<
                                       easy_error::what_message("curl_easy_escape"));
@@ -32,7 +34,9 @@ namespace bunsan{namespace curl
         else
         {
             int size;
-            const detail::unique_ptr<char> ptr(::curl_easy_unescape(m_curl, url.data(), url.size(), &size));
+            const detail::unique_ptr<char> ptr(
+                ::curl_easy_unescape(m_curl, url.data(), url.size(), &size)
+            );
             if (!ptr)
                 BOOST_THROW_EXCEPTION(easy_error() <<
                                       easy_error::what_message("curl_easy_unescape"));
