@@ -6,11 +6,13 @@
 #include <bunsan/curl/options/wrapper/bool.hpp>
 #include <bunsan/curl/options/wrapper/bytes.hpp>
 #include <bunsan/curl/options/wrapper/csv_list.hpp>
+#include <bunsan/curl/options/wrapper/enum_.hpp>
 #include <bunsan/curl/options/wrapper/integer.hpp>
 #include <bunsan/curl/options/wrapper/literal.hpp>
 #include <bunsan/curl/options/wrapper/path.hpp>
 #include <bunsan/curl/options/wrapper/stream_enum.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
+#include <bunsan/curl/options/wrapper/string_list.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_bytes.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option.hpp>
 #include <bunsan/curl/redir_post.hpp>
