@@ -26,9 +26,11 @@
 #include <bunsan/curl/options/wrapper/stream_enum.hpp>
 #include <bunsan/curl/options/wrapper/string.hpp>
 #include <bunsan/curl/options/wrapper/string_list.hpp>
+#include <bunsan/curl/options/wrapper/wrapped_option.hpp>
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
 
+#include <bunsan/range/construct_from_range.hpp>
 #include <bunsan/stream_enum.hpp>
 
 #include <boost/mpl/list.hpp>
@@ -462,9 +464,26 @@ BOOST_AUTO_TEST_CASE(string_list_)
     BOOST_REQUIRE(!iter);
 }
 
+BOOST_AUTO_TEST_CASE(wrapped_option_)
+{
+    struct stub_wrapper
+    {
+        struct copy_policy;
+    };
+    using stub_option = const wrapped_option<
+        CURLOPT_URL,
+        stub_wrapper
+    >;
+    using id_list = std::vector<CURLoption>;
+    const id_list expected_ids = { CURLOPT_URL };
+    using bunsan::range::construct_from_range;
+    BOOST_CHECK_EQUAL(stub_option().id(), CURLOPT_URL);
+    BOOST_CHECK(construct_from_range<id_list>(stub_option().ids()) == expected_ids);
+}
+
 BOOST_AUTO_TEST_CASE(wrapped_option_default_)
 {
-    typedef wrapped_option_default<seconds, 15> def;
+    using def = const wrapped_option_default<seconds, 15>;
     BOOST_CHECK_EQUAL(def(std::chrono::seconds(10)).data(), 10);
     BOOST_CHECK_EQUAL(def(std::chrono::minutes(1)).data(), 60);
     BOOST_CHECK_EQUAL(def().data(), 15);

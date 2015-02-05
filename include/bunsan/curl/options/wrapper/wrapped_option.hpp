@@ -20,7 +20,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         constexpr CURLoption id() const { return Id; }
 
-        curl::detail::one_step_range<const CURLoption> ids()
+        curl::detail::one_step_range<const CURLoption> ids() const
         {
             return curl::detail::make_one_step_range<const CURLoption>(id());
         }
