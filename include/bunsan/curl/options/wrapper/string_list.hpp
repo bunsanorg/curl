@@ -26,7 +26,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         inline const ::curl_slist *data() const
         {
-            return m_data.slist();
+            return m_data.data();
         }
 
     private:

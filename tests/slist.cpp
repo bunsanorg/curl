@@ -78,12 +78,12 @@ BOOST_AUTO_TEST_CASE(string_list)
     bunsan::curl::detail::string_list list2 = list;
     check(list2);
 
-    BOOST_CHECK_NE(list.slist(), list2.slist());
+    BOOST_CHECK_NE(list.data(), list2.data());
 
-    const auto ptr = list.slist();
+    const auto ptr = list.data();
     bunsan::curl::detail::string_list list3 = std::move(list);
     check(list3);
-    BOOST_CHECK_EQUAL(list3.slist(), ptr);
+    BOOST_CHECK_EQUAL(list3.data(), ptr);
     BOOST_CHECK(list.empty());
 
     list.assign(objs, objs + objs_size);

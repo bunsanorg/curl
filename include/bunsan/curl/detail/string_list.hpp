@@ -98,12 +98,12 @@ namespace bunsan{namespace curl{namespace detail
         inline bool empty() const { return !m_data; }
         inline std::size_t size() const { return std::distance(begin(), end()); }
 
-        inline ::curl_slist *slist()
+        inline ::curl_slist *data()
         {
             return m_data.get();
         }
 
-        inline const ::curl_slist *slist() const
+        inline const ::curl_slist *data() const
         {
             return m_data.get();
         }
