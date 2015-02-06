@@ -42,6 +42,9 @@ class Handler(BaseHTTPRequestHandler):
                 ('Content-Length', str(len(self.big)))
             )
             self.wfile.write(self.big)
+        elif self.path == "/header":
+            self._ok_headers()
+            self.wfile.write(self.headers['X-cURL-Test'].encode('ascii'))
         else:
             self._404()
 

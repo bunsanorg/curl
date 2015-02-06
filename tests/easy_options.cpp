@@ -67,4 +67,13 @@ BOOST_AUTO_TEST_CASE(postfields)
     BOOST_CHECK_EQUAL(data, "Hello, world!");
 }
 
+BOOST_AUTO_TEST_CASE(httpheader)
+{
+    easy.set(bunsan::curl::options::url(url_root + "/header"));
+    easy.set(bunsan::curl::options::httpheader({"X-cURL-Test: header data"}));
+    easy.set(bunsan::curl::options::writefunction(data_writer));
+    easy.perform();
+    BOOST_CHECK_EQUAL(data, "header data");
+}
+
 BOOST_AUTO_TEST_SUITE_END() // easy_options
