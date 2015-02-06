@@ -5,6 +5,8 @@
 
 #include <curl/curl.h>
 
+#include <initializer_list>
+
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     class string_list
