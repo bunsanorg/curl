@@ -2,9 +2,9 @@
 
 #include <bunsan/curl/options/traits.hpp>
 
-#include <bunsan/optional.hpp>
-
 #include <curl/curl.h>
+
+#include <boost/optional.hpp>
 
 #include <string>
 
@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     public:
         typedef copy_policy::by_curl copy_policy;
 
-        string(none_t): m_data(none) {}
+        string(boost::none_t): m_data(boost::none) {}
 
         template <typename Arg, typename ... Args>
         string(Arg &&arg, Args &&...args):
@@ -33,6 +33,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
 
     private:
-        optional<std::string> m_data;
+        boost::optional<std::string> m_data;
     };
 }}}}
