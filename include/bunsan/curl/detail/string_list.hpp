@@ -94,7 +94,7 @@ namespace bunsan{namespace curl{namespace detail
             slist::append(m_data, std::forward<T>(arg));
         }
 
-        inline const_iterator begin() const { return const_iterator(m_data.get()); }
+        inline const_iterator begin() const { return const_iterator(data()); }
         inline const_iterator end() const { return const_iterator(); }
         inline const_iterator cbegin() const { return begin(); }
         inline const_iterator cend() const { return end(); }
