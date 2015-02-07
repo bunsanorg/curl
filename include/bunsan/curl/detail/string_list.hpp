@@ -11,7 +11,11 @@ namespace bunsan{namespace curl{namespace detail
 {
     class string_list_iterator:
         public boost::iterator_facade<
-            string_list_iterator, const char * const, boost::forward_traversal_tag>
+            string_list_iterator,
+            const char * const,
+            boost::forward_traversal_tag,
+            const char * const
+        >
     {
     public:
         /// End iterator
