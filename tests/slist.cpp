@@ -2,6 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <bunsan/curl/detail/slist.hpp>
+#include <bunsan/curl/detail/slist_iterator.hpp>
 #include <bunsan/curl/detail/string_list.hpp>
 
 BOOST_AUTO_TEST_SUITE(slist)
@@ -24,6 +25,29 @@ BOOST_AUTO_TEST_CASE(raw)
         iter = iter->next;
         BOOST_REQUIRE(!iter);
     }
+}
+
+BOOST_AUTO_TEST_CASE(iterator)
+{
+    const char *objs[] = {
+        "hello",
+        "world",
+        "of",
+        "strings"
+    };
+    constexpr std::size_t objs_size = sizeof(objs) / sizeof(objs[0]);
+    bunsan::curl::detail::slist_ptr list;
+    for (const char *const str: objs)
+        bunsan::curl::detail::slist::append(list, str);
+
+    auto iter = objs;
+    const auto range = bunsan::curl::detail::make_slist_range(list);
+    for (const char *const str: range)
+    {
+        BOOST_CHECK_EQUAL(str, *iter);
+        ++iter;
+    }
+    BOOST_CHECK(iter == objs + objs_size);
 }
 
 BOOST_AUTO_TEST_CASE(string_list)

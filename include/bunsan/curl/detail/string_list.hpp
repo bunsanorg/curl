@@ -1,57 +1,19 @@
 #pragma once
 
 #include <bunsan/curl/detail/slist.hpp>
-
-#include <boost/iterator/iterator_facade.hpp>
+#include <bunsan/curl/detail/slist_iterator.hpp>
 
 #include <algorithm>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace detail
 {
-    class string_list_iterator:
-        public boost::iterator_facade<
-            string_list_iterator,
-            const char * const,
-            boost::forward_traversal_tag,
-            const char * const
-        >
-    {
-    public:
-        /// End iterator
-        string_list_iterator()=default;
-
-        string_list_iterator(const string_list_iterator &)=default;
-        string_list_iterator &operator=(const string_list_iterator &)=default;
-
-        explicit string_list_iterator(const ::curl_slist *const arg):
-            m_value(arg) {}
-
-    private:
-        friend class boost::iterator_core_access;
-
-        void increment()
-        {
-            m_value = m_value->next;
-        }
-
-        bool equal(const string_list_iterator &other) const
-        {
-            return m_value == other.m_value;
-        }
-
-        value_type dereference() const { return m_value->data; }
-
-    private:
-        const ::curl_slist *m_value = nullptr;
-    };
-
     class string_list
     {
     public:
         typedef const char *value_type;
-        typedef string_list_iterator iterator;
-        typedef string_list_iterator const_iterator;
+        typedef slist_iterator iterator;
+        typedef slist_iterator const_iterator;
 
     public:
         string_list()=default;
