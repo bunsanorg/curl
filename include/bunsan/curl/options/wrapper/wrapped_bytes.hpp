@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 
 #include <boost/range/iterator_range.hpp>
+#include <boost/scope_exit.hpp>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
