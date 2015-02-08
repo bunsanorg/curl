@@ -7,6 +7,15 @@
 
 BOOST_AUTO_TEST_SUITE(slist)
 
+const char *objs[] = {
+    "hello",
+    "world",
+    "of",
+    "strings"
+};
+constexpr std::size_t objs_size = sizeof(objs) / sizeof(objs[0]);
+const auto objs_end = objs + objs_size;
+
 BOOST_AUTO_TEST_CASE(raw)
 {
     bunsan::curl::detail::slist_ptr list;
@@ -29,13 +38,6 @@ BOOST_AUTO_TEST_CASE(raw)
 
 BOOST_AUTO_TEST_CASE(iterator)
 {
-    const char *objs[] = {
-        "hello",
-        "world",
-        "of",
-        "strings"
-    };
-    constexpr std::size_t objs_size = sizeof(objs) / sizeof(objs[0]);
     bunsan::curl::detail::slist_ptr list;
     for (const char *const str: objs)
         bunsan::curl::detail::slist::append(list, str);
@@ -47,7 +49,7 @@ BOOST_AUTO_TEST_CASE(iterator)
         BOOST_CHECK_EQUAL(str, *iter);
         ++iter;
     }
-    BOOST_CHECK(iter == objs + objs_size);
+    BOOST_CHECK(iter == objs_end);
 
     iter = objs;
     const auto srange = bunsan::curl::detail::make_slist_string_range(list);
@@ -56,18 +58,11 @@ BOOST_AUTO_TEST_CASE(iterator)
         BOOST_CHECK_EQUAL(str, *iter);
         ++iter;
     }
-    BOOST_CHECK(iter == objs + objs_size);
+    BOOST_CHECK(iter == objs_end);
 }
 
 BOOST_AUTO_TEST_CASE(string_list)
 {
-    const char *objs[] = {
-        "hello",
-        "world",
-        "of",
-        "strings"
-    };
-    constexpr std::size_t objs_size = sizeof(objs) / sizeof(objs[0]);
     const auto check =
         [&](const bunsan::curl::detail::string_list &list)
         {
@@ -119,7 +114,7 @@ BOOST_AUTO_TEST_CASE(string_list)
     BOOST_CHECK_EQUAL(list3.data(), ptr);
     BOOST_CHECK(list.empty());
 
-    list.assign(objs, objs + objs_size);
+    list.assign(objs, objs_end);
     check(list);
 
     BOOST_CHECK(list == list3);
