@@ -25,6 +25,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/hello":
+            self._ok_headers()
             self.wfile.write(b"Hello, world!")
         elif self.path == "/sleep":
             try:
