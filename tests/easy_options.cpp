@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE easy_options
 #include <boost/test/unit_test.hpp>
 
+#include "easy_fixture.hpp"
+
 #include <bunsan/curl/easy.hpp>
 #include <bunsan/curl/options/behavior.hpp>
 #include <bunsan/curl/options/callback.hpp>
@@ -13,20 +15,6 @@
 #include <boost/algorithm/string/trim.hpp>
 
 #include <cstring>
-
-struct easy_fixture
-{
-    bunsan::curl::easy easy;
-    const std::string url_root = "http://localhost:8090";
-    std::string data;
-
-    std::function<std::size_t (char *, std::size_t)> data_writer =
-        [this](char *const ptr, const std::size_t size)
-        {
-            data.append(ptr, size);
-            return size;
-        };
-};
 
 BOOST_FIXTURE_TEST_SUITE(easy_options, easy_fixture)
 
