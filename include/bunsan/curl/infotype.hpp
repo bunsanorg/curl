@@ -6,7 +6,7 @@
 
 namespace bunsan{namespace curl
 {
-    BUNSAN_TYPED_STREAM_ENUM_CLASS_INITIALIZED(info, long,
+    BUNSAN_TYPED_STREAM_ENUM_CLASS_INITIALIZED(infotype, long,
     (
         (text, CURLINFO_TEXT),
         (header_in, CURLINFO_HEADER_IN),
@@ -17,7 +17,7 @@ namespace bunsan{namespace curl
         (ssl_data_out, CURLINFO_SSL_DATA_OUT)
     ))
     static_assert(
-        static_cast<long>(info::ssl_data_out) + 1 == CURLINFO_END,
+        static_cast<long>(infotype::ssl_data_out) + 1 == CURLINFO_END,
         "outdated"
     );
 }}

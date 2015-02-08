@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bunsan/curl/easy.hpp>
-#include <bunsan/curl/info.hpp>
+#include <bunsan/curl/infotype.hpp>
 #include <bunsan/curl/options/traits.hpp>
 #include <bunsan/curl/options/wrapper/basic_function.hpp>
 
@@ -17,7 +17,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         typedef basic_function<debugfunction_traits> wrapper;
 
         typedef std::function<
-            void (curl::easy &, curl::info, char *, size_t)
+            void (curl::easy &, curl::infotype, char *, size_t)
         > function_type;
 
         static inline int static_call(
@@ -30,7 +30,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
             const auto this_ = static_cast<const wrapper *>(userdata);
             this_->call(
                 curl::easy::get(handle),
-                static_cast<curl::info>(info),
+                static_cast<curl::infotype>(info),
                 ptr,
                 size
             );

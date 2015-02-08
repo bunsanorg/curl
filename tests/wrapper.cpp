@@ -152,12 +152,12 @@ BOOST_AUTO_TEST_CASE(debugfunction_)
     bool d1_ = false;
     const debugfunction d1(
         [&](bunsan::curl::easy &handle,
-            bunsan::curl::info info_type,
+            bunsan::curl::infotype info_type,
             char *ptr,
             size_t size)
         {
             BOOST_CHECK_EQUAL(&handle, &easy);
-            BOOST_CHECK_EQUAL(info_type, bunsan::curl::info::data_out);
+            BOOST_CHECK_EQUAL(info_type, bunsan::curl::infotype::data_out);
             BOOST_CHECK_EQUAL(std::string(ptr), "ptr");
             BOOST_CHECK_EQUAL(size, 15);
             d1_ = true;
