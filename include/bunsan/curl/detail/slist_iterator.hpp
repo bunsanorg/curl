@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 #include <boost/range/iterator_range.hpp>
 
 namespace bunsan{namespace curl{namespace detail
@@ -59,5 +60,55 @@ namespace bunsan{namespace curl{namespace detail
     inline slist_range make_slist_range(const slist_ptr &list)
     {
         return make_slist_range(list.get());
+    }
+
+    inline std::string cchar_to_string(const char *const str)
+    {
+        return std::string(str);
+    }
+
+    using slist_string_iterator = boost::transform_iterator<
+        std::function<std::string (const char *)>,
+        slist_iterator
+    >;
+
+    inline slist_string_iterator make_slist_string_iterator(
+        const ::curl_slist *const list)
+    {
+        return boost::make_transform_iterator(
+            slist_iterator(list),
+            &cchar_to_string
+        );
+    }
+
+    inline slist_string_iterator make_slist_string_iterator()
+    {
+        return boost::make_transform_iterator(
+            slist_iterator(),
+            &cchar_to_string
+        );
+    }
+
+    inline slist_string_iterator make_slist_string_iterator(
+        const slist_ptr &list)
+    {
+        return make_slist_string_iterator(list.get());
+    }
+
+    using slist_string_range = boost::iterator_range<slist_string_iterator>;
+
+
+    inline slist_string_range make_slist_string_range(
+        const ::curl_slist *const list)
+    {
+        return boost::make_iterator_range(
+            make_slist_string_iterator(list),
+            make_slist_string_iterator()
+        );
+    }
+
+    inline slist_string_range make_slist_string_range(const slist_ptr &list)
+    {
+        return make_slist_string_range(list.get());
     }
 }}}

@@ -48,6 +48,15 @@ BOOST_AUTO_TEST_CASE(iterator)
         ++iter;
     }
     BOOST_CHECK(iter == objs + objs_size);
+
+    iter = objs;
+    const auto srange = bunsan::curl::detail::make_slist_string_range(list);
+    for (const std::string &str: srange)
+    {
+        BOOST_CHECK_EQUAL(str, *iter);
+        ++iter;
+    }
+    BOOST_CHECK(iter == objs + objs_size);
 }
 
 BOOST_AUTO_TEST_CASE(string_list)
