@@ -16,6 +16,7 @@ macro(bunsan_curl_server_test target)
     )
 endmacro()
 
+bunsan_curl_server_test(easy_info)
 bunsan_curl_server_test(easy_options)
 
 bunsan_tests_project_footer()

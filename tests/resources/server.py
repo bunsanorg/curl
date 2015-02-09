@@ -46,6 +46,11 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/header":
             self._ok_headers()
             self.wfile.write(self.headers['X-cURL-Test'].encode('ascii'))
+        elif self.path == "/response":
+            response_code = int(self.headers['X-cURL-Response-Code'])
+            response_message = self.headers.get('X-cURL-Response-Message')
+            self.send_response(response_code, response_message)
+            self.end_headers()
         else:
             self._404()
 
