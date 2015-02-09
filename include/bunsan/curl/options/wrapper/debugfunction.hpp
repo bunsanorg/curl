@@ -17,14 +17,14 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         typedef basic_function<debugfunction_traits> wrapper;
 
         typedef std::function<
-            void (curl::easy &, curl::infotype, char *, size_t)
+            void (curl::easy &, curl::infotype, char *, std::size_t)
         > function_type;
 
         static inline int static_call(
             CURL *handle,
             curl_infotype info,
             char *ptr,
-            size_t size,
+            std::size_t size,
             void *userdata)
         {
             const auto this_ = static_cast<const wrapper *>(userdata);
