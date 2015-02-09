@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_bytes: public Wrapper
     {
     public:
-        typedef typename Wrapper::copy_policy copy_policy;
+        using copy_policy = typename Wrapper::copy_policy;
 
         using Wrapper::Wrapper;
 
@@ -50,5 +50,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 }}}}
 
 #define BUNSAN_CURL_BYTES_WRAPPED(NAME, DATA, SIZE, ...) \
-    typedef ::bunsan::curl::options::wrapper::wrapped_bytes< \
-        DATA, SIZE, ::bunsan::curl::options::wrapper::__VA_ARGS__> NAME;
+    using NAME = ::bunsan::curl::options::wrapper::wrapped_bytes< \
+        DATA, SIZE, ::bunsan::curl::options::wrapper::__VA_ARGS__>;

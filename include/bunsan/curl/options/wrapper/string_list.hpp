@@ -12,7 +12,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class string_list
     {
     public:
-        typedef copy_policy::by_wrapper copy_policy;
+        using copy_policy = copy_policy::by_wrapper;
 
         string_list()=default;
 

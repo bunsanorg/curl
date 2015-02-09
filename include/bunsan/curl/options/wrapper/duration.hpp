@@ -17,9 +17,9 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class duration<std::chrono::duration<Rep, Period>>
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
-        typedef std::chrono::duration<Rep, Period> duration_type;
+        using duration_type = std::chrono::duration<Rep, Period>;
 
         template <typename Rep_, typename Period_>
         explicit duration(const std::chrono::duration<Rep_, Period_> &duration):
@@ -36,6 +36,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         duration_type m_data;
     };
 
-    typedef duration<std::chrono::seconds> seconds;
-    typedef duration<std::chrono::milliseconds> milliseconds;
+    using seconds = duration<std::chrono::seconds>;
+    using milliseconds = duration<std::chrono::milliseconds>;
 }}}}

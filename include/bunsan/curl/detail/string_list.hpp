@@ -11,9 +11,9 @@ namespace bunsan{namespace curl{namespace detail
     class string_list
     {
     public:
-        typedef const char *value_type;
-        typedef slist_iterator iterator;
-        typedef slist_iterator const_iterator;
+        using value_type = const char *;
+        using iterator = slist_iterator;
+        using const_iterator = slist_iterator;
 
     public:
         string_list()=default;

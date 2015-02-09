@@ -12,7 +12,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_option_default
     {
     public:
-        typedef typename Wrapper::copy_policy copy_policy;
+        using copy_policy = typename Wrapper::copy_policy;
 
     public:
         wrapped_option_default()=default;
@@ -35,8 +35,8 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 }}}}
 
 #define BUNSAN_CURL_OPTION_DEFAULT_WRAPPED(NAME, CODE, ...) \
-    typedef ::bunsan::curl::options::wrapper::wrapped_option< \
+    using NAME = ::bunsan::curl::options::wrapper::wrapped_option< \
         CODE, ::bunsan::curl::options::wrapper::wrapped_option_default< \
             ::bunsan::curl::options::wrapper::__VA_ARGS__ \
         > \
-    > NAME;
+    >;

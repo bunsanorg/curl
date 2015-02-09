@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace detail
             void operator()(void *const ptr) const;
         };
 
-        typedef std::unique_ptr<struct ::curl_slist, deleter> ptr;
+        using ptr = std::unique_ptr<struct ::curl_slist, deleter>;
 
         void append(ptr &list, const char *const data);
 
@@ -25,5 +25,5 @@ namespace bunsan{namespace curl{namespace detail
         }
     }
 
-    typedef slist::ptr slist_ptr;
+    using slist_ptr = slist::ptr;
 }}}

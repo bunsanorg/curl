@@ -14,11 +14,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct debugfunction_traits
     {
-        typedef basic_function<debugfunction_traits> wrapper;
+        using wrapper = basic_function<debugfunction_traits>;
 
-        typedef std::function<
+        using function_type = std::function<
             void (curl::easy &, curl::infotype, char *, std::size_t)
-        > function_type;
+        >;
 
         static inline int static_call(
             CURL *handle,
@@ -38,5 +38,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    typedef debugfunction_traits::wrapper debugfunction;
+    using debugfunction = debugfunction_traits::wrapper;
 }}}}

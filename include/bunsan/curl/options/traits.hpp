@@ -11,6 +11,6 @@ namespace bunsan{namespace curl{namespace options
     template <typename Option>
     struct option_traits
     {
-        typedef typename Option::copy_policy copy_policy;
+        using copy_policy = typename Option::copy_policy;
     };
 }}}

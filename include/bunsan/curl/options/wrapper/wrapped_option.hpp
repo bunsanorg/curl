@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_option: private Wrapper
     {
     public:
-        typedef typename Wrapper::copy_policy copy_policy;
+        using copy_policy = typename Wrapper::copy_policy;
 
         using Wrapper::Wrapper;
 
@@ -33,5 +33,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 }}}}
 
 #define BUNSAN_CURL_OPTION_WRAPPED(NAME, CODE, ...) \
-    typedef ::bunsan::curl::options::wrapper::wrapped_option< \
-        CODE, ::bunsan::curl::options::wrapper::__VA_ARGS__> NAME;
+    using NAME = ::bunsan::curl::options::wrapper::wrapped_option< \
+        CODE, ::bunsan::curl::options::wrapper::__VA_ARGS__>;

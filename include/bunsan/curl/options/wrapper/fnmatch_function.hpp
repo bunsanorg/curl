@@ -13,11 +13,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct fnmatch_function_traits
     {
-        typedef basic_function<fnmatch_function_traits> wrapper;
+        using wrapper = basic_function<fnmatch_function_traits>;
 
-        typedef std::function<
+        using function_type = std::function<
             curl::fnmatch (const char *pattern, const char *string)
-        > function_type;
+        >;
 
         static inline int static_call(
             void *ptr, const char *pattern, const char *string)
@@ -27,5 +27,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    typedef fnmatch_function_traits::wrapper fnmatch_function;
+    using fnmatch_function = fnmatch_function_traits::wrapper;
 }}}}

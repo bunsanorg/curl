@@ -44,7 +44,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class bitmask
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
     public:
         template <typename ... Args>

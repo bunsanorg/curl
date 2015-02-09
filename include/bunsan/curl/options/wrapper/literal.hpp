@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         class literal
         {
         public:
-            typedef CopyPolicy copy_policy;
+            using copy_policy = CopyPolicy;
 
             literal()=default;
 
@@ -42,7 +42,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class string_literal
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
         string_literal()=default;
 

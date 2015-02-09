@@ -5,7 +5,7 @@ namespace bunsan{namespace curl{namespace info{namespace wrapper
     template <typename T, CURLINFO Info>
     struct basic_wrapper
     {
-        typedef T result_type;
+        using result_type = T;
         static constexpr CURLINFO info = Info;
     };
 

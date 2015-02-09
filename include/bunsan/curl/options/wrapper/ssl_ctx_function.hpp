@@ -13,11 +13,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct ssl_ctx_function_traits
     {
-        typedef basic_function<ssl_ctx_function_traits> wrapper;
+        using wrapper = basic_function<ssl_ctx_function_traits>;
 
-        typedef std::function<
+        using function_type = std::function<
             CURLcode (curl::easy &, void *sslctx)
-        > function_type;
+        >;
 
         static inline CURLcode static_call(
             CURL *handle, void *sslctx, void *parm)
@@ -27,5 +27,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    typedef ssl_ctx_function_traits::wrapper ssl_ctx_function;
+    using ssl_ctx_function = ssl_ctx_function_traits::wrapper;
 }}}}

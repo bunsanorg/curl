@@ -12,7 +12,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class integer
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
         explicit integer(const T data): m_data(data) {}
 
@@ -25,7 +25,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         T m_data;
     };
 
-    typedef integer<long> long_;
-    typedef integer<::curl_off_t> curl_off_t_;
-    typedef integer<time_t> time_t_;
+    using long_ = integer<long>;
+    using curl_off_t_ = integer<::curl_off_t>;
+    using time_t_ = integer<time_t>;
 }}}}

@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_callback: private Wrapper
     {
     public:
-        typedef copy_policy::by_wrapper copy_policy;
+        using copy_policy = copy_policy::by_wrapper;
 
         using Wrapper::Wrapper;
 
@@ -47,5 +47,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 }}}}
 
 #define BUNSAN_CURL_CALLBACK_WRAPPED(NAME, CALLBACK_ID, DATA_ID, ...) \
-    typedef ::bunsan::curl::options::wrapper::wrapped_callback< \
-        CALLBACK_ID, DATA_ID, ::bunsan::curl::options::wrapper::__VA_ARGS__> NAME;
+    using NAME = ::bunsan::curl::options::wrapper::wrapped_callback< \
+        CALLBACK_ID, DATA_ID, ::bunsan::curl::options::wrapper::__VA_ARGS__>;

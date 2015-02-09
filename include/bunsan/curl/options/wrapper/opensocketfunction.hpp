@@ -13,11 +13,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct opensocketfunction_traits
     {
-        typedef basic_function<opensocketfunction_traits> wrapper;
+        using wrapper = basic_function<opensocketfunction_traits>;
 
-        typedef std::function<
+        using function_type = std::function<
             curl_socket_t (curl::socktype purpose, struct curl_sockaddr *address)
-        > function_type;
+        >;
 
         static inline curl_socket_t static_call(
             void *clientp, curlsocktype purpose, struct curl_sockaddr *address)
@@ -27,5 +27,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    typedef opensocketfunction_traits::wrapper opensocketfunction;
+    using opensocketfunction = opensocketfunction_traits::wrapper;
 }}}}

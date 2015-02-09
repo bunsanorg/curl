@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(bitmask_optional_)
         third = 1 << 2,
         def = 1 << 10
     };
-    typedef bitmask<type> bm;
-    typedef bitmask_optional<type, type::def> bmo;
+    using bm = bitmask<type>;
+    using bmo = bitmask_optional<type, type::def>;
 
     BOOST_CHECK_EQUAL(
         bmo().data(),
@@ -80,8 +80,8 @@ BOOST_AUTO_TEST_CASE(bitmask_optional_)
         static_cast<long>(type::first) | static_cast<long>(type::third)
     );
 
-    typedef bitmask<long long> llbm;
-    typedef bitmask_optional<long long, 0> llbmo;
+    using llbm = bitmask<long long>;
+    using llbmo = bitmask_optional<long long, 0>;
 
     BOOST_CHECK_EQUAL(llbmo().data(), 0);
     BOOST_CHECK_EQUAL(llbm(1).data(), 1);
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(c_function_)
         static int x() { return 10; }
     };
 
-    typedef c_function<int ()> function;
+    using function = c_function<int ()>;
 
     BOOST_CHECK_EQUAL(function(&ns::x).data(), &ns::x);
     BOOST_CHECK_EQUAL(function(&ns::x).data()(), 10);
@@ -137,11 +137,11 @@ BOOST_AUTO_TEST_CASE(csv_list_)
     BOOST_CHECK_EQUAL(csv_list<>({"1", "2", "3"}).data(), "1,2,3");
     BOOST_CHECK_EQUAL(csv_list<':'>({"1", "2", "3"}).data(), "1:2:3");
     {
-        typedef csv_list<';', ' '> csv_list_;
+        using csv_list_ = csv_list<';', ' '>;
         BOOST_CHECK_EQUAL(csv_list_({"1", "2", "3"}).data(), "1; 2; 3");
     }
     {
-        typedef csv_list<' ', '=', ' '> csv_list_;
+        using csv_list_ = csv_list<' ', '=', ' '>;
         BOOST_CHECK_EQUAL(csv_list_({"1", "2", "3"}).data(), "1 = 2 = 3");
     }
 }
@@ -182,8 +182,8 @@ BOOST_AUTO_TEST_CASE(enum__)
         third,
         def
     };
-    typedef enum_<type> enum_type;
-    typedef enum_optional<type, type::def> enum_optional_type;
+    using enum_type = enum_<type>;
+    using enum_optional_type = enum_optional<type, type::def>;
     BOOST_CHECK_EQUAL(enum_type(type::first).data(), 0);
     BOOST_CHECK_EQUAL(enum_optional_type(type::first).data(), 0);
     BOOST_CHECK_EQUAL(enum_type(type::second).data(), 1);
@@ -278,19 +278,19 @@ BOOST_AUTO_TEST_CASE(literal_)
             second = 1,
             third = 2
         };
-        typedef enum_literal<type, type::third> lit;
+        using lit = enum_literal<type, type::third>;
         BOOST_CHECK_EQUAL(lit().data(), 2);
     }
     {
-        typedef long_literal<10> lit;
+        using lit = long_literal<10>;
         BOOST_CHECK_EQUAL(lit().data(), 10);
     }
     {
-        typedef string_literal<> lit;
+        using lit = string_literal<>;
         BOOST_CHECK_EQUAL(std::string(lit().data()), "");
     }
     {
-        typedef string_literal<'h', 'e', 'l', 'l', 'o'> lit;
+        using lit = string_literal<'h', 'e', 'l', 'l', 'o'>;
         BOOST_CHECK_EQUAL(std::string(lit().data()), "hello");
     }
 }
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(opensocketfunction_)
 
 BOOST_AUTO_TEST_CASE(path_)
 {
-    typedef boost::filesystem::path fpath;
+    using fpath = boost::filesystem::path;
 
     BOOST_CHECK(path(boost::none).data() == nullptr);
     BOOST_CHECK_EQUAL(
@@ -326,14 +326,14 @@ BOOST_AUTO_TEST_CASE(path_)
     );
 }
 
-typedef boost::mpl::list<
+using progressfunction_types = boost::mpl::list<
     double,
     curl_off_t
-> progressfunction_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(progressfunction_, T, progressfunction_types)
 {
-    typedef basic_progressfunction<T> test_progressfunction;
+    using test_progressfunction = basic_progressfunction<T>;
     bool pr1_ = false;
     T dltotal_ = 100;
     T dlnow_ = 50;
@@ -428,8 +428,8 @@ BUNSAN_STREAM_ENUM_CLASS(my_stream_enum,
 
 BOOST_AUTO_TEST_CASE(stream_enum_)
 {
-    typedef stream_enum<my_stream_enum> se;
-    typedef stream_enum_optional<my_stream_enum, my_stream_enum::second> seo;
+    using se = stream_enum<my_stream_enum>;
+    using seo = stream_enum_optional<my_stream_enum, my_stream_enum::second>;
 
     BOOST_CHECK_EQUAL(se(my_stream_enum::first).data(), "first");
     BOOST_CHECK_EQUAL(seo(my_stream_enum::first).data(), "first");

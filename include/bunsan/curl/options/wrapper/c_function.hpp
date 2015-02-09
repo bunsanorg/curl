@@ -13,9 +13,9 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class c_function<Result (Args ...)>
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
-        typedef Result (*function_ptr)(Args...);
+        using function_ptr = Result (*)(Args...);
 
     public:
         c_function()=default;

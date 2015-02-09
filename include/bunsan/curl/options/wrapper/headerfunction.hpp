@@ -12,11 +12,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct headerfunction_traits
     {
-        typedef basic_function<headerfunction_traits> wrapper;
+        using wrapper = basic_function<headerfunction_traits>;
 
-        typedef std::function<
+        using function_type = std::function<
             std::size_t (char *ptr, std::size_t size)
-        > function_type;
+        >;
 
         static inline std::size_t static_call(
             void *ptr, std::size_t size, std::size_t nmemb, void *userdata)
@@ -26,5 +26,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    typedef headerfunction_traits::wrapper headerfunction;
+    using headerfunction = headerfunction_traits::wrapper;
 }}}}

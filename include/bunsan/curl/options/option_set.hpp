@@ -15,15 +15,15 @@ namespace bunsan{namespace curl{namespace options
         class option_base: private boost::noncopyable
         {
         public:
-            typedef std::unique_ptr<option_base> option_ptr;
-            typedef std::shared_ptr<option_base> shared_option_ptr;
+            using option_ptr = std::unique_ptr<option_base>;
+            using shared_option_ptr = std::shared_ptr<option_base>;
 
-            typedef boost::any_range<
+            using const_id_range = boost::any_range<
                 const CURLoption,
                 boost::forward_traversal_tag,
                 const CURLoption &,
                 std::ptrdiff_t
-            > const_id_range;
+            >;
 
         public:
             virtual void setopt(CURL *curl) const=0;
@@ -35,8 +35,8 @@ namespace bunsan{namespace curl{namespace options
             virtual ~option_base();
         };
 
-        typedef option_base::option_ptr option_ptr;
-        typedef option_base::shared_option_ptr shared_option_ptr;
+        using option_ptr = option_base::option_ptr;
+        using shared_option_ptr = option_base::shared_option_ptr;
     }
 
     using detail::option_ptr;

@@ -13,11 +13,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     template <typename T>
     struct basic_progressfunction_traits
     {
-        typedef basic_function<basic_progressfunction_traits<T>> wrapper;
+        using wrapper = basic_function<basic_progressfunction_traits<T>>;
 
-        typedef std::function<
+        using function_type = std::function<
             int (T dltotal, T dlnow, T ultotal, T ulnow)
-        > function_type;
+        >;
 
         static inline int static_call(
             void *clientp, T dltotal, T dlnow, T ultotal, T ulnow)
@@ -30,6 +30,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     template <typename T>
     using basic_progressfunction = typename basic_progressfunction_traits<T>::wrapper;
 
-    typedef basic_progressfunction<double> progressfunction;
-    typedef basic_progressfunction<curl_off_t> xferinfofunction;
+    using progressfunction = basic_progressfunction<double>;
+    using xferinfofunction = basic_progressfunction<curl_off_t>;
 }}}}

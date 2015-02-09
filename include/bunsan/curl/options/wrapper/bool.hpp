@@ -10,7 +10,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class bool_
     {
     public:
-        typedef copy_policy::by_curl copy_policy;
+        using copy_policy = copy_policy::by_curl;
 
     public:
         bool_()=default;
@@ -26,6 +26,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         bool m_data = False;
     };
 
-    typedef bool_<0, 1> bool_01;
-    typedef bool_<0, 2> bool_02;
+    using bool_01 = bool_<0, 1>;
+    using bool_02 = bool_<0, 2>;
 }}}}
