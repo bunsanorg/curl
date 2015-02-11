@@ -62,13 +62,16 @@ namespace bunsan{namespace curl{namespace detail
         return make_slist_range(list.get());
     }
 
-    inline std::string cchar_to_string(const char *const str)
+    struct cchar_to_string
     {
-        return std::string(str);
-    }
+        std::string operator()(const char *const str) const
+        {
+            return std::string(str);
+        }
+    };
 
     using slist_string_iterator = boost::transform_iterator<
-        std::function<std::string (const char *)>,
+        cchar_to_string,
         slist_iterator
     >;
 
@@ -77,7 +80,7 @@ namespace bunsan{namespace curl{namespace detail
     {
         return boost::make_transform_iterator(
             slist_iterator(list),
-            &cchar_to_string
+            cchar_to_string()
         );
     }
 
@@ -85,7 +88,7 @@ namespace bunsan{namespace curl{namespace detail
     {
         return boost::make_transform_iterator(
             slist_iterator(),
-            &cchar_to_string
+            cchar_to_string()
         );
     }
 
