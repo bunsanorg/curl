@@ -17,4 +17,13 @@ namespace bunsan{namespace curl
         static_cast<long>(http_version::http_2_0) + 1 == CURL_HTTP_VERSION_LAST,
         "outdated"
     );
+
+    struct http_version_unsupported_error: virtual http_version_invalid_value_error
+    {
+        typedef boost::error_info<struct tag_version_major, unsigned> version_major;
+        typedef boost::error_info<struct tag_version_minor, unsigned> version_minor;
+    };
+
+    http_version make_http_version(const unsigned version_major,
+                                   const unsigned version_minor);
 }}

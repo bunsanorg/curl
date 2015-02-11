@@ -11,10 +11,11 @@ bunsan_use_boost(system filesystem serialization thread)
 bunsan_use_curl()
 
 bunsan_add_shared_library(${PROJECT_NAME}
-    src/error_category.cpp
-    src/global.cpp
     src/easy.cpp
     src/easy_escape.cpp
+    src/error_category.cpp
+    src/global.cpp
+    src/http_version.cpp
 
     src/options/option_set.cpp
 
