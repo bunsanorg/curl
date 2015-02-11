@@ -10,6 +10,7 @@ bunsan_use_bunsan(common)
 bunsan_use_boost(
     system
     filesystem
+    regex
     thread
 )
 bunsan_use_curl()
@@ -20,6 +21,8 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/error_category.cpp
     src/global.cpp
     src/http_version.cpp
+
+    src/http/status.cpp
 
     src/options/option_set.cpp
 
