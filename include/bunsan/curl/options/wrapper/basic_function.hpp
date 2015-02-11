@@ -8,6 +8,8 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class basic_function
     {
     public:
+        using function_type = typename Traits::function_type;
+
         template <typename Arg, typename ... Args>
         explicit basic_function(Arg &&arg, Args &&...args):
             m_callback(

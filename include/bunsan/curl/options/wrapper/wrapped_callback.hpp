@@ -16,6 +16,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     {
     public:
         using copy_policy = copy_policy::by_wrapper;
+        using function_type = typename Wrapper::function_type;
 
         using Wrapper::Wrapper;
 
