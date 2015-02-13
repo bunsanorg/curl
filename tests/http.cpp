@@ -2,12 +2,14 @@
 #include <boost/test/unit_test.hpp>
 
 #include <bunsan/curl/http/error.hpp>
+#include <bunsan/curl/http/header.hpp>
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
 
 namespace curl = bunsan::curl;
+namespace http = curl::http;
 
-BOOST_AUTO_TEST_SUITE(http)
+BOOST_AUTO_TEST_SUITE(http_)
 
 BOOST_AUTO_TEST_CASE(make_version)
 {
@@ -60,4 +62,32 @@ BOOST_AUTO_TEST_CASE(status_parse)
                       curl::http::status_parse_error);
 }
 
-BOOST_AUTO_TEST_SUITE_END() // http
+BOOST_AUTO_TEST_SUITE(header)
+
+BOOST_AUTO_TEST_CASE(case_sensitivity)
+{
+    BOOST_CHECK_EQUAL(http::header::parse("Content-Type: text/plain"),
+                      http::header("content-type", "text/plain"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header: Data"),
+                      http::header("header", "Data"));
+}
+
+BOOST_AUTO_TEST_CASE(spaces)
+{
+    BOOST_CHECK_EQUAL(http::header::parse("Header: Data   "),
+                      http::header("header", "Data"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header:Data"),
+                      http::header("header", "Data"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header:Data   "),
+                      http::header("header", "Data"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header   :Data"),
+                      http::header("header", "Data"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header   :Data   "),
+                      http::header("header", "Data"));
+    BOOST_CHECK_EQUAL(http::header::parse("Header   :  Data   "),
+                      http::header("header", "Data"));
+}
+
+BOOST_AUTO_TEST_SUITE_END() // header
+
+BOOST_AUTO_TEST_SUITE_END() // http_
