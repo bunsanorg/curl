@@ -8,12 +8,12 @@ namespace bunsan{namespace curl{namespace http
 
     struct header_error: virtual error
     {
-        typedef boost::error_info<struct tag_name, std::string> name;
+        using name = boost::error_info<struct tag_name, std::string>;
     };
     struct header_non_unique_value_error: virtual header_error {};
     struct header_parse_error: virtual header_error
     {
-        typedef boost::error_info<struct tag_header, std::string> header_data;
+        using header_data = boost::error_info<struct tag_header, std::string>;
     };
 
     struct status_error: virtual header_error {};

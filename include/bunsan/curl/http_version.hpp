@@ -20,8 +20,8 @@ namespace bunsan{namespace curl
 
     struct http_version_unsupported_error: virtual http_version_invalid_value_error
     {
-        typedef boost::error_info<struct tag_version_major, unsigned> version_major;
-        typedef boost::error_info<struct tag_version_minor, unsigned> version_minor;
+        using version_major = boost::error_info<struct tag_version_major, unsigned>;
+        using version_minor = boost::error_info<struct tag_version_minor, unsigned>;
     };
 
     struct http_version_pair
