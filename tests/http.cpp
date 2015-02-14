@@ -64,19 +64,19 @@ BOOST_AUTO_TEST_CASE(stream)
 {
     BOOST_CHECK_EQUAL(
         boost::lexical_cast<std::string>(
-            curl::http::status(curl::http_version::http_1_1, 200, "OK")
+            http::status(curl::http_version::http_1_1, 200, "OK")
         ),
         "HTTP/1.1 200 OK"
     );
     BOOST_CHECK_EQUAL(
         boost::lexical_cast<std::string>(
-            curl::http::status(curl::http_version::http_1_1, 200, "")
+            http::status(curl::http_version::http_1_1, 200, "")
         ),
         "HTTP/1.1 200"
     );
     BOOST_CHECK_EQUAL(
         boost::lexical_cast<std::string>(
-            curl::http::status(curl::http_version::http_1_1, 0, "")
+            http::status(curl::http_version::http_1_1, 0, "")
         ),
         "HTTP/1.1"
     );
@@ -84,45 +84,45 @@ BOOST_AUTO_TEST_CASE(stream)
 
 BOOST_AUTO_TEST_CASE(parse)
 {
-    auto r = curl::http::status::parse("HTTP/1.1 200 OK");
+    auto r = http::status::parse("HTTP/1.1 200 OK");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_1_1);
     BOOST_CHECK_EQUAL(r.code, 200);
     BOOST_CHECK_EQUAL(r.reason, "OK");
 
-    r = curl::http::status::parse("HTTP/1.0 300 hello world");
+    r = http::status::parse("HTTP/1.0 300 hello world");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_1_0);
     BOOST_CHECK_EQUAL(r.code, 300);
     BOOST_CHECK_EQUAL(r.reason, "hello world");
 
-    r = curl::http::status::parse("HTTP/2.0 100");
+    r = http::status::parse("HTTP/2.0 100");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_2_0);
     BOOST_CHECK_EQUAL(r.code, 100);
     BOOST_CHECK(r.reason.empty());
 
-    r = curl::http::status::parse("HTTP/1.1");
+    r = http::status::parse("HTTP/1.1");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_1_1);
     BOOST_CHECK(!r.code);
     BOOST_CHECK(r.reason.empty());
 
-    r = curl::http::status::parse("HTTP/1.1 ");
+    r = http::status::parse("HTTP/1.1 ");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_1_1);
     BOOST_CHECK(!r.code);
     BOOST_CHECK(r.reason.empty());
 
-    BOOST_CHECK_THROW(curl::http::status::parse("HTTP/1.3 200 OK"),
-                      curl::http::status_parse_error);
+    BOOST_CHECK_THROW(http::status::parse("HTTP/1.3 200 OK"),
+                      http::status_parse_error);
 
-    BOOST_CHECK_THROW(curl::http::status::parse("HTTP/1"),
-                      curl::http::status_parse_error);
+    BOOST_CHECK_THROW(http::status::parse("HTTP/1"),
+                      http::status_parse_error);
 
-    BOOST_CHECK_THROW(curl::http::status::parse("HTTP/-1"),
-                      curl::http::status_parse_error);
+    BOOST_CHECK_THROW(http::status::parse("HTTP/-1"),
+                      http::status_parse_error);
 
-    BOOST_CHECK_THROW(curl::http::status::parse("HTTP"),
-                      curl::http::status_parse_error);
+    BOOST_CHECK_THROW(http::status::parse("HTTP"),
+                      http::status_parse_error);
 
-    BOOST_CHECK_THROW(curl::http::status::parse("HTTPS/1.0 200 OK"),
-                      curl::http::status_parse_error);
+    BOOST_CHECK_THROW(http::status::parse("HTTPS/1.0 200 OK"),
+                      http::status_parse_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // status
