@@ -26,6 +26,33 @@ namespace bunsan{namespace curl{namespace http
         );
     }
 
+    void header::merge(const header &h)
+    {
+        if (name() != h.name())
+            BOOST_THROW_EXCEPTION(
+                header_merge_incompatible_name_error() <<
+                header_merge_incompatible_name_error::name(name()) <<
+                header_merge_incompatible_name_error::other_name(h.name()));
+        m_values.insert(
+            m_values.end(),
+            h.m_values.begin(),
+            h.m_values.end()
+        );
+    }
+
+    void header::merge(header &&h)
+    {
+        if (name() != h.name())
+            BOOST_THROW_EXCEPTION(
+                header_merge_incompatible_name_error() <<
+                header_merge_incompatible_name_error::name(name()) <<
+                header_merge_incompatible_name_error::other_name(h.name()));
+        for (std::string &value: h.m_values)
+            m_values.push_back(std::move(value));
+        h.m_name.clear();
+        h.m_values.clear();
+    }
+
     std::string header::make_name(const std::string &raw_name)
     {
         return boost::algorithm::to_lower_copy(raw_name);

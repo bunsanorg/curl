@@ -15,6 +15,12 @@ namespace bunsan{namespace curl{namespace http
     {
         using header_data = boost::error_info<struct tag_header, std::string>;
     };
+    struct header_merge_error: virtual header_error
+    {
+        using other_name = boost::error_info<struct tag_other_name, std::string>;
+    };
+    struct header_merge_incompatible_name_error:
+        virtual header_merge_error {};
 
     struct status_error: virtual header_error {};
     struct status_parse_error:

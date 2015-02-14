@@ -47,6 +47,16 @@ namespace bunsan{namespace curl{namespace http
 
         values_const_range values() const;
 
+        void merge(const header &h);
+        void merge(header &&h);
+
+        template <typename Arg1, typename Arg2, typename ... Args>
+        void merge(Arg1 &&arg1, Arg2 &&arg2, Args &&...args)
+        {
+            merge(std::forward<Arg1>(arg1));
+            merge(std::forward<Arg2>(arg2), std::forward<Args>(args)...);
+        }
+
         static std::string make_name(const std::string &raw_name);
 
         /// Parse header without trailing CRLF
@@ -56,6 +66,14 @@ namespace bunsan{namespace curl{namespace http
         std::string m_name;
         std::vector<std::string> m_values;
     };
+
+    template <typename Arg, typename ... Args>
+    header merge_headers(Arg &&arg, Args &&...args)
+    {
+        header h(std::forward<Arg>(arg));
+        h.merge(std::forward<Args>(args)...);
+        return h;
+    }
 
     std::ostream &operator<<(std::ostream &out, const header &h);
 }}}

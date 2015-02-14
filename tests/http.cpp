@@ -177,6 +177,29 @@ BOOST_AUTO_TEST_CASE(non_unique_value)
     BOOST_CHECK_THROW(h.value(), http::header_non_unique_value_error);
 }
 
+BOOST_AUTO_TEST_CASE(merge)
+{
+    http::header h("header", "data1");
+    BOOST_CHECK_THROW(
+        h.merge(http::header("other", "data2")),
+        http::header_merge_incompatible_name_error
+    );
+    h.merge(http::header("Header", "data2"));
+    const http::header h3("header", "data3");
+    h.merge(h3);
+    BOOST_CHECK_EQUAL(
+        h,
+        http::header("header", "data1", "data2", "data3")
+    );
+    BOOST_CHECK_EQUAL(
+        http::merge_headers(
+            h,
+            http::header("header", "data4"),
+            http::header("header", "data5")),
+        http::header("header", "data1", "data2", "data3", "data4", "data5")
+    );
+}
+
 BOOST_AUTO_TEST_SUITE_END() // header
 
 BOOST_AUTO_TEST_SUITE_END() // http_
