@@ -68,4 +68,16 @@ namespace bunsan{namespace curl{namespace http
                 enable_nested_current());
         }
     }
+
+    std::ostream &operator<<(std::ostream &out, const status &s)
+    {
+        out << "HTTP/" << http_version_pair(s.version);
+        if (s.code)
+        {
+            out << " " << s.code;
+            if (!s.reason.empty())
+                out << " " << s.reason;
+        }
+        return out;
+    }
 }}}

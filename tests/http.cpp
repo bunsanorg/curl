@@ -58,7 +58,31 @@ BOOST_AUTO_TEST_CASE(stream)
 
 BOOST_AUTO_TEST_SUITE_END() // http_version
 
-BOOST_AUTO_TEST_CASE(status_parse)
+BOOST_AUTO_TEST_SUITE(status)
+
+BOOST_AUTO_TEST_CASE(stream)
+{
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(
+            curl::http::status(curl::http_version::http_1_1, 200, "OK")
+        ),
+        "HTTP/1.1 200 OK"
+    );
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(
+            curl::http::status(curl::http_version::http_1_1, 200, "")
+        ),
+        "HTTP/1.1 200"
+    );
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(
+            curl::http::status(curl::http_version::http_1_1, 0, "")
+        ),
+        "HTTP/1.1"
+    );
+}
+
+BOOST_AUTO_TEST_CASE(parse)
 {
     auto r = curl::http::status::parse("HTTP/1.1 200 OK");
     BOOST_CHECK_EQUAL(r.version, curl::http_version::http_1_1);
@@ -100,6 +124,8 @@ BOOST_AUTO_TEST_CASE(status_parse)
     BOOST_CHECK_THROW(curl::http::status::parse("HTTPS/1.0 200 OK"),
                       curl::http::status_parse_error);
 }
+
+BOOST_AUTO_TEST_SUITE_END() // status
 
 BOOST_AUTO_TEST_SUITE(header)
 
