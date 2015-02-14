@@ -1,9 +1,29 @@
 #include <bunsan/curl/http_version.hpp>
 
+#include <initializer_list>
+
 namespace bunsan{namespace curl
 {
-    http_version make_http_version(const unsigned version_major,
-                                   const unsigned version_minor)
+    http_version_pair::http_version_pair(const http_version version)
+    {
+        switch (version)
+        {
+        case http_version::http_none:
+            // default initialization
+            break;
+        case http_version::http_1_0:
+            *this = {1, 0};
+            break;
+        case http_version::http_1_1:
+            *this = {1, 1};
+            break;
+        case http_version::http_2_0:
+            *this = {2, 0};
+            break;
+        }
+    }
+
+    http_version_pair::operator http_version() const
     {
         switch (version_major)
         {
@@ -28,5 +48,10 @@ namespace bunsan{namespace curl
             http_version_unsupported_error() <<
             http_version_unsupported_error::version_major(version_major) <<
             http_version_unsupported_error::version_minor(version_minor));
+    }
+
+    std::ostream &operator<<(std::ostream &out, const http_version_pair &version)
+    {
+        return out << version.version_major << "." << version.version_minor;
     }
 }}

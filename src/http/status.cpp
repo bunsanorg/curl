@@ -35,7 +35,7 @@ namespace bunsan{namespace curl{namespace http
                 const boost::ssub_match reason = result["reason"];
                 BOOST_ASSERT(major.matched);
                 BOOST_ASSERT(minor.matched);
-                ret.version = make_http_version(
+                ret.version = http_version_pair(
                     boost::lexical_cast<unsigned>(major),
                     boost::lexical_cast<unsigned>(minor)
                 );

@@ -6,18 +6,57 @@
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
 
+#include <boost/lexical_cast.hpp>
+
 namespace curl = bunsan::curl;
 namespace http = curl::http;
 
 BOOST_AUTO_TEST_SUITE(http_)
 
-BOOST_AUTO_TEST_CASE(make_version)
+BOOST_AUTO_TEST_SUITE(http_version)
+
+BOOST_AUTO_TEST_CASE(pair_to_enum)
 {
-    BOOST_CHECK_EQUAL(curl::make_http_version(1, 0), curl::http_version::http_1_0);
-    BOOST_CHECK_EQUAL(curl::make_http_version(1, 1), curl::http_version::http_1_1);
-    BOOST_CHECK_EQUAL(curl::make_http_version(2, 0), curl::http_version::http_2_0);
-    BOOST_CHECK_THROW(curl::make_http_version(1, 3), curl::http_version_unsupported_error);
+    BOOST_CHECK_EQUAL(curl::http_version_pair(1, 0), curl::http_version::http_1_0);
+    BOOST_CHECK_EQUAL(curl::http_version_pair(1, 1), curl::http_version::http_1_1);
+    BOOST_CHECK_EQUAL(curl::http_version_pair(2, 0), curl::http_version::http_2_0);
+    BOOST_CHECK_THROW(
+        static_cast<curl::http_version>(curl::http_version_pair(1, 3)),
+        curl::http_version_unsupported_error
+    );
 }
+
+BOOST_AUTO_TEST_CASE(enum_to_pair)
+{
+    BOOST_CHECK_EQUAL(curl::http_version_pair(curl::http_version::http_none),
+                      curl::http_version_pair());
+    BOOST_CHECK_EQUAL(curl::http_version_pair(curl::http_version::http_1_0),
+                      curl::http_version_pair(1, 0));
+    BOOST_CHECK_EQUAL(curl::http_version_pair(curl::http_version::http_1_1),
+                      curl::http_version_pair(1, 1));
+    BOOST_CHECK_EQUAL(curl::http_version_pair(curl::http_version::http_2_0),
+                      curl::http_version_pair(2, 0));
+}
+
+BOOST_AUTO_TEST_CASE(stream)
+{
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(curl::http_version_pair()),
+        "0.0"
+    );
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(curl::http_version_pair(1, 2)),
+        "1.2"
+    );
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(
+            curl::http_version_pair(curl::http_version::http_1_1)
+        ),
+        "1.1"
+    );
+}
+
+BOOST_AUTO_TEST_SUITE_END() // http_version
 
 BOOST_AUTO_TEST_CASE(status_parse)
 {
