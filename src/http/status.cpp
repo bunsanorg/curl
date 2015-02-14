@@ -54,7 +54,7 @@ namespace bunsan{namespace curl{namespace http
             BOOST_THROW_EXCEPTION(
                 status_parse_error() <<
                 status_parse_error::message("Not a status") <<
-                status_parse_error::header(header));
+                status_parse_error::header_data(header));
         }
         catch (status_parse_error &)
         {
@@ -64,7 +64,7 @@ namespace bunsan{namespace curl{namespace http
         {
             BOOST_THROW_EXCEPTION(
                 status_parse_error() <<
-                status_parse_error::header(header) <<
+                status_parse_error::header_data(header) <<
                 enable_nested_current());
         }
     }

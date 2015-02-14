@@ -153,6 +153,30 @@ BOOST_AUTO_TEST_CASE(spaces)
                       http::header("header", "Data"));
 }
 
+BOOST_AUTO_TEST_CASE(stream)
+{
+    const http::header u("header", "data1");
+    const http::header h("Header", "data1", "data2");
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(u),
+        "header: data1"
+    );
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(h),
+        "header: [\"data1\", \"data2\"]"
+    );
+}
+
+BOOST_AUTO_TEST_CASE(non_unique_value)
+{
+    const http::header u("header", "data1");
+    const http::header h("Header", "data1", "data2");
+    BOOST_CHECK_NE(u, h);
+    BOOST_CHECK_EQUAL(h, http::header("header", "data1", "data2"));
+    BOOST_CHECK_EQUAL(u.value(), "data1");
+    BOOST_CHECK_THROW(h.value(), http::header_non_unique_value_error);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // header
 
 BOOST_AUTO_TEST_SUITE_END() // http_

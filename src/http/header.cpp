@@ -4,13 +4,31 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/assert.hpp>
+#include <boost/io/detail/quoted_manip.hpp>
 #include <boost/regex.hpp>
 
 namespace bunsan{namespace curl{namespace http
 {
-    std::string header::make_name(const std::string &name)
+    const std::string &header::value() const
     {
-        return boost::algorithm::to_lower_copy(name);
+        if (!unique_value())
+            BOOST_THROW_EXCEPTION(
+                header_non_unique_value_error() <<
+                header_non_unique_value_error::name(name()));
+        return m_values[0];
+    }
+
+    header::values_const_range header::values() const
+    {
+        return values_const_range(
+            m_values.begin(),
+            m_values.end()
+        );
+    }
+
+    std::string header::make_name(const std::string &raw_name)
+    {
+        return boost::algorithm::to_lower_copy(raw_name);
     }
 
     header header::parse(const std::string &data)
@@ -33,11 +51,29 @@ namespace bunsan{namespace curl{namespace http
         BOOST_THROW_EXCEPTION(
             header_parse_error() <<
             header_parse_error::message("Not a header") <<
-            header_parse_error::header(data));
+            header_parse_error::header_data(data));
     }
 
     std::ostream &operator<<(std::ostream &out, const header &h)
     {
-        return out << h.name << ": " << h.value;
+        out << h.name() << ": ";
+        if (h.unique_value())
+        {
+            out << h.value();
+        }
+        else
+        {
+            out << '[';
+            bool first = true;
+            for (const std::string &value: h.values())
+            {
+                if (!first)
+                    out << ", ";
+                first = false;
+                out << boost::io::quoted(value);
+            }
+            out << ']';
+        }
+        return out;
     }
 }}}
