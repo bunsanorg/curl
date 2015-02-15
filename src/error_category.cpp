@@ -51,19 +51,19 @@ namespace bunsan{namespace curl
 
     const std::error_category &easy_category() noexcept
     {
-        static const easy_category_ impl;
+        static const easy_category_ impl{};
         return impl;
     }
 
     const std::error_category &multi_category() noexcept
     {
-        static const multi_category_ impl;
+        static const multi_category_ impl{};
         return impl;
     }
 
     const std::error_category &share_category() noexcept
     {
-        static const share_category_ impl;
+        static const share_category_ impl{};
         return impl;
     }
 }}
