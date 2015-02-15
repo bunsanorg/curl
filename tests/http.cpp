@@ -3,6 +3,7 @@
 
 #include <bunsan/curl/http/error.hpp>
 #include <bunsan/curl/http/header.hpp>
+#include <bunsan/curl/http/response_head.hpp>
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
 
@@ -201,5 +202,36 @@ BOOST_AUTO_TEST_CASE(merge)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // header
+
+BOOST_AUTO_TEST_SUITE(response_head)
+
+BOOST_AUTO_TEST_CASE(append)
+{
+    http::response_head head(
+        http::status(curl::http_version::http_1_1, 200, "OK")
+    );
+    head.append(http::header("header1", "data1"));
+    head.append(http::header("header2", "data2"));
+    head.append(http::header("Header1", "data3"));
+    head.append(http::header("Header3", "data4"));
+    head.append(http::header("header3", "data5"));
+    BOOST_REQUIRE(head.headers().find("header1") != head.headers().end());
+    BOOST_CHECK_EQUAL(
+        *head.headers().find("header1"),
+        http::header("header1", "data1", "data3")
+    );
+    BOOST_REQUIRE(head.headers().find("header2") != head.headers().end());
+    BOOST_CHECK_EQUAL(
+        *head.headers().find("header2"),
+        http::header("header2", "data2")
+    );
+    BOOST_REQUIRE(head.headers().find("header2") != head.headers().end());
+    BOOST_CHECK_EQUAL(
+        *head.headers().find("header3"),
+        http::header("header3", "data4", "data5")
+    );
+}
+
+BOOST_AUTO_TEST_SUITE_END() // response_head
 
 BOOST_AUTO_TEST_SUITE_END() // http_

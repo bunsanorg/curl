@@ -23,6 +23,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/http_version.cpp
 
     src/http/header.cpp
+    src/http/response_head.cpp
     src/http/status.cpp
 
     src/options/option_set.cpp
