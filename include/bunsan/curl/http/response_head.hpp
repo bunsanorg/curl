@@ -9,7 +9,6 @@
 
 #include <ostream>
 #include <string>
-#include <unordered_map>
 
 namespace bunsan{namespace curl{namespace http
 {
