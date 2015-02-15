@@ -50,3 +50,6 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 #define BUNSAN_CURL_CALLBACK_WRAPPED(NAME, CALLBACK_ID, DATA_ID, ...) \
     using NAME = ::bunsan::curl::options::wrapper::wrapped_callback< \
         CALLBACK_ID, DATA_ID, ::bunsan::curl::options::wrapper::__VA_ARGS__>;
+
+#define BUNSAN_CURL_CALLBACK_WRAPPED_SIMPLE(NAME, CALLBACK_ID, DATA_ID) \
+    BUNSAN_CURL_CALLBACK_WRAPPED(NAME, CALLBACK_ID, DATA_ID, NAME)

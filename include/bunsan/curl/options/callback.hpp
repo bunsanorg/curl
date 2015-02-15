@@ -19,9 +19,6 @@
 
 namespace bunsan{namespace curl{namespace options
 {
-#define BUNSAN_CURL_CALLBACK_WRAPPED_SIMPLE(NAME, CALLBACK_ID, DATA_ID) \
-    BUNSAN_CURL_CALLBACK_WRAPPED(NAME, CALLBACK_ID, DATA_ID, NAME)
-
     BUNSAN_CURL_CALLBACK_WRAPPED_SIMPLE(
         writefunction,
         CURLOPT_WRITEFUNCTION,
