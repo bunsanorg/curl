@@ -26,4 +26,9 @@ namespace bunsan{namespace curl{namespace http
     struct status_parse_error:
         virtual status_error,
         virtual header_parse_error {};
+
+    struct unexpected_header_type_error:
+        virtual header_error {};
+    struct status_header_expected_error:
+        virtual unexpected_header_type_error {};
 }}}

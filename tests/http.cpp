@@ -3,6 +3,7 @@
 
 #include <bunsan/curl/http/error.hpp>
 #include <bunsan/curl/http/header.hpp>
+#include <bunsan/curl/http/header_parser.hpp>
 #include <bunsan/curl/http/response_head.hpp>
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
@@ -233,5 +234,70 @@ BOOST_AUTO_TEST_CASE(append)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // response_head
+
+struct header_parser_fixture
+{
+    http::header_parser parser;
+
+    void parse(const std::string &header)
+    {
+        parser.parse(header);
+    }
+};
+
+BOOST_FIXTURE_TEST_SUITE(header_parser, header_parser_fixture)
+
+BOOST_AUTO_TEST_CASE(parse_)
+{
+    BOOST_CHECK(parser.empty());
+
+    BOOST_CHECK_THROW(parse("header: data"), http::status_header_expected_error);
+    BOOST_CHECK(parser.empty());
+
+    BOOST_CHECK_NO_THROW(parse(""));
+    BOOST_CHECK(parser.empty());
+
+    BOOST_CHECK_NO_THROW(parse("HTTP/1.1 200 OK"));
+    BOOST_CHECK_EQUAL(parser.size(), 1);
+    BOOST_CHECK_EQUAL(
+        parser.last().status(),
+        http::status(curl::http_version::http_1_1, 200, "OK")
+    );
+    BOOST_CHECK(parser.last().headers().empty());
+
+    BOOST_CHECK_NO_THROW(parse("HTTP/1.0 404 Not found"));
+    BOOST_CHECK_EQUAL(parser.size(), 2);
+    BOOST_CHECK_EQUAL(
+        parser.last().status(),
+        http::status(curl::http_version::http_1_0, 404, "Not found")
+    );
+    BOOST_CHECK(parser.last().headers().empty());
+
+    BOOST_CHECK_NO_THROW(parse("header: data1"));
+    BOOST_CHECK_EQUAL(parser.size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
+    BOOST_REQUIRE(parser.last().headers().find("header") !=
+                  parser.last().headers().end());
+    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->value(), "data1");
+
+    BOOST_CHECK_NO_THROW(parse(""));
+    BOOST_CHECK_EQUAL(parser.size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
+
+    BOOST_CHECK_NO_THROW(parse("header: data2"));
+    BOOST_CHECK_EQUAL(parser.size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
+    BOOST_REQUIRE_EQUAL(parser.last().headers().find("header")->values().size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->values()[0], "data1");
+    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->values()[1], "data2");
+
+    BOOST_CHECK_NO_THROW(parse("other: data"));
+    BOOST_CHECK_EQUAL(parser.size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().headers().size(), 2);
+    BOOST_REQUIRE_EQUAL(parser.last().headers().find("other")->values().size(), 1);
+    BOOST_CHECK_EQUAL(parser.last().headers().find("other")->value(), "data");
+}
+
+BOOST_AUTO_TEST_SUITE_END() // header_parser
 
 BOOST_AUTO_TEST_SUITE_END() // http_
