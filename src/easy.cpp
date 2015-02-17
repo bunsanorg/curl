@@ -32,8 +32,9 @@ namespace bunsan{namespace curl
         if (curl.m_curl)
         {
             if (!m_curl)
-                BOOST_THROW_EXCEPTION(easy_error() <<
-                                      easy_error::what_message("curl_easy_duphandle"));
+                BOOST_THROW_EXCEPTION(
+                    easy_error() <<
+                    easy_error::what_message("curl_easy_duphandle"));
             init();
             m_option_set.setopt(m_curl);
         }
