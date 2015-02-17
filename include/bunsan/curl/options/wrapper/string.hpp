@@ -13,7 +13,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class string
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         string(boost::none_t): m_data(boost::none) {}
 

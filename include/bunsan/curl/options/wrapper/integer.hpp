@@ -12,7 +12,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class integer
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         explicit integer(const T data): m_data(data) {}
 

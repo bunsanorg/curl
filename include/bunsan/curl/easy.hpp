@@ -57,7 +57,7 @@ namespace bunsan{namespace curl
         template <typename Option>
         void set(const Option &opt)
         {
-            set_(opt, typename options::option_traits<Option>::copy_policy());
+            set_(opt, typename options::option_traits<Option>::retention_policy());
         }
 
         /// Set all options to default values.
@@ -75,13 +75,13 @@ namespace bunsan{namespace curl
         void init() noexcept;
 
         template <typename Option>
-        void set_(const Option &opt, options::copy_policy::by_curl)
+        void set_(const Option &opt, options::retention_policy::by_curl)
         {
             opt.setopt(m_curl);
         }
 
         template <typename Option>
-        void set_(const Option &opt, options::copy_policy::by_wrapper)
+        void set_(const Option &opt, options::retention_policy::by_wrapper)
         {
             m_option_set.add_and_setopt(opt, m_curl);
         }

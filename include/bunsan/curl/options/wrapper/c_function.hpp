@@ -13,7 +13,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class c_function<Result (Args ...)>
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         using function_ptr = Result (*)(Args...);
 

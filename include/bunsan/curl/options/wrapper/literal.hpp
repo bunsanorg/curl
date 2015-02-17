@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         class literal
         {
         public:
-            using copy_policy = CopyPolicy;
+            using retention_policy = CopyPolicy;
 
             literal()=default;
 
@@ -27,7 +27,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         public detail::literal<
             long,
             static_cast<long>(Value),
-            copy_policy::by_curl
+            retention_policy::by_curl
         > {};
 
     template <long Value>
@@ -35,14 +35,14 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         public detail::literal<
             long,
             Value,
-            copy_policy::by_curl
+            retention_policy::by_curl
         > {};
 
     template <char ... Chars>
     class string_literal
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         string_literal()=default;
 

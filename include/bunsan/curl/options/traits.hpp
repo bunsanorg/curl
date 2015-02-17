@@ -2,7 +2,7 @@
 
 namespace bunsan{namespace curl{namespace options
 {
-    namespace copy_policy
+    namespace retention_policy
     {
         struct by_wrapper {};
         struct by_curl {};
@@ -11,6 +11,6 @@ namespace bunsan{namespace curl{namespace options
     template <typename Option>
     struct option_traits
     {
-        using copy_policy = typename Option::copy_policy;
+        using retention_policy = typename Option::retention_policy;
     };
 }}}

@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_callback: private Wrapper
     {
     public:
-        using copy_policy = copy_policy::by_wrapper;
+        using retention_policy = retention_policy::by_wrapper;
         using function_type = typename Wrapper::function_type;
 
         using Wrapper::Wrapper;

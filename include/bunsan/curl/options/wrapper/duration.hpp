@@ -17,7 +17,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class duration<std::chrono::duration<Rep, Period>>
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         using duration_type = std::chrono::duration<Rep, Period>;
 

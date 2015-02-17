@@ -468,7 +468,7 @@ BOOST_AUTO_TEST_CASE(wrapped_option_)
 {
     struct stub_wrapper
     {
-        struct copy_policy;
+        struct retention_policy;
     };
     using stub_option = const wrapped_option<
         CURLOPT_URL,

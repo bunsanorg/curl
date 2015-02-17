@@ -10,7 +10,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class bool_
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
     public:
         bool_()=default;

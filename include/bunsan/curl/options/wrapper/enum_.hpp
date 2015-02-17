@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class enum_
     {
     public:
-        using copy_policy = copy_policy::by_curl;
+        using retention_policy = retention_policy::by_curl;
 
         explicit enum_(const Enum data): m_data(data) {}
 

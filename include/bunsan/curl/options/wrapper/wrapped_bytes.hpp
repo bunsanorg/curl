@@ -15,7 +15,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     class wrapped_bytes: public Wrapper
     {
     public:
-        using copy_policy = typename Wrapper::copy_policy;
+        using retention_policy = typename Wrapper::retention_policy;
 
         using Wrapper::Wrapper;
 
