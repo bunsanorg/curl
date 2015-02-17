@@ -17,6 +17,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     public:
         using retention_policy = retention_policy::by_wrapper;
         using function_type = typename Wrapper::function_type;
+        using result_type = typename Wrapper::result_type;
 
         using Wrapper::Wrapper;
 

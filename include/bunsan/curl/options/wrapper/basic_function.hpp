@@ -9,10 +9,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
     {
     public:
         using function_type = typename Traits::function_type;
+        using result_type = typename function_type::result_type;
 
         template <typename Arg, typename ... Args>
         explicit basic_function(Arg &&arg, Args &&...args):
-            m_callback(
+            m_function(
                 std::forward<Arg>(arg),
                 std::forward<Args>(args)...
             ) {}
@@ -29,13 +30,12 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
 
         template <typename ... Args>
-        typename Traits::function_type::
         result_type call(Args &&...args) const
         {
-            return m_callback(std::forward<Args>(args)...);
+            return m_function(std::forward<Args>(args)...);
         }
 
     private:
-        typename Traits::function_type m_callback;
+        function_type m_function;
     };
 }}}}
