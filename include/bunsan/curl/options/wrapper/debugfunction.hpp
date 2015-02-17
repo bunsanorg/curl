@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct debugfunction_traits
     {
-        using wrapper = basic_function<debugfunction_traits>;
+        using wrapper_type = basic_function<debugfunction_traits>;
 
         using function_type = std::function<
             void (curl::easy &, curl::infotype, char *, std::size_t)
@@ -27,7 +27,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
             std::size_t size,
             void *userdata)
         {
-            const auto this_ = static_cast<const wrapper *>(userdata);
+            const auto this_ = static_cast<const wrapper_type *>(userdata);
             this_->call(
                 curl::easy::get(handle),
                 static_cast<curl::infotype>(info),
@@ -38,5 +38,5 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
     };
 
-    using debugfunction = debugfunction_traits::wrapper;
+    using debugfunction = debugfunction_traits::wrapper_type;
 }}}}

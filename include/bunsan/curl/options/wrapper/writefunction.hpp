@@ -12,7 +12,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct writefunction_traits
     {
-        using wrapper = basic_function<writefunction_traits>;
+        using wrapper_type = basic_function<writefunction_traits>;
 
         using function_type = std::function<
             std::size_t (char *ptr, std::size_t size)
@@ -21,10 +21,10 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         static inline std::size_t static_call(
             char *ptr, std::size_t size, std::size_t nmemb, void *userdata)
         {
-            const auto this_ = static_cast<const wrapper *>(userdata);
+            const auto this_ = static_cast<const wrapper_type *>(userdata);
             return this_->call(ptr, size * nmemb);
         }
     };
 
-    using writefunction = writefunction_traits::wrapper;
+    using writefunction = writefunction_traits::wrapper_type;
 }}}}

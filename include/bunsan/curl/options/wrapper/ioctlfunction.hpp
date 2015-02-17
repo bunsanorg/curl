@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct ioctlfunction_traits
     {
-        using wrapper = basic_function<ioctlfunction_traits>;
+        using wrapper_type = basic_function<ioctlfunction_traits>;
 
         using function_type = std::function<
             curl::ioerr (curl::easy &, int cmd)
@@ -22,10 +22,10 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         static inline curlioerr static_call(CURL *handle, int cmd, void *clientp)
         {
-            const auto this_ = static_cast<const wrapper *>(clientp);
+            const auto this_ = static_cast<const wrapper_type *>(clientp);
             return static_cast<curlioerr>(this_->call(curl::easy::get(handle), cmd));
         }
     };
 
-    using ioctlfunction = ioctlfunction_traits::wrapper;
+    using ioctlfunction = ioctlfunction_traits::wrapper_type;
 }}}}

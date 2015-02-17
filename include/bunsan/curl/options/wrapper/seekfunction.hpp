@@ -13,7 +13,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     struct seekfunction_traits
     {
-        using wrapper = basic_function<seekfunction_traits>;
+        using wrapper_type = basic_function<seekfunction_traits>;
 
         using function_type = std::function<
             seekfunc (curl_off_t offset, int origin)
@@ -21,10 +21,10 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         static inline int static_call(void *instream, curl_off_t offset, int origin)
         {
-            const auto this_ = static_cast<const wrapper *>(instream);
+            const auto this_ = static_cast<const wrapper_type *>(instream);
             return static_cast<int>(this_->call(offset, origin));
         }
     };
 
-    using seekfunction = seekfunction_traits::wrapper;
+    using seekfunction = seekfunction_traits::wrapper_type;
 }}}}
