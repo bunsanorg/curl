@@ -58,7 +58,7 @@ namespace bunsan{namespace curl{namespace http
         }
     }
 
-    std::size_t header_parser::parse_header_callback(char *ptr, std::size_t size)
+    std::size_t header_parser::parse_header_callback(const char *ptr, std::size_t size)
     {
         std::string header_data(ptr, size);
         if (!boost::algorithm::ends_with(header_data, "\r\n"))

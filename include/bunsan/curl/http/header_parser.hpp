@@ -52,7 +52,7 @@ namespace bunsan{namespace curl{namespace http
         void parse(const std::string &header_data);
 
     private:
-        std::size_t parse_header_callback(char *ptr, std::size_t size);
+        std::size_t parse_header_callback(const char *ptr, std::size_t size);
 
     private:
         std::vector<response_head> m_responses;
