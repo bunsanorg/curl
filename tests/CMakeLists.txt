@@ -15,6 +15,7 @@ endmacro()
 bunsan_tests_project_add_test(easy easy.cpp)
 bunsan_tests_project_add_test(http http.cpp)
 bunsan_tests_project_add_test(slist slist.cpp)
+bunsan_tests_project_add_test(traits traits.cpp)
 bunsan_tests_project_add_test(wrapper wrapper.cpp)
 
 bunsan_curl_tests_add_server_test(easy_info easy_info.cpp)
