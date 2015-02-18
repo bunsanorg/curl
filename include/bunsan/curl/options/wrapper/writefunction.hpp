@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -17,6 +18,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             std::size_t (const char *ptr, std::size_t size)
         >;
+        using fail_type = std::integral_constant<std::size_t, 0>;
 
         static inline std::size_t static_call(
             char *ptr, std::size_t size, std::size_t nmemb, void *userdata)

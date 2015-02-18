@@ -1,5 +1,7 @@
 #pragma once
 
+#include <exception>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -30,9 +32,53 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         }
 
         template <typename ... Args>
-        result_type call(Args &&...args) const
+        result_type call(Args &&...args) const noexcept
         {
-            return m_function(std::forward<Args>(args)...);
+            return call_(
+                static_cast<typename Traits::fail_type *>(nullptr),
+                std::forward<Args>(args)...
+            );
+        }
+
+    private:
+        template <typename Fail, typename ... Args>
+        result_type call_(Fail *, Args &&...args) const noexcept
+        {
+            try
+            {
+                return m_function(std::forward<Args>(args)...);
+            }
+            catch (...)
+            {
+                static_assert(
+                    std::is_same<
+                        typename Fail::value_type,
+                        result_type
+                    >::value,
+                    "fail_type be result_type!"
+                );
+                try
+                {
+                    return Fail();
+                }
+                catch (...)
+                {
+                    std::terminate();
+                }
+            }
+        }
+
+        template <typename ... Args>
+        result_type call_(void *, Args &&...args) const noexcept
+        {
+            try
+            {
+                return m_function(std::forward<Args>(args)...);
+            }
+            catch (...)
+            {
+                std::terminate();
+            }
         }
 
     private:

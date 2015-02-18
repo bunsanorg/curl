@@ -8,6 +8,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -19,6 +20,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             curl::ioerr (curl::easy &, int cmd)
         >;
+        using fail_type = std::integral_constant<curl::ioerr, curl::ioerr::failrestart>;
 
         static inline curlioerr static_call(CURL *handle, int cmd, void *clientp)
         {

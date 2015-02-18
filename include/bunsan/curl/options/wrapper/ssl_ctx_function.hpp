@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -18,6 +19,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             CURLcode (curl::easy &, void *sslctx)
         >;
+        using fail_type = std::integral_constant<CURLcode, CURLE_ABORTED_BY_CALLBACK>;
 
         static inline CURLcode static_call(
             CURL *handle, void *sslctx, void *parm)

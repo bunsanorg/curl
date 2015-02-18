@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -18,6 +19,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             int (T dltotal, T dlnow, T ultotal, T ulnow)
         >;
+        using fail_type = std::integral_constant<int, 1>;
 
         static inline int static_call(
             void *clientp, T dltotal, T dlnow, T ultotal, T ulnow)

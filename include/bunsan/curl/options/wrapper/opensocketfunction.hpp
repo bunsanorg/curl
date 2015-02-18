@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -18,6 +19,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             curl_socket_t (curl::socktype purpose, struct curl_sockaddr *address)
         >;
+        using fail_type = std::integral_constant<curl_socket_t, CURL_SOCKET_BAD>;
 
         static inline curl_socket_t static_call(
             void *clientp, curlsocktype purpose, struct curl_sockaddr *address)

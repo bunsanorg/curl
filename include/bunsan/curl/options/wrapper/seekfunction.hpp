@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -18,6 +19,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             seekfunc (curl_off_t offset, int origin)
         >;
+        using fail_type = std::integral_constant<seekfunc, seekfunc::fail>;
 
         static inline int static_call(void *instream, curl_off_t offset, int origin)
         {

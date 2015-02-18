@@ -8,6 +8,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -19,6 +20,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             void (curl::easy &, curl::infotype, char *, std::size_t)
         >;
+        using fail_type = void;
 
         static inline int static_call(
             CURL *handle,

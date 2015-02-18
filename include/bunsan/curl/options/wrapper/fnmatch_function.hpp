@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -18,6 +19,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         using function_type = std::function<
             curl::fnmatch (const char *pattern, const char *string)
         >;
+        using fail_type = std::integral_constant<curl::fnmatch, curl::fnmatch::fail>;
 
         static inline int static_call(
             void *ptr, const char *pattern, const char *string)
