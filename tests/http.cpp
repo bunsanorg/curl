@@ -221,14 +221,14 @@ BOOST_AUTO_TEST_SUITE_END() // header
 
 BOOST_AUTO_TEST_SUITE(header_set)
 
-BOOST_AUTO_TEST_CASE(append)
+BOOST_AUTO_TEST_CASE(merge_insert)
 {
     http::header_set set;
-    set.append(http::header("header1", "data1"));
-    set.append(http::header("header2", "data2"));
-    set.append(http::header("Header1", "data3"));
-    set.append(http::header("Header3", "data4"));
-    set.append(http::header("header3", "data5"));
+    set.merge_insert(http::header("header1", "data1"));
+    set.merge_insert(http::header("header2", "data2"));
+    set.merge_insert(http::header("Header1", "data3"));
+    set.merge_insert(http::header("Header3", "data4"));
+    set.merge_insert(http::header("header3", "data5"));
     BOOST_REQUIRE(set.index().find("header1") != set.index().end());
     BOOST_CHECK_EQUAL(
         *set.index().find("header1"),

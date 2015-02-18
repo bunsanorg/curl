@@ -18,7 +18,7 @@ namespace bunsan{namespace curl{namespace http
         response_head &operator=(const response_head &)=default;
         response_head &operator=(response_head &&)=default;
 
-        void append(const header &h) { m_header_set.append(h); }
+        void append(const header &h) { m_header_set.merge_insert(h); }
 
         const http::status &status() const { return m_status; }
         const header_set &headers() const { return m_header_set; }

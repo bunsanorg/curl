@@ -2,7 +2,7 @@
 
 namespace bunsan{namespace curl{namespace http
 {
-    void header_set::append(const header &h)
+    void header_set::merge_insert(const header &h)
     {
         const auto iter = index().find(h.name());
         if (iter != index().end())

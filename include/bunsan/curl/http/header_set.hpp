@@ -31,7 +31,7 @@ namespace bunsan{namespace curl{namespace http
         using const_iterator = index_type::const_iterator;
 
     public:
-        void append(const header &h);
+        void merge_insert(const header &h);
 
         const index_type &index() const { return m_headers.get<tag_hashed>(); }
         index_type &index() { return m_headers.get<tag_hashed>(); }
