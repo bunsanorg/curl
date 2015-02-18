@@ -9,6 +9,11 @@
 
 namespace bunsan{namespace curl{namespace http
 {
+    std::string header::merger::operator()(const std::string &value) const
+    {
+        return m_name + ": " + value;
+    }
+
     const std::string &header::value() const
     {
         if (!unique_value())
@@ -23,6 +28,14 @@ namespace bunsan{namespace curl{namespace http
         return values_const_range(
             m_values.begin(),
             m_values.end()
+        );
+    }
+
+    header::headers_const_range header::headers() const
+    {
+        return headers_const_range(
+            headers_const_iterator(m_values.begin(), merger(name())),
+            headers_const_iterator(m_values.end(), merger(name()))
         );
     }
 

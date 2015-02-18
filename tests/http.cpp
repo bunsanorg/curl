@@ -8,6 +8,8 @@
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
 
+#include <bunsan/range/construct_from_range.hpp>
+
 #include <boost/lexical_cast.hpp>
 
 namespace curl = bunsan::curl;
@@ -200,6 +202,18 @@ BOOST_AUTO_TEST_CASE(merge)
             http::header("header", "data5")),
         http::header("header", "data1", "data2", "data3", "data4", "data5")
     );
+}
+
+BOOST_AUTO_TEST_CASE(headers)
+{
+    http::header h("header", "data1", "data2", "data3");
+    const auto headers = bunsan::range::construct_from_range<
+        std::vector<std::string>
+    >(h.headers());
+    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_CHECK_EQUAL(headers[0], "header: data1");
+    BOOST_CHECK_EQUAL(headers[1], "header: data2");
+    BOOST_CHECK_EQUAL(headers[2], "header: data3");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // header

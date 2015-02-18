@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/iterator/transform_iterator.hpp>
 #include <boost/range/iterator_range.hpp>
 
 #include <initializer_list>
@@ -14,9 +15,27 @@ namespace bunsan{namespace curl{namespace http
     private:
         using values_type = std::vector<std::string>;
 
+        class merger
+        {
+        public:
+            explicit merger(const std::string &name):
+                m_name(name) {}
+
+            std::string operator()(const std::string &value) const;
+
+        private:
+            const std::string &m_name;
+        };
+
     public:
         using values_const_iterator = values_type::const_iterator;
         using values_const_range = boost::iterator_range<values_const_iterator>;
+
+        using headers_const_iterator = boost::transform_iterator<
+            merger,
+            values_const_iterator
+        >;
+        using headers_const_range = boost::iterator_range<headers_const_iterator>;
 
     public:
         header()=default;
@@ -46,6 +65,9 @@ namespace bunsan{namespace curl{namespace http
         const std::string &value() const;
 
         values_const_range values() const;
+
+        /// Separate header strings
+        headers_const_range headers() const;
 
         void merge(const header &h);
         void merge(header &&h);
