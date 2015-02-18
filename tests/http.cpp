@@ -205,12 +205,12 @@ BOOST_AUTO_TEST_CASE(merge)
     );
 }
 
-BOOST_AUTO_TEST_CASE(headers)
+BOOST_AUTO_TEST_CASE(plain_headers)
 {
     http::header h("header", "data1", "data2", "data3");
     const auto headers = bunsan::range::construct_from_range<
         std::vector<std::string>
-    >(h.headers());
+    >(h.plain_headers());
     BOOST_REQUIRE_EQUAL(headers.size(), 3);
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
     BOOST_CHECK_EQUAL(headers[1], "header: data2");

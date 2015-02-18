@@ -31,11 +31,11 @@ namespace bunsan{namespace curl{namespace http
         );
     }
 
-    header::headers_const_range header::headers() const
+    header::plain_const_range header::plain_headers() const
     {
-        return headers_const_range(
-            headers_const_iterator(m_values.begin(), merger(name())),
-            headers_const_iterator(m_values.end(), merger(name()))
+        return plain_const_range(
+            plain_const_iterator(m_values.begin(), merger(name())),
+            plain_const_iterator(m_values.end(), merger(name()))
         );
     }
 

@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace http
     std::ostream &operator<<(std::ostream &out, const header_set &h)
     {
         for (const header &hdr: h.index())
-            for (const std::string &str: hdr.headers())
+            for (const std::string &str: hdr.plain_headers())
                 out << str << '\n';
         return out;
     }
