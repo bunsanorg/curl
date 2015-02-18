@@ -24,6 +24,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/http/header.cpp
     src/http/header_parser.cpp
+    src/http/header_set.cpp
     src/http/response_head.cpp
     src/http/status.cpp
 

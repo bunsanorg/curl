@@ -4,6 +4,7 @@
 #include <bunsan/curl/http/error.hpp>
 #include <bunsan/curl/http/header.hpp>
 #include <bunsan/curl/http/header_parser.hpp>
+#include <bunsan/curl/http/header_set.hpp>
 #include <bunsan/curl/http/response_head.hpp>
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
@@ -218,6 +219,35 @@ BOOST_AUTO_TEST_CASE(headers)
 
 BOOST_AUTO_TEST_SUITE_END() // header
 
+BOOST_AUTO_TEST_SUITE(header_set)
+
+BOOST_AUTO_TEST_CASE(append)
+{
+    http::header_set set;
+    set.append(http::header("header1", "data1"));
+    set.append(http::header("header2", "data2"));
+    set.append(http::header("Header1", "data3"));
+    set.append(http::header("Header3", "data4"));
+    set.append(http::header("header3", "data5"));
+    BOOST_REQUIRE(set.index().find("header1") != set.index().end());
+    BOOST_CHECK_EQUAL(
+        *set.index().find("header1"),
+        http::header("header1", "data1", "data3")
+    );
+    BOOST_REQUIRE(set.index().find("header2") != set.index().end());
+    BOOST_CHECK_EQUAL(
+        *set.index().find("header2"),
+        http::header("header2", "data2")
+    );
+    BOOST_REQUIRE(set.index().find("header2") != set.index().end());
+    BOOST_CHECK_EQUAL(
+        *set.index().find("header3"),
+        http::header("header3", "data4", "data5")
+    );
+}
+
+BOOST_AUTO_TEST_SUITE_END() // header_set
+
 BOOST_AUTO_TEST_SUITE(response_head)
 
 BOOST_AUTO_TEST_CASE(append)
@@ -225,25 +255,11 @@ BOOST_AUTO_TEST_CASE(append)
     http::response_head head(
         http::status(curl::http_version::http_1_1, 200, "OK")
     );
-    head.append(http::header("header1", "data1"));
-    head.append(http::header("header2", "data2"));
-    head.append(http::header("Header1", "data3"));
-    head.append(http::header("Header3", "data4"));
-    head.append(http::header("header3", "data5"));
-    BOOST_REQUIRE(head.headers().find("header1") != head.headers().end());
+    head.append(http::header("header", "data"));
+    BOOST_REQUIRE(head.index().find("header") != head.index().end());
     BOOST_CHECK_EQUAL(
-        *head.headers().find("header1"),
-        http::header("header1", "data1", "data3")
-    );
-    BOOST_REQUIRE(head.headers().find("header2") != head.headers().end());
-    BOOST_CHECK_EQUAL(
-        *head.headers().find("header2"),
-        http::header("header2", "data2")
-    );
-    BOOST_REQUIRE(head.headers().find("header2") != head.headers().end());
-    BOOST_CHECK_EQUAL(
-        *head.headers().find("header3"),
-        http::header("header3", "data4", "data5")
+        *head.index().find("header"),
+        http::header("header", "data")
     );
 }
 
@@ -277,7 +293,7 @@ BOOST_AUTO_TEST_CASE(parse_)
         parser.last().status(),
         http::status(curl::http_version::http_1_1, 200, "OK")
     );
-    BOOST_CHECK(parser.last().headers().empty());
+    BOOST_CHECK(parser.last().index().empty());
 
     BOOST_CHECK_NO_THROW(parse("HTTP/1.0 404 Not found"));
     BOOST_CHECK_EQUAL(parser.size(), 2);
@@ -285,31 +301,31 @@ BOOST_AUTO_TEST_CASE(parse_)
         parser.last().status(),
         http::status(curl::http_version::http_1_0, 404, "Not found")
     );
-    BOOST_CHECK(parser.last().headers().empty());
+    BOOST_CHECK(parser.last().index().empty());
 
     BOOST_CHECK_NO_THROW(parse("header: data1"));
     BOOST_CHECK_EQUAL(parser.size(), 2);
-    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
-    BOOST_REQUIRE(parser.last().headers().find("header") !=
-                  parser.last().headers().end());
-    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->value(), "data1");
+    BOOST_CHECK_EQUAL(parser.last().index().size(), 1);
+    BOOST_REQUIRE(parser.last().index().find("header") !=
+                  parser.last().index().end());
+    BOOST_CHECK_EQUAL(parser.last().index().find("header")->value(), "data1");
 
     BOOST_CHECK_NO_THROW(parse(""));
     BOOST_CHECK_EQUAL(parser.size(), 2);
-    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
+    BOOST_CHECK_EQUAL(parser.last().index().size(), 1);
 
     BOOST_CHECK_NO_THROW(parse("header: data2"));
     BOOST_CHECK_EQUAL(parser.size(), 2);
-    BOOST_CHECK_EQUAL(parser.last().headers().size(), 1);
-    BOOST_REQUIRE_EQUAL(parser.last().headers().find("header")->values().size(), 2);
-    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->values()[0], "data1");
-    BOOST_CHECK_EQUAL(parser.last().headers().find("header")->values()[1], "data2");
+    BOOST_CHECK_EQUAL(parser.last().index().size(), 1);
+    BOOST_REQUIRE_EQUAL(parser.last().index().find("header")->values().size(), 2);
+    BOOST_CHECK_EQUAL(parser.last().index().find("header")->values()[0], "data1");
+    BOOST_CHECK_EQUAL(parser.last().index().find("header")->values()[1], "data2");
 
     BOOST_CHECK_NO_THROW(parse("other: data"));
     BOOST_CHECK_EQUAL(parser.size(), 2);
-    BOOST_CHECK_EQUAL(parser.last().headers().size(), 2);
-    BOOST_REQUIRE_EQUAL(parser.last().headers().find("other")->values().size(), 1);
-    BOOST_CHECK_EQUAL(parser.last().headers().find("other")->value(), "data");
+    BOOST_CHECK_EQUAL(parser.last().index().size(), 2);
+    BOOST_REQUIRE_EQUAL(parser.last().index().find("other")->values().size(), 1);
+    BOOST_CHECK_EQUAL(parser.last().index().find("other")->value(), "data");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // header_parser
