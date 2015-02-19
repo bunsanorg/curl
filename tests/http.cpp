@@ -208,9 +208,17 @@ BOOST_AUTO_TEST_CASE(merge)
 BOOST_AUTO_TEST_CASE(plain_headers)
 {
     http::header h("header", "data1", "data2", "data3");
-    const auto headers = boost::copy_range<
+    auto headers = boost::copy_range<
         std::vector<std::string>
     >(h.plain_headers());
+    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_CHECK_EQUAL(headers[0], "header: data1");
+    BOOST_CHECK_EQUAL(headers[1], "header: data2");
+    BOOST_CHECK_EQUAL(headers[2], "header: data3");
+
+    headers.clear();
+    for (const std::string &hdr: h.plain_headers())
+        headers.push_back(hdr);
     BOOST_REQUIRE_EQUAL(headers.size(), 3);
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
     BOOST_CHECK_EQUAL(headers[1], "header: data2");
@@ -313,6 +321,17 @@ BOOST_AUTO_TEST_CASE(plain_headers)
 
     i = range.begin();
     hdrs.assign(i, j); // 0, end
+    BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
+    std::sort(hdrs.begin(), hdrs.end());
+    BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");
+    BOOST_CHECK_EQUAL(hdrs[1], "header1: data3");
+    BOOST_CHECK_EQUAL(hdrs[2], "header2: data2");
+    BOOST_CHECK_EQUAL(hdrs[3], "header3: data4");
+    BOOST_CHECK_EQUAL(hdrs[4], "header3: data5");
+
+    hdrs.clear();
+    for (const std::string &hdr: range)
+        hdrs.push_back(hdr);
     BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
     std::sort(hdrs.begin(), hdrs.end());
     BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");
