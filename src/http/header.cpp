@@ -11,7 +11,8 @@ namespace bunsan{namespace curl{namespace http
 {
     std::string header::merger::operator()(const std::string &value) const
     {
-        return m_name + ": " + value;
+        BOOST_ASSERT(m_name);
+        return *m_name + ": " + value;
     }
 
     const std::string &header::value() const
@@ -34,8 +35,8 @@ namespace bunsan{namespace curl{namespace http
     header::plain_const_range header::plain_headers() const
     {
         return plain_const_range(
-            plain_const_iterator(m_values.begin(), merger(name())),
-            plain_const_iterator(m_values.end(), merger(name()))
+            plain_const_iterator(m_values.begin(), merger(&m_name)),
+            plain_const_iterator(m_values.end(), merger(&m_name))
         );
     }
 

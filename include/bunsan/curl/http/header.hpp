@@ -18,13 +18,18 @@ namespace bunsan{namespace curl{namespace http
         class merger
         {
         public:
-            explicit merger(const std::string &name):
+            explicit merger(const std::string *const name=nullptr):
                 m_name(name) {}
+
+            merger(const merger &)=default;
+            merger(merger &&)=default;
+            merger &operator=(const merger &)=default;
+            merger &operator=(merger &&)=default;
 
             std::string operator()(const std::string &value) const;
 
         private:
-            const std::string &m_name;
+            const std::string *m_name;
         };
 
     public:

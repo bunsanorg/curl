@@ -217,6 +217,22 @@ BOOST_AUTO_TEST_CASE(plain_headers)
     BOOST_CHECK_EQUAL(headers[2], "header: data3");
 }
 
+BOOST_AUTO_TEST_CASE(plain_headers_iterator)
+{
+    http::header h("header", "data1", "data2", "data3");
+    const http::header::plain_const_range range = h.plain_headers();
+    http::header::plain_const_iterator i = range.begin();
+    BOOST_CHECK_EQUAL(*i++, "header: data1");
+    BOOST_CHECK_EQUAL(*i++, "header: data2");
+    BOOST_CHECK_EQUAL(*i++, "header: data3");
+    BOOST_CHECK(i == range.end());
+    i = range.begin();
+    BOOST_CHECK_EQUAL(*i++, "header: data1");
+    BOOST_CHECK_EQUAL(*i++, "header: data2");
+    BOOST_CHECK_EQUAL(*i++, "header: data3");
+    BOOST_CHECK(i == range.end());
+}
+
 BOOST_AUTO_TEST_SUITE_END() // header
 
 BOOST_AUTO_TEST_SUITE(header_set)
