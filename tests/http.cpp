@@ -9,8 +9,6 @@
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
 
-#include <bunsan/range/construct_from_range.hpp>
-
 #include <boost/lexical_cast.hpp>
 
 #include <algorithm>
@@ -210,7 +208,7 @@ BOOST_AUTO_TEST_CASE(merge)
 BOOST_AUTO_TEST_CASE(plain_headers)
 {
     http::header h("header", "data1", "data2", "data3");
-    const auto headers = bunsan::range::construct_from_range<
+    const auto headers = boost::copy_range<
         std::vector<std::string>
     >(h.plain_headers());
     BOOST_REQUIRE_EQUAL(headers.size(), 3);
@@ -274,7 +272,7 @@ BOOST_AUTO_TEST_CASE(plain_headers)
     set.merge_insert(http::header("header3", "data5"));
 
     const auto range = set.plain_headers();
-    auto hdrs = bunsan::range::construct_from_range<
+    auto hdrs = boost::copy_range<
         std::vector<std::string>
     >(range);
     BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
@@ -327,7 +325,7 @@ BOOST_AUTO_TEST_CASE(plain_headers)
 BOOST_AUTO_TEST_CASE(plain_headers_empty)
 {
     const http::header_set set;
-    const auto hdrs = bunsan::range::construct_from_range<
+    const auto hdrs = boost::copy_range<
         std::vector<std::string>
     >(set.plain_headers());
     BOOST_CHECK(hdrs.empty());

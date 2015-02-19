@@ -30,7 +30,6 @@
 #include <bunsan/curl/options/wrapper/wrapped_option_default.hpp>
 #include <bunsan/curl/options/wrapper/writefunction.hpp>
 
-#include <bunsan/range/construct_from_range.hpp>
 #include <bunsan/stream_enum.hpp>
 
 #include <boost/mpl/list.hpp>
@@ -476,9 +475,8 @@ BOOST_AUTO_TEST_CASE(wrapped_option_)
     >;
     using id_list = std::vector<CURLoption>;
     const id_list expected_ids = { CURLOPT_URL };
-    using bunsan::range::construct_from_range;
     BOOST_CHECK_EQUAL(stub_option().id(), CURLOPT_URL);
-    BOOST_CHECK(construct_from_range<id_list>(stub_option().ids()) == expected_ids);
+    BOOST_CHECK(boost::copy_range<id_list>(stub_option().ids()) == expected_ids);
 }
 
 BOOST_AUTO_TEST_CASE(wrapped_option_default_)
