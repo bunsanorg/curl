@@ -13,6 +13,8 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <algorithm>
+
 namespace curl = bunsan::curl;
 namespace http = curl::http;
 
@@ -260,6 +262,75 @@ BOOST_AUTO_TEST_CASE(merge_insert)
         *set.index().find("header3"),
         http::header("header3", "data4", "data5")
     );
+}
+
+BOOST_AUTO_TEST_CASE(plain_headers)
+{
+    http::header_set set;
+    set.merge_insert(http::header("header1", "data1"));
+    set.merge_insert(http::header("header2", "data2"));
+    set.merge_insert(http::header("Header1", "data3"));
+    set.merge_insert(http::header("Header3", "data4"));
+    set.merge_insert(http::header("header3", "data5"));
+
+    const auto range = set.plain_headers();
+    auto hdrs = bunsan::range::construct_from_range<
+        std::vector<std::string>
+    >(range);
+    BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
+    std::sort(hdrs.begin(), hdrs.end());
+    BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");
+    BOOST_CHECK_EQUAL(hdrs[1], "header1: data3");
+    BOOST_CHECK_EQUAL(hdrs[2], "header2: data2");
+    BOOST_CHECK_EQUAL(hdrs[3], "header3: data4");
+    BOOST_CHECK_EQUAL(hdrs[4], "header3: data5");
+
+    http::header_set::plain_const_iterator i = range.begin();
+    http::header_set::plain_const_iterator j = range.begin();
+    BOOST_CHECK(i == j); // 0, 0
+    ++i;
+    BOOST_CHECK(i != j); // 1, 0
+    ++j;
+    BOOST_CHECK(i == j); // 1, 1
+    ++j;
+    BOOST_CHECK(i != j); // 1, 2
+    ++i;
+    BOOST_CHECK(i == j); // 2, 2
+    ++i;
+    BOOST_CHECK(i != j); // 3, 2
+    ++i;
+    BOOST_CHECK(i != j); // 4, 2
+    ++j;
+    BOOST_CHECK(i != j); // 4, 3
+    ++j;
+    BOOST_CHECK(i == j); // 4, 4
+    ++i;
+    BOOST_CHECK(i != j); // end, 4
+    BOOST_CHECK(i == range.end());
+    BOOST_CHECK(range.end() == i);
+    ++j;
+    BOOST_CHECK(i == j); // end, end
+    BOOST_CHECK(j == range.end());
+    BOOST_CHECK(range.end() == j);
+
+    i = range.begin();
+    hdrs.assign(i, j); // 0, end
+    BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
+    std::sort(hdrs.begin(), hdrs.end());
+    BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");
+    BOOST_CHECK_EQUAL(hdrs[1], "header1: data3");
+    BOOST_CHECK_EQUAL(hdrs[2], "header2: data2");
+    BOOST_CHECK_EQUAL(hdrs[3], "header3: data4");
+    BOOST_CHECK_EQUAL(hdrs[4], "header3: data5");
+}
+
+BOOST_AUTO_TEST_CASE(plain_headers_empty)
+{
+    const http::header_set set;
+    const auto hdrs = bunsan::range::construct_from_range<
+        std::vector<std::string>
+    >(set.plain_headers());
+    BOOST_CHECK(hdrs.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END() // header_set

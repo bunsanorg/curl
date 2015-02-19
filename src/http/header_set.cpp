@@ -11,6 +11,14 @@ namespace bunsan{namespace curl{namespace http
             index().insert(h);
     }
 
+    header_set::plain_const_range header_set::plain_headers() const
+    {
+        return plain_const_range(
+            plain_const_iterator(index().begin(), index().end()),
+            plain_const_iterator(index().end(), index().end())
+        );
+    }
+
     std::ostream &operator<<(std::ostream &out, const header_set &h)
     {
         for (const header &hdr: h.index())
