@@ -12,7 +12,10 @@ namespace bunsan{namespace curl{namespace http
     std::string header::merger::operator()(const std::string &value) const
     {
         BOOST_ASSERT(m_name);
-        return *m_name + ": " + value;
+        if (value.empty())
+            return *m_name + ':';
+        else
+            return *m_name + ": " + value;
     }
 
     const std::string &header::value() const
@@ -97,14 +100,16 @@ namespace bunsan{namespace curl{namespace http
 
     std::ostream &operator<<(std::ostream &out, const header &h)
     {
-        out << h.name() << ": ";
+        out << h.name() << ':';
         if (h.unique_value())
         {
+            if (!h.value().empty())
+                out << ' ';
             out << h.value();
         }
         else
         {
-            out << '[';
+            out << " [";
             bool first = true;
             for (const std::string &value: h.values())
             {

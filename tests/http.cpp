@@ -160,6 +160,16 @@ BOOST_AUTO_TEST_CASE(spaces)
                       http::header("header", "Data"));
 }
 
+BOOST_AUTO_TEST_CASE(empty)
+{
+    BOOST_CHECK_EQUAL(http::header::parse("header:"),
+                      http::header("header", ""));
+    BOOST_CHECK_EQUAL(
+        boost::lexical_cast<std::string>(http::header("header", "")),
+        "header:"
+    );
+}
+
 BOOST_AUTO_TEST_CASE(stream)
 {
     const http::header u("header", "data1");
@@ -209,32 +219,35 @@ BOOST_AUTO_TEST_CASE(merge)
 
 BOOST_AUTO_TEST_CASE(plain_headers)
 {
-    http::header h("header", "data1", "data2", "data3");
+    http::header h("header", "data1", "", "data2", "data3");
     auto headers = boost::copy_range<
         std::vector<std::string>
     >(h.plain_headers());
-    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_REQUIRE_EQUAL(headers.size(), 4);
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
-    BOOST_CHECK_EQUAL(headers[1], "header: data2");
-    BOOST_CHECK_EQUAL(headers[2], "header: data3");
+    BOOST_CHECK_EQUAL(headers[1], "header:");
+    BOOST_CHECK_EQUAL(headers[2], "header: data2");
+    BOOST_CHECK_EQUAL(headers[3], "header: data3");
 
     headers.clear();
     for (const std::string &hdr: h.plain_headers())
         headers.push_back(hdr);
-    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_REQUIRE_EQUAL(headers.size(), 4);
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
-    BOOST_CHECK_EQUAL(headers[1], "header: data2");
-    BOOST_CHECK_EQUAL(headers[2], "header: data3");
+    BOOST_CHECK_EQUAL(headers[1], "header:");
+    BOOST_CHECK_EQUAL(headers[2], "header: data2");
+    BOOST_CHECK_EQUAL(headers[3], "header: data3");
 
     const curl::options::wrapper::string_list list(h.plain_headers());
     headers.assign(
         curl::detail::make_slist_string_iterator(list.data()),
         curl::detail::make_slist_string_iterator()
     );
-    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_REQUIRE_EQUAL(headers.size(), 4);
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
-    BOOST_CHECK_EQUAL(headers[1], "header: data2");
-    BOOST_CHECK_EQUAL(headers[2], "header: data3");
+    BOOST_CHECK_EQUAL(headers[1], "header:");
+    BOOST_CHECK_EQUAL(headers[2], "header: data2");
+    BOOST_CHECK_EQUAL(headers[3], "header: data3");
 }
 
 BOOST_AUTO_TEST_CASE(plain_headers_iterator)
