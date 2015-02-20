@@ -16,20 +16,23 @@
 
 #include <cstring>
 
+namespace curl = bunsan::curl;
+namespace options = curl::options;
+
 BOOST_FIXTURE_TEST_SUITE(easy_options, easy_fixture)
 
 BOOST_AUTO_TEST_CASE(write)
 {
-    easy.set(bunsan::curl::options::url(url_root + "/hello"));
-    easy.set(bunsan::curl::options::writefunction(data_writer));
+    easy.set(options::url(url_root + "/hello"));
+    easy.set(options::writefunction(data_writer));
     easy.perform();
     BOOST_CHECK_EQUAL(data, "Hello, world!");
 }
 
 BOOST_AUTO_TEST_CASE(timeout)
 {
-    easy.set(bunsan::curl::options::url(url_root + "/sleep"));
-    easy.set(bunsan::curl::options::timeout(std::chrono::milliseconds(100)));
+    easy.set(options::url(url_root + "/sleep"));
+    easy.set(options::timeout(std::chrono::milliseconds(100)));
 
     std::error_code ec;
     easy.perform(ec);
@@ -38,8 +41,8 @@ BOOST_AUTO_TEST_CASE(timeout)
 
 BOOST_AUTO_TEST_CASE(maxfilesize)
 {
-    easy.set(bunsan::curl::options::url(url_root + "/big"));
-    easy.set(bunsan::curl::options::maxfilesize(1024 * 1024));
+    easy.set(options::url(url_root + "/big"));
+    easy.set(options::maxfilesize(1024 * 1024));
 
     std::error_code ec;
     easy.perform(ec);
@@ -48,18 +51,18 @@ BOOST_AUTO_TEST_CASE(maxfilesize)
 
 BOOST_AUTO_TEST_CASE(postfields)
 {
-    easy.set(bunsan::curl::options::url(url_root + "/echo"));
-    easy.set(bunsan::curl::options::postfields("Hello, world!"));
-    easy.set(bunsan::curl::options::writefunction(data_writer));
+    easy.set(options::url(url_root + "/echo"));
+    easy.set(options::postfields("Hello, world!"));
+    easy.set(options::writefunction(data_writer));
     easy.perform();
     BOOST_CHECK_EQUAL(data, "Hello, world!");
 }
 
 BOOST_AUTO_TEST_CASE(httpheader)
 {
-    easy.set(bunsan::curl::options::url(url_root + "/header"));
-    easy.set(bunsan::curl::options::httpheader({"X-cURL-Test: header data"}));
-    easy.set(bunsan::curl::options::writefunction(data_writer));
+    easy.set(options::url(url_root + "/header"));
+    easy.set(options::httpheader({"X-cURL-Test: header data"}));
+    easy.set(options::writefunction(data_writer));
     easy.perform();
     BOOST_CHECK_EQUAL(data, "header data");
 }
