@@ -67,4 +67,60 @@ BOOST_AUTO_TEST_CASE(httpheader)
     BOOST_CHECK_EQUAL(data, "header data");
 }
 
+BOOST_AUTO_TEST_CASE(readfunction_with_size)
+{
+    const char mydata[] = "Hello, world!";
+    const std::size_t mydata_size = std::strlen(mydata);
+    const std::string mydata_size_str =
+        boost::lexical_cast<std::string>(mydata_size);
+    std::size_t mydata_pos = 0;
+    easy.set(options::url(url_root + "/echo"));
+    easy.set(options::post(true));
+    easy.set(options::httpheader({
+        "Content-Length: " + mydata_size_str
+    }));
+    easy.set(options::readfunction(
+        [&](char *data, std::size_t size)
+        {
+            const std::size_t sendsize =
+                std::min(size, mydata_size - mydata_pos);
+            std::copy(
+                mydata + mydata_pos,
+                mydata + mydata_pos + sendsize,
+                data
+            );
+            mydata_pos += sendsize;
+            return sendsize;
+        }));
+    easy.set(options::writefunction(data_writer));
+    easy.perform();
+    BOOST_CHECK_EQUAL(data, mydata);
+}
+
+BOOST_AUTO_TEST_CASE(readfunction_chunked)
+{
+    const char mydata[] = "Hello, world!";
+    const std::size_t mydata_size = std::strlen(mydata);
+    std::size_t mydata_pos = 0;
+    easy.set(options::url(url_root + "/echo"));
+    easy.set(options::post(true));
+    easy.set(options::httpheader({"Transfer-Encoding: chunked"}));
+    easy.set(options::readfunction(
+        [&](char *data, std::size_t size)
+        {
+            const std::size_t sendsize =
+                std::min(size, mydata_size - mydata_pos);
+            std::copy(
+                mydata + mydata_pos,
+                mydata + mydata_pos + sendsize,
+                data
+            );
+            mydata_pos += sendsize;
+            return sendsize;
+        }));
+    easy.set(options::writefunction(data_writer));
+    easy.perform();
+    BOOST_CHECK_EQUAL(data, mydata);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // easy_options

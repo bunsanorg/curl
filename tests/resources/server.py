@@ -57,8 +57,22 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/echo":
             self._ok_headers()
-            length = int(self.headers['Content-Length'])
-            self.wfile.write(self.rfile.read(length))
+            if 'Content-Length' in self.headers:
+                length = int(self.headers['Content-Length'])
+                self.wfile.write(self.rfile.read(length))
+            else:
+                data = []
+                while True:
+                    line = self.rfile.readline()
+                    line = line.rstrip()
+                    length = int(line, 16)
+                    if length != 0:
+                        data.append(self.rfile.read(length))
+                    self.rfile.read(2)  # ignore CRLF
+                    if length == 0:
+                        break
+                data = b''.join(data)
+                self.wfile.write(data)
         else:
             self._404()
 
