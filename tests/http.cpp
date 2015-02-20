@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE http
 #include <boost/test/unit_test.hpp>
 
+#include <bunsan/curl/detail/slist_iterator.hpp>
 #include <bunsan/curl/http/error.hpp>
 #include <bunsan/curl/http/header.hpp>
 #include <bunsan/curl/http/header_parser.hpp>
@@ -8,6 +9,7 @@
 #include <bunsan/curl/http/response_head.hpp>
 #include <bunsan/curl/http/status.hpp>
 #include <bunsan/curl/http_version.hpp>
+#include <bunsan/curl/options/wrapper/string_list.hpp>
 
 #include <boost/lexical_cast.hpp>
 
@@ -223,6 +225,16 @@ BOOST_AUTO_TEST_CASE(plain_headers)
     BOOST_CHECK_EQUAL(headers[0], "header: data1");
     BOOST_CHECK_EQUAL(headers[1], "header: data2");
     BOOST_CHECK_EQUAL(headers[2], "header: data3");
+
+    const curl::options::wrapper::string_list list(h.plain_headers());
+    headers.assign(
+        curl::detail::make_slist_string_iterator(list.data()),
+        curl::detail::make_slist_string_iterator()
+    );
+    BOOST_REQUIRE_EQUAL(headers.size(), 3);
+    BOOST_CHECK_EQUAL(headers[0], "header: data1");
+    BOOST_CHECK_EQUAL(headers[1], "header: data2");
+    BOOST_CHECK_EQUAL(headers[2], "header: data3");
 }
 
 BOOST_AUTO_TEST_CASE(plain_headers_iterator)
@@ -332,6 +344,19 @@ BOOST_AUTO_TEST_CASE(plain_headers)
     hdrs.clear();
     for (const std::string &hdr: range)
         hdrs.push_back(hdr);
+    BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
+    std::sort(hdrs.begin(), hdrs.end());
+    BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");
+    BOOST_CHECK_EQUAL(hdrs[1], "header1: data3");
+    BOOST_CHECK_EQUAL(hdrs[2], "header2: data2");
+    BOOST_CHECK_EQUAL(hdrs[3], "header3: data4");
+    BOOST_CHECK_EQUAL(hdrs[4], "header3: data5");
+
+    const curl::options::wrapper::string_list list(range);
+    hdrs.assign(
+        curl::detail::make_slist_string_iterator(list.data()),
+        curl::detail::make_slist_string_iterator()
+    );
     BOOST_REQUIRE_EQUAL(hdrs.size(), 5);
     std::sort(hdrs.begin(), hdrs.end());
     BOOST_CHECK_EQUAL(hdrs[0], "header1: data1");

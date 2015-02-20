@@ -5,6 +5,8 @@
 
 #include <curl/curl.h>
 
+#include <boost/range/iterator_range.hpp>
+
 #include <initializer_list>
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
@@ -16,9 +18,9 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         string_list()=default;
 
-        template <typename Container>
-        explicit string_list(const Container &container):
-            m_data(begin(container), end(container)) {}
+        template <typename Range>
+        explicit string_list(const Range &range):
+            m_data(boost::copy_range<curl::detail::string_list>(range)) {}
 
         template <typename T>
         explicit string_list(const std::initializer_list<T> &container):
