@@ -22,7 +22,6 @@ namespace bunsan{namespace curl{namespace http
 
         const http::status &status() const { return m_status; }
         const header_set &headers() const { return m_header_set; }
-        const header_set::index_type &index() const { return headers().index(); }
 
         bool operator==(const response_head &h) const
         {

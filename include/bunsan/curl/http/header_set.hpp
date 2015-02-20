@@ -27,10 +27,9 @@ namespace bunsan{namespace curl{namespace http
                 >
             >
         >;
+        using index_type = container_type::index<tag_hashed>::type;
 
     public:
-        using index_type = container_type::index<tag_hashed>::type;
-        using iterator = index_type::iterator;
         using const_iterator = index_type::const_iterator;
 
         class plain_const_iterator;
@@ -39,8 +38,14 @@ namespace bunsan{namespace curl{namespace http
     public:
         void merge_insert(const header &h);
 
-        const index_type &index() const { return m_headers.get<tag_hashed>(); }
-        index_type &index() { return m_headers.get<tag_hashed>(); }
+        void erase(const std::string &name);
+
+        const_iterator find(const std::string &name) const;
+
+        const_iterator begin() const { return index().begin(); }
+        const_iterator end() const { return index().end(); }
+        std::size_t size() const { return index().size(); }
+        bool empty() const { return index().empty(); }
 
         plain_const_range plain_headers() const;
 
@@ -48,6 +53,10 @@ namespace bunsan{namespace curl{namespace http
         {
             return m_headers == h.m_headers;
         }
+
+    private:
+        const index_type &index() const { return m_headers.get<tag_hashed>(); }
+        index_type &index() { return m_headers.get<tag_hashed>(); }
 
     private:
         container_type m_headers;

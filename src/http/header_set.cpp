@@ -11,6 +11,16 @@ namespace bunsan{namespace curl{namespace http
             index().insert(h);
     }
 
+    void header_set::erase(const std::string &name)
+    {
+        index().erase(header::make_name(name));
+    }
+
+    header_set::const_iterator header_set::find(const std::string &name) const
+    {
+        return index().find(header::make_name(name));
+    }
+
     header_set::plain_const_range header_set::plain_headers() const
     {
         return plain_const_range(
@@ -21,7 +31,7 @@ namespace bunsan{namespace curl{namespace http
 
     std::ostream &operator<<(std::ostream &out, const header_set &h)
     {
-        for (const header &hdr: h.index())
+        for (const header &hdr: h)
             for (const std::string &str: hdr.plain_headers())
                 out << str << '\n';
         return out;
