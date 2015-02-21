@@ -32,6 +32,7 @@ namespace bunsan{namespace curl{namespace options
     BUNSAN_CURL_OPTION_WRAPPED(put, CURLOPT_PUT, bool_01)
     BUNSAN_CURL_OPTION_WRAPPED(post, CURLOPT_POST, bool_01)
     BUNSAN_CURL_BYTES_WRAPPED(postfields, CURLOPT_POSTFIELDS, CURLOPT_POSTFIELDSIZE_LARGE, bytes)
+    BUNSAN_CURL_OPTION_WRAPPED(postfieldsize, CURLOPT_POSTFIELDSIZE_LARGE, curl_off_t_)
     // retention_policy::by_curl version of postfields: CURLOPT_COPYPOSTFIELDS
     // TODO BUNSAN_CURL_OPTION_WRAPPED(httppost, CURLOPT_HTTPPOST, httppost)
     BUNSAN_CURL_OPTION_WRAPPED(referer, CURLOPT_REFERER, string)
