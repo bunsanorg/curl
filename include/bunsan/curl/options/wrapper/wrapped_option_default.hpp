@@ -8,7 +8,10 @@
 
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
-    template <typename Wrapper, decltype(static_cast<Wrapper *>(nullptr)->data()) Default>
+    template <
+        typename Wrapper,
+        decltype(static_cast<Wrapper *>(nullptr)->data()) Default
+    >
     class wrapped_option_default
     {
     public:
@@ -19,7 +22,8 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         template <typename Arg, typename ... Args>
         explicit wrapped_option_default(Arg &&arg, Args &&...args):
-            m_wrapper(std::forward<Arg>(arg), std::forward<Args>(args)...) {}
+            m_wrapper(std::forward<Arg>(arg),
+                      std::forward<Args>(args)...) {}
 
         inline decltype(static_cast<Wrapper *>(nullptr)->data()) data() const
         {
