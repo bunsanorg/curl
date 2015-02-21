@@ -7,8 +7,6 @@
 
 #include <curl/curl.h>
 
-#include <boost/scope_exit.hpp>
-
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
     template <CURLoption CallbackId, CURLoption DataId, typename Wrapper>
@@ -31,19 +29,22 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         void setopt(CURL *const curl) const
         {
-            bool commit = false;
-            BOOST_SCOPE_EXIT_ALL(curl, this, &commit)
+            try
             {
-                if (!commit)
-                {
-                    // noexcept
-                    ::curl_easy_setopt(curl, callback_id(), nullptr);
-                    ::curl_easy_setopt(curl, data_id(), nullptr);
-                }
-            };
-            curl::detail::easy::setopt(curl, callback_id(), Wrapper::callback());
-            curl::detail::easy::setopt(curl, data_id(), Wrapper::data());
-            commit = true;
+                curl::detail::easy::setopt(curl, callback_id(), Wrapper::callback());
+                curl::detail::easy::setopt(curl, data_id(), Wrapper::data());
+            }
+            catch (...)
+            {
+                unsetopt(curl);
+                throw;
+            }
+        }
+
+        void unsetopt(CURL *const curl) const noexcept
+        {
+            ::curl_easy_setopt(curl, callback_id(), nullptr);
+            ::curl_easy_setopt(curl, data_id(), nullptr);
         }
     };
 }}}}

@@ -29,22 +29,25 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         void setopt(CURL *const curl) const
         {
-            bool commit = false;
-            BOOST_SCOPE_EXIT_ALL(curl, this, &commit)
+            try
             {
-                if (!commit)
-                {
-                    // see Curl_init_userdefined()
-                    constexpr decltype(Wrapper::size()) unknown_size = -1;
+                curl::detail::easy::setopt(curl, size_id(), Wrapper::size());
+                curl::detail::easy::setopt(curl, data_id(), Wrapper::data());
+            }
+            catch (...)
+            {
+                unsetopt(curl);
+                throw;
+            }
+        }
 
-                    // noexcept
-                    ::curl_easy_setopt(curl, size_id(), unknown_size);
-                    ::curl_easy_setopt(curl, data_id(), nullptr);
-                }
-            };
-            curl::detail::easy::setopt(curl, size_id(), Wrapper::size());
-            curl::detail::easy::setopt(curl, data_id(), Wrapper::data());
-            commit = true;
+        void unsetopt(CURL *const curl) const noexcept
+        {
+            // see Curl_init_userdefined()
+            constexpr decltype(Wrapper::size()) unknown_size = -1;
+
+            ::curl_easy_setopt(curl, size_id(), unknown_size);
+            ::curl_easy_setopt(curl, data_id(), nullptr);
         }
     };
 }}}}

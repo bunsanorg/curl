@@ -8,8 +8,41 @@
 
 #include <boost/range/iterator_range.hpp>
 
+#include <type_traits>
+
 namespace bunsan{namespace curl{namespace options{namespace wrapper
 {
+    namespace detail
+    {
+        template <typename RetentionPolicy>
+        struct unsetter;
+
+        template <>
+        struct unsetter<retention_policy::by_curl>
+        {
+            template <typename Data>
+            static void unsetopt(CURL *,
+                                 const CURLoption,
+                                 const Data &) noexcept {}
+        };
+
+        template <>
+        struct unsetter<retention_policy::by_wrapper>
+        {
+            template <typename Data>
+            static void unsetopt(CURL *const curl,
+                                 const CURLoption id,
+                                 const Data &) noexcept
+            {
+                static_assert(
+                    std::is_pointer<Data>::value,
+                    "Only pointers are supported!"
+                );
+                ::curl_easy_setopt(curl, id, static_cast<Data>(nullptr));
+            }
+        };
+    }
+
     template <CURLoption Id, typename Wrapper>
     class wrapped_option: private Wrapper
     {
@@ -28,6 +61,11 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         void setopt(CURL *const curl) const
         {
             curl::detail::easy::setopt(curl, id(), Wrapper::data());
+        }
+
+        void unsetopt(CURL *const curl) const
+        {
+            detail::unsetter<retention_policy>::unsetopt(curl, id(), Wrapper::data());
         }
     };
 }}}}
