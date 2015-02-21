@@ -72,9 +72,7 @@ BOOST_AUTO_TEST_CASE(readfunction_with_size)
     rdata = "Hello, world!";
     easy.set(options::url(url_root + "/echo"));
     easy.set(options::post(true));
-    easy.set(options::httpheader({
-        rdata_content_length()
-    }));
+    easy.set(options::postfieldsize(rdata.size()));
     easy.set(options::readfunction(reader));
     easy.set(options::writefunction(writer));
     easy.perform();

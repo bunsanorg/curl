@@ -29,10 +29,4 @@ struct easy_fixture
             rdata.erase(rdata.begin(), rdata.begin() + size);
             return size;
         };
-
-    std::string rdata_content_length() const
-    {
-        return "Content-Length: " +
-               boost::lexical_cast<std::string>(rdata.size());
-    }
 };
