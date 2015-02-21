@@ -6,6 +6,12 @@ namespace bunsan{namespace curl{namespace options
 {
     namespace detail
     {
+        template <typename Option>
+        struct option_type:
+            std::remove_cv<
+                typename std::remove_reference<Option>::type
+            > {};
+
         struct is_function_checker
         {
             template <typename Option>
@@ -37,7 +43,8 @@ namespace bunsan{namespace curl{namespace options
     template <typename Option>
     struct option_traits
     {
-        using retention_policy = typename Option::retention_policy;
-        using is_function = detail::is_function<Option>;
+        using option_type = typename detail::option_type<Option>::type;
+        using retention_policy = typename option_type::retention_policy;
+        using is_function = detail::is_function<option_type>;
     };
 }}}

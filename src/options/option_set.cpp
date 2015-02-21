@@ -44,27 +44,18 @@ namespace bunsan{namespace curl{namespace options
         }
     }
 
-    void option_set::add(option_ptr &&opt)
+    void option_set::store_and_setopt(option_ptr opt, CURL *const curl)
     {
+        BOOST_ASSERT(curl);
         BOOST_ASSERT(opt);
-        shared_option_ptr opt_(opt.release());
-        const detail::option_base::const_id_range range = opt_->ids();
+        const auto range = opt->ids();
         BOOST_ASSERT(!range.empty());
-        for (const CURLoption &id: range)
-            reset(id);
-        for (const CURLoption &id: range)
-            m_options[curl_opt_id(id)] = opt_;
-    }
-
-    void option_set::add_and_setopt(option_ptr &&opt, CURL *const curl)
-    {
-        const detail::option_base::const_id_range range = opt->ids();
-        BOOST_ASSERT(!range.empty());
-        const CURLoption id = *range.begin();
-        const CURLoption id_ = curl_opt_id(id);
-        add(std::move(opt));
-        BOOST_ASSERT(m_options[id_]);
-        m_options[id_]->setopt(curl);
+        shared_option_ptr option(opt.release());
+        for (const CURLoption id: range)
+            unsetopt(curl, id);
+        for (const CURLoption id: range)
+            m_options[curl_opt_id(id)] = option;
+        option->setopt(curl);
     }
 
     void option_set::setopt(CURL *const curl) const
@@ -86,7 +77,7 @@ namespace bunsan{namespace curl{namespace options
             opt.reset();
     }
 
-    void option_set::reset(const CURLoption id)
+    void option_set::unsetopt(CURL *const curl, const CURLoption id)
     {
         const CURLoption id_ = curl_opt_id(id);
         const shared_option_ptr opt = m_options[id_];
@@ -99,6 +90,7 @@ namespace bunsan{namespace curl{namespace options
                 BOOST_ASSERT(m_options[other_id_] == opt);
                 m_options[other_id_].reset();
             }
+            opt->unsetopt(curl);
         }
         BOOST_ASSERT(!m_options[id_]);
     }

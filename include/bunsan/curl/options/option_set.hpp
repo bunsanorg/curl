@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bunsan/curl/options/traits.hpp>
+
 #include <curl/curl.h>
 
 #include <boost/noncopyable.hpp>
@@ -27,6 +29,7 @@ namespace bunsan{namespace curl{namespace options
 
         public:
             virtual void setopt(CURL *curl) const=0;
+            virtual void unsetopt(CURL *curl) const noexcept=0;
 
             virtual const_id_range ids() const=0;
 
@@ -46,11 +49,18 @@ namespace bunsan{namespace curl{namespace options
     class option: public detail::option_base
     {
     public:
-        explicit option(const T &impl): m_impl(impl) {}
+        template <typename Arg>
+        explicit option(Arg &&arg):
+            m_impl(std::forward<Arg>(arg)) {}
 
         void setopt(CURL *curl) const override
         {
             m_impl.setopt(curl);
+        }
+
+        void unsetopt(CURL *curl) const noexcept override
+        {
+            m_impl.unsetopt(curl);
         }
 
         const_id_range ids() const override
@@ -68,6 +78,17 @@ namespace bunsan{namespace curl{namespace options
         T m_impl;
     };
 
+    template <typename Option>
+    option_ptr make_option(Option &&opt)
+    {
+        option_ptr ptr(
+            new option<typename option_traits<Option>::option_type>(
+                std::forward<Option>(opt)
+            )
+        );
+        return ptr;
+    }
+
     class option_set
     {
     public:
@@ -81,20 +102,11 @@ namespace bunsan{namespace curl{namespace options
         void swap(option_set &) noexcept;
 
         template <typename Option>
-        void add(const Option &opt)
+        void setopt(CURL *const curl, Option &&opt)
         {
-            add(newopt(opt));
+            using retention_policy = typename option_traits<Option>::retention_policy;
+            setopt_(curl, std::forward<Option>(opt), retention_policy());
         }
-
-        template <typename Option>
-        void add_and_setopt(const Option &opt, CURL *const curl)
-        {
-            add_and_setopt(newopt(opt), curl);
-        }
-
-        void add(option_ptr &&opt);
-
-        void add_and_setopt(option_ptr &&opt, CURL *const curl);
 
         void setopt(CURL *const curl) const;
 
@@ -102,11 +114,26 @@ namespace bunsan{namespace curl{namespace options
 
     private:
         template <typename Option>
-        option_ptr newopt(const Option &opt)
+        void setopt_(CURL *const curl, Option &&opt,
+                     retention_policy::by_curl)
         {
-            option_ptr tmp(new option<Option>(opt));
-            return tmp;
+            for (const CURLoption id: opt.ids())
+                unsetopt(curl, id);
+            opt.setopt(curl);
         }
+
+        template <typename Option>
+        void setopt_(CURL *const curl, Option &&opt,
+                     retention_policy::by_wrapper)
+        {
+            store_and_setopt(
+                make_option(std::forward<Option>(opt)),
+                curl
+            );
+        }
+
+        void store_and_setopt(option_ptr opt, CURL *const curl);
+        void unsetopt(CURL *const curl, const CURLoption id);
 
         void reset(const CURLoption id);
 
