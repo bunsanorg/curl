@@ -1,32 +1,10 @@
 #pragma once
 
+#include "server_fixture.hpp"
+
 #include <bunsan/curl/easy.hpp>
 
-#include <boost/lexical_cast.hpp>
-
-#include <algorithm>
-#include <string>
-
-struct easy_fixture
+struct easy_fixture: server_fixture
 {
     bunsan::curl::easy easy;
-    const std::string url_root = "http://localhost:8090";
-    std::string wdata;
-    std::string rdata;
-
-    std::function<std::size_t (const char *, std::size_t)> writer =
-        [this](const char *const ptr, const std::size_t size)
-        {
-            wdata.append(ptr, size);
-            return size;
-        };
-
-    std::function<std::size_t (char *, std::size_t)> reader =
-        [this](char *const ptr, std::size_t size)
-        {
-            size = std::min(size, rdata.size());
-            std::copy(rdata.begin(), rdata.begin() + size, ptr);
-            rdata.erase(rdata.begin(), rdata.begin() + size);
-            return size;
-        };
 };

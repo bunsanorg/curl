@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bunsan/curl/error.hpp>
+#include <bunsan/curl/http_version.hpp>
 
 namespace bunsan{namespace curl{namespace http
 {
@@ -31,4 +32,20 @@ namespace bunsan{namespace curl{namespace http
         virtual header_error {};
     struct status_header_expected_error:
         virtual unexpected_header_type_error {};
+
+    struct not_ok_status_error: virtual error
+    {
+        using status_http_version = boost::error_info<
+            struct tag_status_http_version,
+            curl::http_version
+        >;
+        using status_code = boost::error_info<
+            struct tag_status_code,
+            unsigned
+        >;
+        using status_reason = boost::error_info<
+            struct tag_status_reason,
+            std::string
+        >;
+    };
 }}}

@@ -22,5 +22,6 @@ bunsan_tests_project_add_test(wrapper wrapper.cpp)
 
 bunsan_curl_tests_add_server_test(easy_info easy_info.cpp)
 bunsan_curl_tests_add_server_test(easy_options easy_options.cpp)
+bunsan_curl_tests_add_server_test(http_client http_client.cpp)
 
 bunsan_tests_project_footer()

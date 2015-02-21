@@ -22,6 +22,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/global.cpp
     src/http_version.cpp
 
+    src/http/client.cpp
     src/http/header.cpp
     src/http/header_parser.cpp
     src/http/header_set.cpp
