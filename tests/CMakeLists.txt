@@ -1,7 +1,8 @@
 bunsan_tests_project_header()
 
-bunsan_find_python3()
+bunsan_tests_use_parent_project()
 
+bunsan_find_python3()
 macro(bunsan_curl_tests_add_server_test target)
     bunsan_tests_project_add_executable(test_${target} ${ARGN})
     set(test_executable ${CMAKE_CURRENT_BINARY_DIR}/test_${target})
