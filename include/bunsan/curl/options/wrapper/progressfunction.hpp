@@ -21,7 +21,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = std::integral_constant<int, 1>;
 
-        static inline int static_call(
+        static int static_call(
             void *clientp, T dltotal, T dlnow, T ultotal, T ulnow)
         {
             const auto this_ = static_cast<const wrapper_type *>(clientp);

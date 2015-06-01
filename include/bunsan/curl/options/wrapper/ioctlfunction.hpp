@@ -22,7 +22,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = std::integral_constant<curl::ioerr, curl::ioerr::failrestart>;
 
-        static inline curlioerr static_call(CURL *handle, int cmd, void *clientp)
+        static curlioerr static_call(CURL *handle, int cmd, void *clientp)
         {
             const auto this_ = static_cast<const wrapper_type *>(clientp);
             return static_cast<curlioerr>(this_->call(curl::easy::get(handle), cmd));

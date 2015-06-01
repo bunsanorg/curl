@@ -27,7 +27,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         explicit duration(const duration_type &duration): m_data(duration) {}
 
-        inline long data() const
+        long data() const
         {
             return boost::numeric_cast<long>(m_data.count());
         }

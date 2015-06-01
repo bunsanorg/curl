@@ -17,7 +17,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         explicit bool_(const bool data): m_data(data) {}
 
-        inline long data() const
+        long data() const
         {
             return m_data ? True : False;
         }

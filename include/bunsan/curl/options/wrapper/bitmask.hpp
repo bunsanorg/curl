@@ -53,7 +53,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
                 std::forward<Args>(args)...
             )) {}
 
-        inline long data() const
+        long data() const
         {
             return m_data;
         }

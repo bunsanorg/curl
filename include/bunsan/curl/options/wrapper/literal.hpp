@@ -18,7 +18,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
             literal()=default;
 
-            inline T data() const { return Value; }
+            T data() const { return Value; }
         };
     }
 
@@ -46,7 +46,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         string_literal()=default;
 
-        inline const char *data() const { return m_data; }
+        const char *data() const { return m_data; }
 
     private:
         const char m_data[sizeof...(Chars) + 1] = {

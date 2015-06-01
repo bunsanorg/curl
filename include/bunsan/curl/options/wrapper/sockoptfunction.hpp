@@ -21,7 +21,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = std::integral_constant<int, CURL_SOCKOPT_ERROR>;
 
-        static inline int static_call(
+        static int static_call(
             void *clientp, curl_socket_t curlfd, curlsocktype purpose)
         {
             const auto this_ = static_cast<const wrapper_type *>(clientp);

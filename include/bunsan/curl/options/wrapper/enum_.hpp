@@ -18,7 +18,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         explicit enum_(const Enum data): m_data(data) {}
 
-        inline long data() const
+        long data() const
         {
             return boost::numeric_cast<long>(
                 static_cast<typename std::underlying_type<Enum>::type>(m_data)

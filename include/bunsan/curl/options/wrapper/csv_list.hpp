@@ -14,7 +14,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         template <char Separator, char ... Separators>
         struct csv_list_separators
         {
-            static inline void call(std::ostream &out)
+            static void call(std::ostream &out)
             {
                 csv_list_separators<Separator>::call(out);
                 csv_list_separators<Separators...>::call(out);
@@ -24,7 +24,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         template <char Separator>
         struct csv_list_separators<Separator>
         {
-            static inline void call(std::ostream &out)
+            static void call(std::ostream &out)
             {
                 out << Separator;
             }

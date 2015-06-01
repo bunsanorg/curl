@@ -21,8 +21,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = std::integral_constant<CURLcode, CURLE_ABORTED_BY_CALLBACK>;
 
-        static inline CURLcode static_call(
-            CURL *handle, void *sslctx, void *parm)
+        static CURLcode static_call(CURL *handle, void *sslctx, void *parm)
         {
             const auto this_ = static_cast<const wrapper_type *>(parm);
             return this_->call(curl::easy::get(handle), sslctx);

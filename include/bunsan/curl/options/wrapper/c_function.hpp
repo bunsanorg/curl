@@ -23,7 +23,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         explicit c_function(const function_ptr data):
             m_data(data) {}
 
-        inline function_ptr data() const
+        function_ptr data() const
         {
             return m_data;
         }

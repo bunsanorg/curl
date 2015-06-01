@@ -22,7 +22,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = void;
 
-        static inline int static_call(
+        static int static_call(
             CURL *handle,
             curl_infotype info,
             char *ptr,

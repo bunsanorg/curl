@@ -45,7 +45,7 @@ namespace bunsan{namespace curl{namespace detail
             m_data.reset();
         }
 
-        inline void swap(string_list &list) noexcept
+        void swap(string_list &list) noexcept
         {
             m_data.swap(list.m_data);
         }
@@ -56,20 +56,20 @@ namespace bunsan{namespace curl{namespace detail
             slist::append(m_data, std::forward<T>(arg));
         }
 
-        inline const_iterator begin() const { return const_iterator(data()); }
-        inline const_iterator end() const { return const_iterator(); }
-        inline const_iterator cbegin() const { return begin(); }
-        inline const_iterator cend() const { return end(); }
+        const_iterator begin() const { return const_iterator(data()); }
+        const_iterator end() const { return const_iterator(); }
+        const_iterator cbegin() const { return begin(); }
+        const_iterator cend() const { return end(); }
 
-        inline bool empty() const { return !m_data; }
-        inline std::size_t size() const { return std::distance(begin(), end()); }
+        bool empty() const { return !m_data; }
+        std::size_t size() const { return std::distance(begin(), end()); }
 
-        inline ::curl_slist *data()
+        ::curl_slist *data()
         {
             return m_data.get();
         }
 
-        inline const ::curl_slist *data() const
+        const ::curl_slist *data() const
         {
             return m_data.get();
         }

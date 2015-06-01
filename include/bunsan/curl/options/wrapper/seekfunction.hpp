@@ -21,7 +21,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         >;
         using fail_type = std::integral_constant<seekfunc, seekfunc::fail>;
 
-        static inline int static_call(void *instream, curl_off_t offset, int origin)
+        static int static_call(void *instream, curl_off_t offset, int origin)
         {
             const auto this_ = static_cast<const wrapper_type *>(instream);
             return static_cast<int>(this_->call(offset, origin));

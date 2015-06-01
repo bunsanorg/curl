@@ -26,7 +26,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
         explicit string_list(const std::initializer_list<T> &container):
             m_data(begin(container), end(container)) {}
 
-        inline const ::curl_slist *data() const
+        const ::curl_slist *data() const
         {
             return m_data.data();
         }

@@ -16,7 +16,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
 
         explicit integer(const T data): m_data(data) {}
 
-        inline T data() const
+        T data() const
         {
             return m_data;
         }

@@ -20,12 +20,12 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
                 std::forward<Args>(args)...
             )) {}
 
-        inline const char *data() const
+        const char *data() const
         {
             return m_data.data();
         }
 
-        inline curl_off_t size() const
+        curl_off_t size() const
         {
             return m_data.size();
         }

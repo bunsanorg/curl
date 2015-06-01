@@ -25,7 +25,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
             m_wrapper(std::forward<Arg>(arg),
                       std::forward<Args>(args)...) {}
 
-        inline decltype(static_cast<Wrapper *>(nullptr)->data()) data() const
+        auto data() const
         {
             if (m_wrapper)
                 return m_wrapper->data();

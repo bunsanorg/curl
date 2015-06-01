@@ -24,7 +24,7 @@ namespace bunsan{namespace curl{namespace options{namespace wrapper
                 std::forward<Args>(args)...
             )) {}
 
-        inline const char *data() const
+        const char *data() const
         {
             if (m_data)
                 return m_data->c_str();
