@@ -6,33 +6,35 @@
 #include <ostream>
 #include <string>
 
-namespace bunsan{namespace curl{namespace http
-{
-    class response_head
-    {
-    public:
-        explicit response_head(const http::status &s);
+namespace bunsan {
+namespace curl {
+namespace http {
 
-        response_head(const response_head &)=default;
-        response_head(response_head &&)=default;
-        response_head &operator=(const response_head &)=default;
-        response_head &operator=(response_head &&)=default;
+class response_head {
+ public:
+  explicit response_head(const http::status &s);
 
-        void append(const header &h) { m_header_set.merge_insert(h); }
+  response_head(const response_head &) = default;
+  response_head(response_head &&) = default;
+  response_head &operator=(const response_head &) = default;
+  response_head &operator=(response_head &&) = default;
 
-        const http::status &status() const { return m_status; }
-        const header_set &headers() const { return m_header_set; }
+  void append(const header &h) { m_header_set.merge_insert(h); }
 
-        bool operator==(const response_head &h) const
-        {
-            return m_status == h.m_status &&
-                   m_header_set == h.m_header_set;
-        }
+  const http::status &status() const { return m_status; }
+  const header_set &headers() const { return m_header_set; }
 
-    private:
-        http::status m_status;
-        header_set m_header_set;
-    };
+  bool operator==(const response_head &h) const {
+    return m_status == h.m_status && m_header_set == h.m_header_set;
+  }
 
-    std::ostream &operator<<(std::ostream &out, const response_head &r);
-}}}
+ private:
+  http::status m_status;
+  header_set m_header_set;
+};
+
+std::ostream &operator<<(std::ostream &out, const response_head &r);
+
+}  // namespace http
+}  // namespace curl
+}  // namespace bunsan

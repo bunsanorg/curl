@@ -4,7 +4,6 @@
 
 #include <bunsan/curl/easy.hpp>
 
-struct easy_fixture: server_fixture
-{
-    bunsan::curl::easy easy;
+struct easy_fixture : server_fixture {
+  bunsan::curl::easy easy;
 };

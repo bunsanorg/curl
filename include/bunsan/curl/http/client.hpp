@@ -11,61 +11,64 @@
 
 #include <utility>
 
-namespace bunsan{namespace curl{namespace http
-{
-    class client: private boost::noncopyable
-    {
-    public:
-        using readfunction = options::wrapper::readfunction::function_type;
-        using writefunction = options::wrapper::writefunction::function_type;
+namespace bunsan {
+namespace curl {
+namespace http {
 
-    public:
-        client();
+class client : private boost::noncopyable {
+ public:
+  using readfunction = options::wrapper::readfunction::function_type;
+  using writefunction = options::wrapper::writefunction::function_type;
 
-        template <typename Option>
-        void set(Option &&option)
-        {
-            m_easy.set(std::forward<Option>(option));
-        }
+ public:
+  client();
 
-        void set_method_get();
-        void set_method_head();
-        void set_method_post();
-        void set_method_put();
+  template <typename Option>
+  void set(Option &&option) {
+    m_easy.set(std::forward<Option>(option));
+  }
 
-        // TODO cookies
+  void set_method_get();
+  void set_method_head();
+  void set_method_post();
+  void set_method_put();
 
-        void set_useragent(const std::string &useragent);
-        void set_referer(const std::string &referer);
+  // TODO cookies
 
-        void set_header(const header &h);
-        void set_header(const std::string &name, const std::string &value);
-        void set_header(const std::string &header);
-        void unset_header(const std::string &name);
-        void set_content_length(const std::size_t size);
-        void set_content_type(const std::string &content_type);
-        void set_transfer_encoding(const std::string &transfer_encoding);
-        void set_transfer_encoding_chunked();
+  void set_useragent(const std::string &useragent);
+  void set_referer(const std::string &referer);
 
-        void set_url(const std::string &url);
+  void set_header(const header &h);
+  void set_header(const std::string &name, const std::string &value);
+  void set_header(const std::string &header);
+  void unset_header(const std::string &name);
+  void set_content_length(const std::size_t size);
+  void set_content_type(const std::string &content_type);
+  void set_transfer_encoding(const std::string &transfer_encoding);
+  void set_transfer_encoding_chunked();
 
-        void set_follow_location(const bool follow_location);
+  void set_url(const std::string &url);
 
-        void set_readfunction(const readfunction &callback);
-        void set_writefunction(const writefunction &callback);
+  void set_follow_location(const bool follow_location);
 
-        void set_post_data(const std::string &data);
+  void set_readfunction(const readfunction &callback);
+  void set_writefunction(const writefunction &callback);
 
-        const header_parser &responses();
+  void set_post_data(const std::string &data);
 
-        status perform();
+  const header_parser &responses();
 
-        /// \throws not_ok_status_error if status.code != 200
-        void check_perform();
+  status perform();
 
-    private:
-        easy m_easy;
-        header_set m_request_headers;
-        header_parser m_header_parser;
-    };
-}}}
+  /// \throws not_ok_status_error if status.code != 200
+  void check_perform();
+
+ private:
+  easy m_easy;
+  header_set m_request_headers;
+  header_parser m_header_parser;
+};
+
+}  // namespace http
+}  // namespace curl
+}  // namespace bunsan

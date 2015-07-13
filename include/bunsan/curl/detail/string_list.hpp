@@ -6,92 +6,73 @@
 #include <algorithm>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace detail
-{
-    class string_list
-    {
-    public:
-        using value_type = const char *;
-        using iterator = slist_iterator;
-        using const_iterator = slist_iterator;
+namespace bunsan {
+namespace curl {
+namespace detail {
 
-    public:
-        string_list()=default;
+class string_list {
+ public:
+  using value_type = const char *;
+  using iterator = slist_iterator;
+  using const_iterator = slist_iterator;
 
-        string_list(string_list &&)=default;
-        string_list &operator=(string_list &&)=default;
+ public:
+  string_list() = default;
 
-        string_list(const string_list &);
-        string_list &operator=(const string_list &);
+  string_list(string_list &&) = default;
+  string_list &operator=(string_list &&) = default;
 
-        template <typename Iterator>
-        explicit string_list(Iterator begin, const Iterator end)
-        {
-            for (; begin != end; ++begin)
-                append(*begin);
-        }
+  string_list(const string_list &);
+  string_list &operator=(const string_list &);
 
-        template <typename Arg, typename ... Args>
-        void assign(Arg &&arg, Args &&...args)
-        {
-            string_list(
-                std::forward<Arg>(arg),
-                std::forward<Args>(args)...
-            ).swap(*this);
-        }
+  template <typename Iterator>
+  explicit string_list(Iterator begin, const Iterator end) {
+    for (; begin != end; ++begin) append(*begin);
+  }
 
-        void clear()
-        {
-            m_data.reset();
-        }
+  template <typename Arg, typename... Args>
+  void assign(Arg &&arg, Args &&... args) {
+    string_list(std::forward<Arg>(arg), std::forward<Args>(args)...)
+        .swap(*this);
+  }
 
-        void swap(string_list &list) noexcept
-        {
-            m_data.swap(list.m_data);
-        }
+  void clear() { m_data.reset(); }
 
-        template <typename T>
-        void append(T &&arg)
-        {
-            slist::append(m_data, std::forward<T>(arg));
-        }
+  void swap(string_list &list) noexcept { m_data.swap(list.m_data); }
 
-        const_iterator begin() const { return const_iterator(data()); }
-        const_iterator end() const { return const_iterator(); }
-        const_iterator cbegin() const { return begin(); }
-        const_iterator cend() const { return end(); }
+  template <typename T>
+  void append(T &&arg) {
+    slist::append(m_data, std::forward<T>(arg));
+  }
 
-        bool empty() const { return !m_data; }
-        std::size_t size() const { return std::distance(begin(), end()); }
+  const_iterator begin() const { return const_iterator(data()); }
+  const_iterator end() const { return const_iterator(); }
+  const_iterator cbegin() const { return begin(); }
+  const_iterator cend() const { return end(); }
 
-        ::curl_slist *data()
-        {
-            return m_data.get();
-        }
+  bool empty() const { return !m_data; }
+  std::size_t size() const { return std::distance(begin(), end()); }
 
-        const ::curl_slist *data() const
-        {
-            return m_data.get();
-        }
+  ::curl_slist *data() { return m_data.get(); }
 
-    private:
-        slist_ptr m_data;
-    };
+  const ::curl_slist *data() const { return m_data.get(); }
 
-    inline void swap(string_list &a, string_list &b) noexcept
-    {
-        a.swap(b);
-    }
+ private:
+  slist_ptr m_data;
+};
 
-    bool operator==(const string_list &a, const string_list &b);
+inline void swap(string_list &a, string_list &b) noexcept { a.swap(b); }
 
-    inline string_list::const_iterator begin(const string_list &list)
-    {
-        return list.begin();
-    }
+bool operator==(const string_list &a, const string_list &b);
 
-    inline string_list::const_iterator end(const string_list &list)
-    {
-        return list.end();
-    }
-}}}
+inline string_list::const_iterator begin(const string_list &list) {
+  return list.begin();
+}
+
+inline string_list::const_iterator end(const string_list &list) {
+  return list.end();
+}
+
+}  // namespace detail
+}  // namespace curl
+}  // namespace bunsan

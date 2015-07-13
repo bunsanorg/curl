@@ -9,24 +9,26 @@
 #include <type_traits>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    struct closesocketfunction_traits
-    {
-        using wrapper_type = basic_function<closesocketfunction_traits>;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        using function_type = std::function<
-            int (curl_socket_t item)
-        >;
-        using fail_type = std::integral_constant<int, 1>;
+struct closesocketfunction_traits {
+  using wrapper_type = basic_function<closesocketfunction_traits>;
 
-        static int static_call(
-            void *clientp, curl_socket_t item)
-        {
-            const auto this_ = static_cast<const wrapper_type *>(clientp);
-            return this_->call(item);
-        }
-    };
+  using function_type = std::function<int(curl_socket_t item)>;
+  using fail_type = std::integral_constant<int, 1>;
 
-    using closesocketfunction = closesocketfunction_traits::wrapper_type;
-}}}}
+  static int static_call(void *clientp, curl_socket_t item) {
+    const auto this_ = static_cast<const wrapper_type *>(clientp);
+    return this_->call(item);
+  }
+};
+
+using closesocketfunction = closesocketfunction_traits::wrapper_type;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

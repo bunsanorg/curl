@@ -21,74 +21,67 @@ namespace options = curl::options;
 
 BOOST_FIXTURE_TEST_SUITE(easy_options, easy_fixture)
 
-BOOST_AUTO_TEST_CASE(write)
-{
-    easy.set(options::url(url_root + "/hello"));
-    easy.set(options::writefunction(writer));
-    easy.perform();
-    BOOST_CHECK_EQUAL(wdata, "Hello, world!");
+BOOST_AUTO_TEST_CASE(write) {
+  easy.set(options::url(url_root + "/hello"));
+  easy.set(options::writefunction(writer));
+  easy.perform();
+  BOOST_CHECK_EQUAL(wdata, "Hello, world!");
 }
 
-BOOST_AUTO_TEST_CASE(timeout)
-{
-    easy.set(options::url(url_root + "/sleep"));
-    easy.set(options::timeout(std::chrono::milliseconds(100)));
+BOOST_AUTO_TEST_CASE(timeout) {
+  easy.set(options::url(url_root + "/sleep"));
+  easy.set(options::timeout(std::chrono::milliseconds(100)));
 
-    std::error_code ec;
-    easy.perform(ec);
-    BOOST_CHECK_EQUAL(ec, CURLE_OPERATION_TIMEDOUT);
+  std::error_code ec;
+  easy.perform(ec);
+  BOOST_CHECK_EQUAL(ec, CURLE_OPERATION_TIMEDOUT);
 }
 
-BOOST_AUTO_TEST_CASE(maxfilesize)
-{
-    easy.set(options::url(url_root + "/big"));
-    easy.set(options::maxfilesize(1024 * 1024));
+BOOST_AUTO_TEST_CASE(maxfilesize) {
+  easy.set(options::url(url_root + "/big"));
+  easy.set(options::maxfilesize(1024 * 1024));
 
-    std::error_code ec;
-    easy.perform(ec);
-    BOOST_CHECK_EQUAL(ec, CURLE_FILESIZE_EXCEEDED);
+  std::error_code ec;
+  easy.perform(ec);
+  BOOST_CHECK_EQUAL(ec, CURLE_FILESIZE_EXCEEDED);
 }
 
-BOOST_AUTO_TEST_CASE(postfields)
-{
-    easy.set(options::url(url_root + "/echo"));
-    easy.set(options::postfields("Hello, world!"));
-    easy.set(options::writefunction(writer));
-    easy.perform();
-    BOOST_CHECK_EQUAL(wdata, "Hello, world!");
+BOOST_AUTO_TEST_CASE(postfields) {
+  easy.set(options::url(url_root + "/echo"));
+  easy.set(options::postfields("Hello, world!"));
+  easy.set(options::writefunction(writer));
+  easy.perform();
+  BOOST_CHECK_EQUAL(wdata, "Hello, world!");
 }
 
-BOOST_AUTO_TEST_CASE(httpheader)
-{
-    easy.set(options::url(url_root + "/header"));
-    easy.set(options::httpheader({"X-cURL-Test: header data"}));
-    easy.set(options::writefunction(writer));
-    easy.perform();
-    BOOST_CHECK_EQUAL(wdata, "header data");
+BOOST_AUTO_TEST_CASE(httpheader) {
+  easy.set(options::url(url_root + "/header"));
+  easy.set(options::httpheader({"X-cURL-Test: header data"}));
+  easy.set(options::writefunction(writer));
+  easy.perform();
+  BOOST_CHECK_EQUAL(wdata, "header data");
 }
 
-BOOST_AUTO_TEST_CASE(readfunction_with_size)
-{
-    rdata = "Hello, world!";
-    easy.set(options::url(url_root + "/echo"));
-    easy.set(options::post(true));
-    easy.set(options::postfieldsize(rdata.size()));
-    easy.set(options::readfunction(reader));
-    easy.set(options::writefunction(writer));
-    easy.perform();
-    BOOST_CHECK_EQUAL(wdata, "Hello, world!");
+BOOST_AUTO_TEST_CASE(readfunction_with_size) {
+  rdata = "Hello, world!";
+  easy.set(options::url(url_root + "/echo"));
+  easy.set(options::post(true));
+  easy.set(options::postfieldsize(rdata.size()));
+  easy.set(options::readfunction(reader));
+  easy.set(options::writefunction(writer));
+  easy.perform();
+  BOOST_CHECK_EQUAL(wdata, "Hello, world!");
 }
 
-BOOST_AUTO_TEST_CASE(readfunction_chunked)
-{
-    rdata = "Hello, world!";
-    easy.set(options::url(url_root + "/echo"));
-    easy.set(options::post(true));
-    easy.set(options::httpheader({"Transfer-Encoding: chunked"}));
-    easy.set(options::readfunction(reader));
-    easy.set(options::writefunction(writer));
-    easy.perform();
-    BOOST_CHECK_EQUAL(wdata, "Hello, world!");
+BOOST_AUTO_TEST_CASE(readfunction_chunked) {
+  rdata = "Hello, world!";
+  easy.set(options::url(url_root + "/echo"));
+  easy.set(options::post(true));
+  easy.set(options::httpheader({"Transfer-Encoding: chunked"}));
+  easy.set(options::readfunction(reader));
+  easy.set(options::writefunction(writer));
+  easy.perform();
+  BOOST_CHECK_EQUAL(wdata, "Hello, world!");
 }
 
-BOOST_AUTO_TEST_SUITE_END() // easy_options
+BOOST_AUTO_TEST_SUITE_END()  // easy_options

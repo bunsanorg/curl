@@ -10,66 +10,59 @@
 
 #include <type_traits>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    namespace detail
-    {
-        template <typename RetentionPolicy>
-        struct unsetter;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        template <>
-        struct unsetter<retention_policy::by_curl>
-        {
-            template <typename Data>
-            static void unsetopt(CURL *,
-                                 const CURLoption,
-                                 const Data &) noexcept {}
-        };
+namespace detail {
+template <typename RetentionPolicy>
+struct unsetter;
 
-        template <>
-        struct unsetter<retention_policy::by_wrapper>
-        {
-            template <typename Data>
-            static void unsetopt(CURL *const curl,
-                                 const CURLoption id,
-                                 const Data &) noexcept
-            {
-                static_assert(
-                    std::is_pointer<Data>::value,
-                    "Only pointers are supported!"
-                );
-                ::curl_easy_setopt(curl, id, static_cast<Data>(nullptr));
-            }
-        };
-    }
+template <>
+struct unsetter<retention_policy::by_curl> {
+  template <typename Data>
+  static void unsetopt(CURL *, const CURLoption, const Data &) noexcept {}
+};
 
-    template <CURLoption Id, typename Wrapper>
-    class wrapped_option: private Wrapper
-    {
-    public:
-        using retention_policy = typename Wrapper::retention_policy;
+template <>
+struct unsetter<retention_policy::by_wrapper> {
+  template <typename Data>
+  static void unsetopt(CURL *const curl, const CURLoption id,
+                       const Data &) noexcept {
+    static_assert(std::is_pointer<Data>::value, "Only pointers are supported!");
+    ::curl_easy_setopt(curl, id, static_cast<Data>(nullptr));
+  }
+};
+}  // namespace detail
 
-        using Wrapper::Wrapper;
+template <CURLoption Id, typename Wrapper>
+class wrapped_option : private Wrapper {
+ public:
+  using retention_policy = typename Wrapper::retention_policy;
 
-        constexpr CURLoption id() const { return Id; }
+  using Wrapper::Wrapper;
 
-        curl::detail::one_step_range<const CURLoption> ids() const
-        {
-            return curl::detail::make_one_step_range<const CURLoption>(id());
-        }
+  constexpr CURLoption id() const { return Id; }
 
-        void setopt(CURL *const curl) const
-        {
-            curl::detail::easy::setopt(curl, id(), Wrapper::data());
-        }
+  curl::detail::one_step_range<const CURLoption> ids() const {
+    return curl::detail::make_one_step_range<const CURLoption>(id());
+  }
 
-        void unsetopt(CURL *const curl) const
-        {
-            detail::unsetter<retention_policy>::unsetopt(curl, id(), Wrapper::data());
-        }
-    };
-}}}}
+  void setopt(CURL *const curl) const {
+    curl::detail::easy::setopt(curl, id(), Wrapper::data());
+  }
 
-#define BUNSAN_CURL_OPTION_WRAPPED(NAME, CODE, ...) \
-    using NAME = ::bunsan::curl::options::wrapper::wrapped_option< \
-        CODE, ::bunsan::curl::options::wrapper::__VA_ARGS__>;
+  void unsetopt(CURL *const curl) const {
+    detail::unsetter<retention_policy>::unsetopt(curl, id(), Wrapper::data());
+  }
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan
+
+#define BUNSAN_CURL_OPTION_WRAPPED(NAME, CODE, ...)              \
+  using NAME = ::bunsan::curl::options::wrapper::wrapped_option< \
+      CODE, ::bunsan::curl::options::wrapper::__VA_ARGS__>;

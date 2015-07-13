@@ -6,52 +6,45 @@
 
 #include <type_traits>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    namespace detail
-    {
-        template <typename T, T Value, typename CopyPolicy>
-        class literal
-        {
-        public:
-            using retention_policy = CopyPolicy;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-            literal()=default;
+namespace detail {
+template <typename T, T Value, typename CopyPolicy>
+class literal {
+ public:
+  using retention_policy = CopyPolicy;
 
-            T data() const { return Value; }
-        };
-    }
+  literal() = default;
 
-    template <typename T, T Value>
-    class enum_literal:
-        public detail::literal<
-            long,
-            static_cast<long>(Value),
-            retention_policy::by_curl
-        > {};
+  T data() const { return Value; }
+};
+}  // namespace detail
 
-    template <long Value>
-    class long_literal:
-        public detail::literal<
-            long,
-            Value,
-            retention_policy::by_curl
-        > {};
+template <typename T, T Value>
+class enum_literal : public detail::literal<long, static_cast<long>(Value),
+                                            retention_policy::by_curl> {};
 
-    template <char ... Chars>
-    class string_literal
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+template <long Value>
+class long_literal
+    : public detail::literal<long, Value, retention_policy::by_curl> {};
 
-        string_literal()=default;
+template <char... Chars>
+class string_literal {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-        const char *data() const { return m_data; }
+  string_literal() = default;
 
-    private:
-        const char m_data[sizeof...(Chars) + 1] = {
-            Chars...,
-            '\0'
-        };
-    };
-}}}}
+  const char *data() const { return m_data; }
+
+ private:
+  const char m_data[sizeof...(Chars) + 1] = {Chars..., '\0'};
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

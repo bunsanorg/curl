@@ -9,81 +9,79 @@
 #include <system_error>
 #include <type_traits>
 
-namespace bunsan{namespace curl
-{
-    class easy
-    {
-    public:
-        /// Create invalid object.
-        easy(std::nullptr_t) noexcept;
+namespace bunsan {
+namespace curl {
 
-        /// Destroy current object making it invalid.
-        easy &operator=(std::nullptr_t) noexcept;
+class easy {
+ public:
+  /// Create invalid object.
+  easy(std::nullptr_t) noexcept;
 
-        /// \note Takes ownership.
-        explicit easy(CURL *const curl) noexcept;
+  /// Destroy current object making it invalid.
+  easy &operator=(std::nullptr_t) noexcept;
 
-        easy(const easy &);
-        easy &operator=(const easy &);
+  /// \note Takes ownership.
+  explicit easy(CURL *const curl) noexcept;
 
-        easy(easy &&) noexcept;
-        easy &operator=(easy &&) noexcept;
+  easy(const easy &);
+  easy &operator=(const easy &);
 
-        void swap(easy &) noexcept;
+  easy(easy &&) noexcept;
+  easy &operator=(easy &&) noexcept;
 
-        explicit operator bool() const noexcept;
+  void swap(easy &) noexcept;
 
-        /*!
-         * \return raw handle
-         *
-         * \note Ownership remains.
-         *
-         * \warning If object is not valid behavior is undefined.
-         */
-        CURL *handle();
+  explicit operator bool() const noexcept;
 
-        easy();
-        ~easy();
+  /*!
+   * \return raw handle
+   *
+   * \note Ownership remains.
+   *
+   * \warning If object is not valid behavior is undefined.
+   */
+  CURL *handle();
 
-        std::string escape(const std::string &url);
-        std::string unescape(const std::string &url);
+  easy();
+  ~easy();
 
-        void perform();
-        void perform(std::error_code &ec);
+  std::string escape(const std::string &url);
+  std::string unescape(const std::string &url);
 
-        void pause(const int bitmask);
-        void pause(const int bitmask, std::error_code &ec);
+  void perform();
+  void perform(std::error_code &ec);
 
-        template <typename Option>
-        void set(const Option &opt)
-        {
-            m_option_set.setopt(m_curl, opt);
-        }
+  void pause(const int bitmask);
+  void pause(const int bitmask, std::error_code &ec);
 
-        /// Set all options to default values.
-        void reset();
+  template <typename Option>
+  void set(const Option &opt) {
+    m_option_set.setopt(m_curl, opt);
+  }
 
-        /*!
-         * Get easy object from captured CURL pointer.
-         *
-         * \warning If CURL pointer is not captured
-         * by easy object behavior is undefined.
-         */
-        static easy &get(CURL *const curl) noexcept;
+  /// Set all options to default values.
+  void reset();
 
-    private:
-        void init() noexcept;
+  /*!
+   * Get easy object from captured CURL pointer.
+   *
+   * \warning If CURL pointer is not captured
+   * by easy object behavior is undefined.
+   */
+  static easy &get(CURL *const curl) noexcept;
 
-        static easy *get_(CURL *const curl) noexcept;
+ private:
+  void init() noexcept;
 
-    private:
-        /// \note implementation can use m_curl == nullptr internally
-        CURL *m_curl;
-        options::option_set m_option_set;
-    };
+  static easy *get_(CURL *const curl) noexcept;
 
-    inline void swap(easy &a, easy &b) noexcept
-    {
-        a.swap(b);
-    }
-}}
+ private:
+  /// \note implementation can use m_curl == nullptr internally
+  CURL *m_curl;
+  options::option_set m_option_set;
+};
+
+inline void swap(easy &a, easy &b) noexcept { a.swap(b); }
+
+}  // namespace curl
+}  // namespace bunsan

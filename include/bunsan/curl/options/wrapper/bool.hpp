@@ -4,28 +4,31 @@
 
 #include <curl/curl.h>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    template <long False, long True>
-    class bool_
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-    public:
-        bool_()=default;
+template <long False, long True>
+class bool_ {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-        explicit bool_(const bool data): m_data(data) {}
+ public:
+  bool_() = default;
 
-        long data() const
-        {
-            return m_data ? True : False;
-        }
+  explicit bool_(const bool data) : m_data(data) {}
 
-    private:
-        bool m_data = False;
-    };
+  long data() const { return m_data ? True : False; }
 
-    using bool_01 = bool_<0, 1>;
-    using bool_02 = bool_<0, 2>;
-}}}}
+ private:
+  bool m_data = False;
+};
+
+using bool_01 = bool_<0, 1>;
+using bool_02 = bool_<0, 2>;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

@@ -6,51 +6,48 @@
 
 #include <utility>
 
-namespace bunsan{namespace curl{namespace detail
-{
-    template <typename T>
-    class one_step_iterator:
-        public boost::iterator_facade<
-            one_step_iterator<T>, T, boost::forward_traversal_tag>
-    {
-    public:
-        /// End iterator.
-        one_step_iterator()=default;
+namespace bunsan {
+namespace curl {
+namespace detail {
 
-        one_step_iterator(const one_step_iterator &)=default;
-        one_step_iterator &operator=(const one_step_iterator &)=default;
+template <typename T>
+class one_step_iterator
+    : public boost::iterator_facade<one_step_iterator<T>, T,
+                                    boost::forward_traversal_tag> {
+ public:
+  /// End iterator.
+  one_step_iterator() = default;
 
-        explicit one_step_iterator(const T &arg):
-            m_value(arg) {}
+  one_step_iterator(const one_step_iterator &) = default;
+  one_step_iterator &operator=(const one_step_iterator &) = default;
 
-        explicit one_step_iterator(T &&arg):
-            m_value(std::move(arg)) {}
+  explicit one_step_iterator(const T &arg) : m_value(arg) {}
 
-    private:
-        friend class boost::iterator_core_access;
+  explicit one_step_iterator(T &&arg) : m_value(std::move(arg)) {}
 
-        void increment() { m_value = boost::none; }
+ private:
+  friend class boost::iterator_core_access;
 
-        bool equal(const one_step_iterator &other) const
-        {
-            return m_value == other.m_value;
-        }
+  void increment() { m_value = boost::none; }
 
-        T &dereference() const { return *m_value; }
+  bool equal(const one_step_iterator &other) const {
+    return m_value == other.m_value;
+  }
 
-    private:
-        boost::optional<T> m_value;
-    };
+  T &dereference() const { return *m_value; }
 
-    template <typename T>
-    using one_step_range = boost::iterator_range<one_step_iterator<T>>;
+ private:
+  boost::optional<T> m_value;
+};
 
-    template <typename T>
-    one_step_range<T> make_one_step_range(const T &value)
-    {
-        return one_step_range<T>{
-            one_step_iterator<T>(value),
-            one_step_iterator<T>()
-        };
-    }
-}}}
+template <typename T>
+using one_step_range = boost::iterator_range<one_step_iterator<T>>;
+
+template <typename T>
+one_step_range<T> make_one_step_range(const T &value) {
+  return one_step_range<T>{one_step_iterator<T>(value), one_step_iterator<T>()};
+}
+
+}  // namespace detail
+}  // namespace curl
+}  // namespace bunsan

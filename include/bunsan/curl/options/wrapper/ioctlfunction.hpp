@@ -11,23 +11,27 @@
 #include <type_traits>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    struct ioctlfunction_traits
-    {
-        using wrapper_type = basic_function<ioctlfunction_traits>;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        using function_type = std::function<
-            curl::ioerr (curl::easy &, int cmd)
-        >;
-        using fail_type = std::integral_constant<curl::ioerr, curl::ioerr::failrestart>;
+struct ioctlfunction_traits {
+  using wrapper_type = basic_function<ioctlfunction_traits>;
 
-        static curlioerr static_call(CURL *handle, int cmd, void *clientp)
-        {
-            const auto this_ = static_cast<const wrapper_type *>(clientp);
-            return static_cast<curlioerr>(this_->call(curl::easy::get(handle), cmd));
-        }
-    };
+  using function_type = std::function<curl::ioerr(curl::easy &, int cmd)>;
+  using fail_type =
+      std::integral_constant<curl::ioerr, curl::ioerr::failrestart>;
 
-    using ioctlfunction = ioctlfunction_traits::wrapper_type;
-}}}}
+  static curlioerr static_call(CURL *handle, int cmd, void *clientp) {
+    const auto this_ = static_cast<const wrapper_type *>(clientp);
+    return static_cast<curlioerr>(this_->call(curl::easy::get(handle), cmd));
+  }
+};
+
+using ioctlfunction = ioctlfunction_traits::wrapper_type;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

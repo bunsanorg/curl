@@ -10,23 +10,26 @@
 #include <type_traits>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    struct ssl_ctx_function_traits
-    {
-        using wrapper_type = basic_function<ssl_ctx_function_traits>;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        using function_type = std::function<
-            CURLcode (curl::easy &, void *sslctx)
-        >;
-        using fail_type = std::integral_constant<CURLcode, CURLE_ABORTED_BY_CALLBACK>;
+struct ssl_ctx_function_traits {
+  using wrapper_type = basic_function<ssl_ctx_function_traits>;
 
-        static CURLcode static_call(CURL *handle, void *sslctx, void *parm)
-        {
-            const auto this_ = static_cast<const wrapper_type *>(parm);
-            return this_->call(curl::easy::get(handle), sslctx);
-        }
-    };
+  using function_type = std::function<CURLcode(curl::easy &, void *sslctx)>;
+  using fail_type = std::integral_constant<CURLcode, CURLE_ABORTED_BY_CALLBACK>;
 
-    using ssl_ctx_function = ssl_ctx_function_traits::wrapper_type;
-}}}}
+  static CURLcode static_call(CURL *handle, void *sslctx, void *parm) {
+    const auto this_ = static_cast<const wrapper_type *>(parm);
+    return this_->call(curl::easy::get(handle), sslctx);
+  }
+};
+
+using ssl_ctx_function = ssl_ctx_function_traits::wrapper_type;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

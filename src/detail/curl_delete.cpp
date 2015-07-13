@@ -2,7 +2,12 @@
 
 #include <curl/curl.h>
 
-void bunsan::curl::detail::curl_delete::operator()(void *const ptr) const
-{
-    ::curl_free(ptr);
-}
+namespace bunsan {
+namespace curl {
+namespace detail {
+
+void curl_delete::operator()(void *const ptr) const { ::curl_free(ptr); }
+
+}  // namespace detail
+}  // namespace curl
+}  // namespace bunsan

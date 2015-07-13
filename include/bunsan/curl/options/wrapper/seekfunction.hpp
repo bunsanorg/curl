@@ -10,23 +10,26 @@
 #include <type_traits>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    struct seekfunction_traits
-    {
-        using wrapper_type = basic_function<seekfunction_traits>;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        using function_type = std::function<
-            seekfunc (curl_off_t offset, int origin)
-        >;
-        using fail_type = std::integral_constant<seekfunc, seekfunc::fail>;
+struct seekfunction_traits {
+  using wrapper_type = basic_function<seekfunction_traits>;
 
-        static int static_call(void *instream, curl_off_t offset, int origin)
-        {
-            const auto this_ = static_cast<const wrapper_type *>(instream);
-            return static_cast<int>(this_->call(offset, origin));
-        }
-    };
+  using function_type = std::function<seekfunc(curl_off_t offset, int origin)>;
+  using fail_type = std::integral_constant<seekfunc, seekfunc::fail>;
 
-    using seekfunction = seekfunction_traits::wrapper_type;
-}}}}
+  static int static_call(void *instream, curl_off_t offset, int origin) {
+    const auto this_ = static_cast<const wrapper_type *>(instream);
+    return static_cast<int>(this_->call(offset, origin));
+  }
+};
+
+using seekfunction = seekfunction_traits::wrapper_type;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

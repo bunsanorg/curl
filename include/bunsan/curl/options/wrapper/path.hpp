@@ -4,25 +4,25 @@
 
 #include <boost/filesystem/path.hpp>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    class path: public string
-    {
-    public:
-        path()=default;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        explicit path(boost::none_t):
-            string(boost::none) {}
+class path : public string {
+ public:
+  path() = default;
 
-        template <typename ... Args>
-        explicit path(Args &&...args):
-            string(
-                boost::filesystem::path(
-                    std::forward<Args>(args)...
-                ).string()
-            ) {}
+  explicit path(boost::none_t) : string(boost::none) {}
 
-        explicit path(const boost::filesystem::path &path):
-            string(path.string()) {}
-    };
-}}}}
+  template <typename... Args>
+  explicit path(Args &&... args)
+      : string(boost::filesystem::path(std::forward<Args>(args)...).string()) {}
+
+  explicit path(const boost::filesystem::path &path) : string(path.string()) {}
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

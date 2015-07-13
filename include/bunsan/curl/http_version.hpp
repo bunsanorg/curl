@@ -4,55 +4,51 @@
 
 #include <bunsan/stream_enum.hpp>
 
-namespace bunsan{namespace curl
-{
-    BUNSAN_TYPED_STREAM_ENUM_CLASS_INITIALIZED(http_version, long,
-    (
-        (http_none, CURL_HTTP_VERSION_NONE),
-        (http_1_0, CURL_HTTP_VERSION_1_0),
-        (http_1_1, CURL_HTTP_VERSION_1_1),
-        (http_2_0, CURL_HTTP_VERSION_2_0)
-    ))
-    static_assert(
-        static_cast<long>(http_version::http_2_0) + 1 == CURL_HTTP_VERSION_LAST,
-        "outdated"
-    );
+namespace bunsan {
+namespace curl {
 
-    struct http_version_unsupported_error: virtual http_version_invalid_value_error
-    {
-        using version_major = boost::error_info<struct tag_version_major, unsigned>;
-        using version_minor = boost::error_info<struct tag_version_minor, unsigned>;
-    };
+BUNSAN_TYPED_STREAM_ENUM_CLASS_INITIALIZED(http_version, long, (
+  (http_none, CURL_HTTP_VERSION_NONE),
+  (http_1_0, CURL_HTTP_VERSION_1_0),
+  (http_1_1, CURL_HTTP_VERSION_1_1),
+  (http_2_0, CURL_HTTP_VERSION_2_0)
+))
+static_assert(static_cast<long>(http_version::http_2_0) + 1 ==
+                  CURL_HTTP_VERSION_LAST,
+              "outdated");
 
-    struct http_version_pair
-    {
-        http_version_pair()=default;
-        http_version_pair(const http_version_pair &)=default;
-        http_version_pair(http_version_pair &&)=default;
-        http_version_pair &operator=(const http_version_pair &)=default;
-        http_version_pair &operator=(http_version_pair &&)=default;
+struct http_version_unsupported_error
+    : virtual http_version_invalid_value_error {
+  using version_major = boost::error_info<struct tag_version_major, unsigned>;
+  using version_minor = boost::error_info<struct tag_version_minor, unsigned>;
+};
 
-        // if version == http_none creates default
-        explicit http_version_pair(const http_version version);
+struct http_version_pair {
+  http_version_pair() = default;
+  http_version_pair(const http_version_pair &) = default;
+  http_version_pair(http_version_pair &&) = default;
+  http_version_pair &operator=(const http_version_pair &) = default;
+  http_version_pair &operator=(http_version_pair &&) = default;
 
-        constexpr http_version_pair(const unsigned major_,
-                                    const unsigned minor_):
-            version_major(major_),
-            version_minor(minor_) {}
+  // if version == http_none creates default
+  explicit http_version_pair(const http_version version);
 
-        /* implicit */ operator http_version() const;
+  constexpr http_version_pair(const unsigned major_, const unsigned minor_)
+      : version_major(major_), version_minor(minor_) {}
 
-        bool operator==(const http_version_pair &v) const
-        {
-            return version_major == v.version_major &&
-                   version_minor == v.version_minor;
-        }
+  /* implicit */ operator http_version() const;
 
-        unsigned version_major = 0;
-        unsigned version_minor = 0;
-    };
+  bool operator==(const http_version_pair &v) const {
+    return version_major == v.version_major && version_minor == v.version_minor;
+  }
 
-    http_version_pair make_http_version_pair(const http_version version);
+  unsigned version_major = 0;
+  unsigned version_minor = 0;
+};
 
-    std::ostream &operator<<(std::ostream &out, const http_version_pair &version);
-}}
+http_version_pair make_http_version_pair(const http_version version);
+
+std::ostream &operator<<(std::ostream &out, const http_version_pair &version);
+
+}  // namespace curl
+}  // namespace bunsan

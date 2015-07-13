@@ -6,14 +6,17 @@
 
 #include <curl/curl.h>
 
-namespace bunsan{namespace curl{namespace info{namespace wrapper
-{
-    template <CURLINFO Info>
-    struct bool_: basic_wrapper<bool, Info>
-    {
-        static bool getinfo(CURL *easy)
-        {
-            return long_<Info>::getinfo(easy);
-        }
-    };
-}}}}
+namespace bunsan {
+namespace curl {
+namespace info {
+namespace wrapper {
+
+template <CURLINFO Info>
+struct bool_ : basic_wrapper<bool, Info> {
+  static bool getinfo(CURL *easy) { return long_<Info>::getinfo(easy); }
+};
+
+}  // namespace wrapper
+}  // namespace info
+}  // namespace curl
+}  // namespace bunsan

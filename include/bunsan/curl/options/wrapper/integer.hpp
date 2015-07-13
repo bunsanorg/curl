@@ -6,26 +6,29 @@
 
 #include <type_traits>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    template <typename T>
-    class integer
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        explicit integer(const T data): m_data(data) {}
+template <typename T>
+class integer {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-        T data() const
-        {
-            return m_data;
-        }
+  explicit integer(const T data) : m_data(data) {}
 
-    private:
-        T m_data;
-    };
+  T data() const { return m_data; }
 
-    using long_ = integer<long>;
-    using curl_off_t_ = integer<::curl_off_t>;
-    using time_t_ = integer<time_t>;
-}}}}
+ private:
+  T m_data;
+};
+
+using long_ = integer<long>;
+using curl_off_t_ = integer<::curl_off_t>;
+using time_t_ = integer<time_t>;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

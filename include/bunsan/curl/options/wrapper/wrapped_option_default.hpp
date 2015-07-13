@@ -6,41 +6,42 @@
 
 #include <boost/optional.hpp>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    template <
-        typename Wrapper,
-        decltype(static_cast<Wrapper *>(nullptr)->data()) Default
-    >
-    class wrapped_option_default
-    {
-    public:
-        using retention_policy = typename Wrapper::retention_policy;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-    public:
-        wrapped_option_default()=default;
+template <typename Wrapper,
+          decltype(static_cast<Wrapper *>(nullptr)->data()) Default>
+class wrapped_option_default {
+ public:
+  using retention_policy = typename Wrapper::retention_policy;
 
-        template <typename Arg, typename ... Args>
-        explicit wrapped_option_default(Arg &&arg, Args &&...args):
-            m_wrapper(std::forward<Arg>(arg),
-                      std::forward<Args>(args)...) {}
+ public:
+  wrapped_option_default() = default;
 
-        auto data() const
-        {
-            if (m_wrapper)
-                return m_wrapper->data();
-            else
-                return Default;
-        }
+  template <typename Arg, typename... Args>
+  explicit wrapped_option_default(Arg &&arg, Args &&... args)
+      : m_wrapper(std::forward<Arg>(arg), std::forward<Args>(args)...) {}
 
-    private:
-        boost::optional<Wrapper> m_wrapper;
-    };
-}}}}
+  auto data() const {
+    if (m_wrapper) {
+      return m_wrapper->data();
+    } else {
+      return Default;
+    }
+  }
 
-#define BUNSAN_CURL_OPTION_DEFAULT_WRAPPED(NAME, CODE, ...) \
-    using NAME = ::bunsan::curl::options::wrapper::wrapped_option< \
-        CODE, ::bunsan::curl::options::wrapper::wrapped_option_default< \
-            ::bunsan::curl::options::wrapper::__VA_ARGS__ \
-        > \
-    >;
+ private:
+  boost::optional<Wrapper> m_wrapper;
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan
+
+#define BUNSAN_CURL_OPTION_DEFAULT_WRAPPED(NAME, CODE, ...)           \
+  using NAME = ::bunsan::curl::options::wrapper::wrapped_option<      \
+      CODE, ::bunsan::curl::options::wrapper::wrapped_option_default< \
+                ::bunsan::curl::options::wrapper::__VA_ARGS__> >;

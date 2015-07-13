@@ -4,26 +4,28 @@
 
 #include <memory>
 
-namespace bunsan{namespace curl{namespace detail
-{
-    namespace slist
-    {
-        struct deleter
-        {
-            constexpr deleter() noexcept=default;
+namespace bunsan {
+namespace curl {
+namespace detail {
 
-            void operator()(void *const ptr) const;
-        };
+namespace slist {
+struct deleter {
+  constexpr deleter() noexcept = default;
 
-        using ptr = std::unique_ptr<struct ::curl_slist, deleter>;
+  void operator()(void *const ptr) const;
+};
 
-        void append(ptr &list, const char *const data);
+using ptr = std::unique_ptr<struct ::curl_slist, deleter>;
 
-        inline void append(ptr &list, const std::string &data)
-        {
-            append(list, data.c_str());
-        }
-    }
+void append(ptr &list, const char *const data);
 
-    using slist_ptr = slist::ptr;
-}}}
+inline void append(ptr &list, const std::string &data) {
+  append(list, data.c_str());
+}
+}  // namespace slist
+
+using slist_ptr = slist::ptr;
+
+}  // namespace detail
+}  // namespace curl
+}  // namespace bunsan

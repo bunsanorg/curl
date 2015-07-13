@@ -8,66 +8,58 @@
 
 #include <type_traits>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    namespace detail
-    {
-        template <typename T>
-        inline typename std::enable_if<!std::is_enum<T>::value, long>::
-        type bitmask_cast(const T data)
-        {
-            return boost::numeric_cast<long>(data);
-        }
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        template <typename T>
-        inline typename std::enable_if<std::is_enum<T>::value, long>::
-        type bitmask_cast(const T data)
-        {
-            return bitmask_cast(
-                static_cast<
-                    typename std::underlying_type<T>::type
-                >(data)
-            );
-        }
+namespace detail {
+template <typename T>
+inline typename std::enable_if<!std::is_enum<T>::value, long>::type
+bitmask_cast(const T data) {
+  return boost::numeric_cast<long>(data);
+}
 
-        inline long bitmask_merge() { return 0; }
+template <typename T>
+inline typename std::enable_if<std::is_enum<T>::value, long>::type bitmask_cast(
+    const T data) {
+  return bitmask_cast(
+      static_cast<typename std::underlying_type<T>::type>(data));
+}
 
-        template <typename Arg, typename ... Args>
-        inline long bitmask_merge(const Arg arg, Args &&...args)
-        {
-            return bitmask_cast(arg) |
-                   bitmask_merge(std::forward<Args>(args)...);
-        }
-    }
+inline long bitmask_merge() { return 0; }
 
-    template <typename T>
-    class bitmask
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+template <typename Arg, typename... Args>
+inline long bitmask_merge(const Arg arg, Args &&... args) {
+  return bitmask_cast(arg) | bitmask_merge(std::forward<Args>(args)...);
+}
+}  // namespace detail
 
-    public:
-        template <typename ... Args>
-        bitmask(Args &&...args):
-            m_data(detail::bitmask_merge(
-                std::forward<Args>(args)...
-            )) {}
+template <typename T>
+class bitmask {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-        long data() const
-        {
-            return m_data;
-        }
+ public:
+  template <typename... Args>
+  bitmask(Args &&... args)
+      : m_data(detail::bitmask_merge(std::forward<Args>(args)...)) {}
 
-    private:
-        long m_data;
-    };
+  long data() const { return m_data; }
 
-    template <typename T, T Default>
-    class bitmask_optional: public bitmask<T>
-    {
-    public:
-        using bitmask<T>::bitmask;
+ private:
+  long m_data;
+};
 
-        bitmask_optional(): bitmask<T>(Default) {}
-    };
-}}}}
+template <typename T, T Default>
+class bitmask_optional : public bitmask<T> {
+ public:
+  using bitmask<T>::bitmask;
+
+  bitmask_optional() : bitmask<T>(Default) {}
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

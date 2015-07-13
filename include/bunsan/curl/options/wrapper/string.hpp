@@ -8,31 +8,35 @@
 
 #include <string>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    class string
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        string(boost::none_t): m_data(boost::none) {}
+class string {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-        template <typename Arg, typename ... Args>
-        string(Arg &&arg, Args &&...args):
-            m_data(std::string(
-                std::forward<Arg>(arg),
-                std::forward<Args>(args)...
-            )) {}
+  string(boost::none_t) : m_data(boost::none) {}
 
-        const char *data() const
-        {
-            if (m_data)
-                return m_data->c_str();
-            else
-                return nullptr;
-        }
+  template <typename Arg, typename... Args>
+  string(Arg &&arg, Args &&... args)
+      : m_data(
+            std::string(std::forward<Arg>(arg), std::forward<Args>(args)...)) {}
 
-    private:
-        boost::optional<std::string> m_data;
-    };
-}}}}
+  const char *data() const {
+    if (m_data) {
+      return m_data->c_str();
+    } else {
+      return nullptr;
+    }
+  }
+
+ private:
+  boost::optional<std::string> m_data;
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

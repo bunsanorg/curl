@@ -10,24 +10,28 @@
 #include <type_traits>
 #include <utility>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    struct sockoptfunction_traits
-    {
-        using wrapper_type = basic_function<sockoptfunction_traits>;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        using function_type = std::function<
-            int (curl_socket_t curlfd, curl::socktype purpose)
-        >;
-        using fail_type = std::integral_constant<int, CURL_SOCKOPT_ERROR>;
+struct sockoptfunction_traits {
+  using wrapper_type = basic_function<sockoptfunction_traits>;
 
-        static int static_call(
-            void *clientp, curl_socket_t curlfd, curlsocktype purpose)
-        {
-            const auto this_ = static_cast<const wrapper_type *>(clientp);
-            return this_->call(curlfd, static_cast<curl::socktype>(purpose));
-        }
-    };
+  using function_type =
+      std::function<int(curl_socket_t curlfd, curl::socktype purpose)>;
+  using fail_type = std::integral_constant<int, CURL_SOCKOPT_ERROR>;
 
-    using sockoptfunction = sockoptfunction_traits::wrapper_type;
-}}}}
+  static int static_call(void *clientp, curl_socket_t curlfd,
+                         curlsocktype purpose) {
+    const auto this_ = static_cast<const wrapper_type *>(clientp);
+    return this_->call(curlfd, static_cast<curl::socktype>(purpose));
+  }
+};
+
+using sockoptfunction = sockoptfunction_traits::wrapper_type;
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

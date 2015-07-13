@@ -9,29 +9,32 @@
 
 #include <initializer_list>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    class string_list
-    {
-    public:
-        using retention_policy = retention_policy::by_wrapper;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-        string_list()=default;
+class string_list {
+ public:
+  using retention_policy = retention_policy::by_wrapper;
 
-        template <typename Range>
-        explicit string_list(const Range &range):
-            m_data(boost::copy_range<curl::detail::string_list>(range)) {}
+  string_list() = default;
 
-        template <typename T>
-        explicit string_list(const std::initializer_list<T> &container):
-            m_data(begin(container), end(container)) {}
+  template <typename Range>
+  explicit string_list(const Range &range)
+      : m_data(boost::copy_range<curl::detail::string_list>(range)) {}
 
-        const ::curl_slist *data() const
-        {
-            return m_data.data();
-        }
+  template <typename T>
+  explicit string_list(const std::initializer_list<T> &container)
+      : m_data(begin(container), end(container)) {}
 
-    private:
-        curl::detail::string_list m_data;
-    };
-}}}}
+  const ::curl_slist *data() const { return m_data.data(); }
+
+ private:
+  curl::detail::string_list m_data;
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan

@@ -4,31 +4,33 @@
 
 #include <curl/curl.h>
 
-namespace bunsan{namespace curl{namespace options{namespace wrapper
-{
-    template <typename Signature>
-    class c_function;
+namespace bunsan {
+namespace curl {
+namespace options {
+namespace wrapper {
 
-    template <typename Result, typename ... Args>
-    class c_function<Result (Args ...)>
-    {
-    public:
-        using retention_policy = retention_policy::by_curl;
+template <typename Signature>
+class c_function;
 
-        using function_ptr = Result (*)(Args...);
+template <typename Result, typename... Args>
+class c_function<Result(Args...)> {
+ public:
+  using retention_policy = retention_policy::by_curl;
 
-    public:
-        c_function()=default;
+  using function_ptr = Result (*)(Args...);
 
-        explicit c_function(const function_ptr data):
-            m_data(data) {}
+ public:
+  c_function() = default;
 
-        function_ptr data() const
-        {
-            return m_data;
-        }
+  explicit c_function(const function_ptr data) : m_data(data) {}
 
-    private:
-        function_ptr m_data = nullptr;
-    };
-}}}}
+  function_ptr data() const { return m_data; }
+
+ private:
+  function_ptr m_data = nullptr;
+};
+
+}  // namespace wrapper
+}  // namespace options
+}  // namespace curl
+}  // namespace bunsan
