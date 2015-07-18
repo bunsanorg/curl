@@ -17,13 +17,12 @@ class one_step_iterator
  public:
   /// End iterator.
   one_step_iterator() = default;
-
   one_step_iterator(const one_step_iterator &) = default;
+  one_step_iterator(one_step_iterator &&) = default;
   one_step_iterator &operator=(const one_step_iterator &) = default;
+  one_step_iterator &operator=(one_step_iterator &&) = default;
 
-  explicit one_step_iterator(const T &arg) : m_value(arg) {}
-
-  explicit one_step_iterator(T &&arg) : m_value(std::move(arg)) {}
+  explicit one_step_iterator(T arg) : m_value(std::move(arg)) {}
 
  private:
   friend class boost::iterator_core_access;
@@ -44,8 +43,9 @@ template <typename T>
 using one_step_range = boost::iterator_range<one_step_iterator<T>>;
 
 template <typename T>
-one_step_range<T> make_one_step_range(const T &value) {
-  return one_step_range<T>{one_step_iterator<T>(value), one_step_iterator<T>()};
+one_step_range<T> make_one_step_range(T value) {
+  return one_step_range<T>{one_step_iterator<T>(std::move(value)),
+                           one_step_iterator<T>()};
 }
 
 }  // namespace detail
