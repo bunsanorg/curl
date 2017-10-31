@@ -17,6 +17,8 @@ http_version_pair::http_version_pair(const http_version version) {
       *this = {1, 1};
       break;
     case http_version::http_2_0:
+    case http_version::http_2tls:
+    case http_version::http_2_prior_knowledge:
       *this = {2, 0};
       break;
   }
